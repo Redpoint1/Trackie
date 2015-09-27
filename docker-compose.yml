@@ -8,9 +8,8 @@ web:
     - redis:redis
   volumes:
     - /usr/src/app/static
-    - /home/web/trackie/web/static
   env_file: .env  
-  command: /usr/local/bin/uwsgi --yaml ./trackie/uwsgi.yml
+  command: bash /usr/src/app/startup.sh
 
 nginx:
   restart: always

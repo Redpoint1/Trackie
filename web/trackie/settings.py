@@ -37,6 +37,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #3d party
+    'django_extensions',
+    'rest_framework',
+    'debug_toolbar',
+
     # apps
     'api',
 )
@@ -111,8 +117,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
+STATIC_ROOT = '/usr/src/app/static/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+#    os.path.join(BASE_DIR, 'assets'),
 )
 print(STATICFILES_DIRS)
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = True
+SHOW_TOOLBAR_CALLBACK = True
