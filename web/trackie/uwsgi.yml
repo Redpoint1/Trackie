@@ -1,0 +1,8 @@
+uwsgi:
+  socket: :8000
+  protocol: http
+  master: true
+  vacuum: true
+  module: trackie.wsgi
+  workers: 3
+  

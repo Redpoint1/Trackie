@@ -9,8 +9,8 @@ web:
   volumes:
     - /usr/src/app/static
     - /home/web/trackie/web/static
-  env_file: .env
-  command: /usr/local/bin/gunicorn trackie.wsgi:application -w 2 -b 0.0.0.0:8000
+  env_file: .env  
+  command: /usr/local/bin/uwsgi --yaml ./trackie/uwsgi.yml
 
 nginx:
   restart: always
@@ -42,5 +42,6 @@ data:
   restart: always
   image: postgres:latest
   volumes:
-    - /var/lib/postgres
+    - /var/lib/postgresql
   command: "true"
+
