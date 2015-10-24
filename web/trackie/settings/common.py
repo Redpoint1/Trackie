@@ -23,7 +23,6 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -37,11 +36,10 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     #3d party
     'django_extensions',
     'rest_framework',
-    'debug_toolbar',
 
     # apps
     'api',
@@ -78,28 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'trackie.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PASS'],
-        'HOST': os.environ['DB_SERVICE'],
-        'PORT': os.environ['DB_PORT']
-    }
-}
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -122,7 +98,3 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 #    os.path.join(BASE_DIR, 'assets'),
 )
-print(STATICFILES_DIRS)
-
-DEBUG_TOOLBAR_PATCH_SETTINGS = True
-SHOW_TOOLBAR_CALLBACK = True
