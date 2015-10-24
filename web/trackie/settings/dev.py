@@ -13,5 +13,9 @@ DATABASES = {
     }
 }
 
+MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
+
 DEBUG_TOOLBAR_PATCH_SETTINGS = True
 SHOW_TOOLBAR_CALLBACK = True
