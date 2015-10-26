@@ -43,6 +43,7 @@ INSTALLED_APPS = (
 
     # apps
     'app.api',
+    'domain_app.trackie'
 )
 
 MIDDLEWARE_CLASSES = (
