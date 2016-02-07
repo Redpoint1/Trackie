@@ -4,12 +4,12 @@ from django.conf.urls import include, patterns, url
 
 import app.api.rest.v1.views as restV1_views
 
-urlpatterns = patterns('',
+urlpatterns = [
      url(r'^$',
          view=restV1_views.ApiRoot.as_view(),
          name=restV1_views.ApiRoot.name     ,
      ),
-)
+]
 
 urlpatterns += (
     url(r'^trackie/', include('domain_app.trackie.rest.v1.urls')),
