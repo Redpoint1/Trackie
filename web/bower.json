@@ -1,0 +1,36 @@
+{
+  "name": "Trackie",
+  "description": "Bachelor project based on Django for live racing",
+  "main": "manage.py",
+  "authors": [
+    "Richard Rozar <redpoints1@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "trackie",
+    "web",
+    "application",
+    "django",
+    "angular",
+    "bachelor",
+    "project"
+  ],
+  "homepage": "https://github.com/Redpoint1/Trackie-Bc",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "font-awesome": "fontawesome#~4.5.0",
+    "angular": "~1.5.0",
+    "angular-resource": "~1.5.0",
+    "angular-route": "~1.5.0",
+    "angular-sanitize": "~1.5.0"
+  }
+}

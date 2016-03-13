@@ -1,0 +1,7 @@
+.idea
+.remote-sync.json
+.project
+.pydevproject
+.settings/
+web/.dev/
+

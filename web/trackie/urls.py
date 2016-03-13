@@ -4,7 +4,7 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    #url(r'^api/', include('api.urls')),
+    url(r'^api/', include('app.api.urls')),
 ]
 
 if settings.DEBUG:
