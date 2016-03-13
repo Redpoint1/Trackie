@@ -1,5 +1,4 @@
-from common import * #@PydevCodeAnalysisIgnore
-
+from .common import *
 DEBUG = True
 
 INSTALLED_APPS += (
