@@ -1,13 +1,12 @@
-Django==1.9.2
+Django==1.9.4
 django-debug-toolbar==1.4
 django-extensions==1.6.1
-django-filter==0.12.0
+django-filter==0.13.0
 djangorestframework==3.3.2
 Markdown==2.6.5
 psycopg2==2.6.1
 redis==2.10.5
 six==1.10.0
-sqlparse==0.1.18
+sqlparse==0.1.19
 uuid==1.30
 uWSGI==2.0.12
-wheel==0.29.0
