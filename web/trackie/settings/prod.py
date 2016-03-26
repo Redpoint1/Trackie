@@ -1,3 +1,5 @@
+""" Production configuration for Django """
+
 from .common import *
 
 DATABASES = {

@@ -1,3 +1,5 @@
+""" Rest api urls v1 for domain """
+
 from django.conf.urls import url
 
 from . import views as trackie_rest_v1_views

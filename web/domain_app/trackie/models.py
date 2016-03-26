@@ -1,3 +1,5 @@
+""" Domain specific DB models """
+
 import django.db.models as db_models
 import django.contrib.auth.models as auth_model
 
@@ -5,8 +7,12 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class Tournament(db_models.Model):
+    """
+    Tournament DB model
+    """
 
     class Meta:
+        """ """
         verbose_name = _("Tournament")
         verbose_name_plural = _("Tournaments")
 
@@ -32,8 +38,10 @@ class Tournament(db_models.Model):
 
 
 class RaceType(db_models.Model):
+    """ Race type """
 
     class Meta:
+        """ """
         verbose_name = _("Race type")
         verbose_name_plural = _("Race types")
 
@@ -59,8 +67,10 @@ class RaceType(db_models.Model):
 
 
 class SportType(db_models.Model):
+    """ Sport type """
 
     class Meta:
+        """ """
         verbose_name = _("Sport type")
         verbose_name_plural = _("Sport types")
 
@@ -86,8 +96,10 @@ class SportType(db_models.Model):
 
 
 class Race(db_models.Model):
+    """ Race """
 
     class Meta:
+        """ """
         verbose_name = _("Race")
         verbose_name_plural = _("Races")
 

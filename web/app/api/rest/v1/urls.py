@@ -1,3 +1,4 @@
+""" Rest api urls v1 """
 from django.conf.urls import include, url
 
 from . import views as rest_v1_views

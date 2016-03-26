@@ -1,3 +1,5 @@
+""" Rest api urls for each version """
+
 from django.conf.urls import include, url
 
 urlpatterns = [

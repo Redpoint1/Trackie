@@ -1,3 +1,5 @@
+""" Development configuration for Django """
+
 from .common import *
 DEBUG = True
 

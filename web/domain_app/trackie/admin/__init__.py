@@ -1,7 +1,8 @@
+""" Automatic registration of models """
+
 import inspect
 
 from django.contrib.admin.options import BaseModelAdmin
-
 import django.contrib.admin.sites as contrib_admin
 
 from . import models as trackie_admin_models
