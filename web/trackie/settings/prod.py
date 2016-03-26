@@ -1,6 +1,6 @@
 """ Production configuration for Django """
 
-from .common import *
+from .common import *  # pylint: disable=wildcard-import,unused-wildcard-import
 
 DATABASES = {
     'default': {

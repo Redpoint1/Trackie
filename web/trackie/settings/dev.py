@@ -1,6 +1,6 @@
 """ Development configuration for Django """
 
-from .common import *
+from .common import *  # pylint: disable=wildcard-import,unused-wildcard-import
 DEBUG = True
 
 INSTALLED_APPS += (

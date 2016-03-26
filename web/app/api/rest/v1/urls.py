@@ -1,13 +1,14 @@
 """ Rest api urls v1 """
+
 from django.conf.urls import include, url
 
 from . import views as rest_v1_views
 
-urlpatterns = [
+urlpatterns = [  # pylint: disable=invalid-name
     url(r'^$',
         view=rest_v1_views.ApiRoot.as_view(),
-        name=rest_v1_views.ApiRoot.name,
-        ),
+        name=rest_v1_views.ApiRoot.name
+        )
 ]
 
 urlpatterns += (

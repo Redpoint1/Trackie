@@ -7,7 +7,7 @@ import django.contrib.admin.sites as contrib_admin
 
 from . import models as trackie_admin_models
 
-to_add_models = []
+to_add_models = []  # pylint: disable=invalid-name
 
 for attr in dir(trackie_admin_models):
     cls = getattr(trackie_admin_models, attr)
