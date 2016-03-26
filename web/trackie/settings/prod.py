@@ -1,4 +1,4 @@
-from common import * #@PydevCodeAnalysisIgnore
+from .common import *
 
 DATABASES = {
     'default': {

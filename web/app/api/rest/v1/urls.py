@@ -1,14 +1,12 @@
-#from django.conf import settings
+from django.conf.urls import include, url
 
-from django.conf.urls import include, patterns, url
-
-import app.api.rest.v1.views as restV1_views
+from . import views as rest_v1_views
 
 urlpatterns = [
-     url(r'^$',
-         view=restV1_views.ApiRoot.as_view(),
-         name=restV1_views.ApiRoot.name     ,
-     ),
+    url(r'^$',
+        view=rest_v1_views.ApiRoot.as_view(),
+        name=rest_v1_views.ApiRoot.name,
+        ),
 ]
 
 urlpatterns += (
