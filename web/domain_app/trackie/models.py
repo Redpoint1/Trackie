@@ -11,7 +11,7 @@ class Tournament(db_models.Model):
     Tournament DB model
     """
 
-    class Meta:  # pylint: disable=empty-docstring,no-init,old-style-class
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
         verbose_name = _("Tournament")
         verbose_name_plural = _("Tournaments")
 
@@ -39,7 +39,7 @@ class Tournament(db_models.Model):
 class RaceType(db_models.Model):
     """ Race type """
 
-    class Meta:  # pylint: disable=empty-docstring,no-init,old-style-class
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
         verbose_name = _("Race type")
         verbose_name_plural = _("Race types")
 
@@ -67,7 +67,7 @@ class RaceType(db_models.Model):
 class SportType(db_models.Model):
     """ Sport type """
 
-    class Meta:  # pylint: disable=empty-docstring,no-init,old-style-class
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
         verbose_name = _("Sport type")
         verbose_name_plural = _("Sport types")
 
@@ -95,7 +95,7 @@ class SportType(db_models.Model):
 class Race(db_models.Model):
     """ Race """
 
-    class Meta:  # pylint: disable=empty-docstring,no-init,old-style-class
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
         verbose_name = _("Race")
         verbose_name_plural = _("Races")
 
