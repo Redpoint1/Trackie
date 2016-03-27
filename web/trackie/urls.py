@@ -10,7 +10,7 @@ urlpatterns = [  # pylint: disable=invalid-name
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
+    import debug_toolbar  # pylint: disable=wrong-import-position
     urlpatterns.append(
         url(r'^__debug__/', include(debug_toolbar.urls))
     )

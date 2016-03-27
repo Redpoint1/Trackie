@@ -7,8 +7,7 @@ from . import views as rest_v1_views
 urlpatterns = [  # pylint: disable=invalid-name
     url(r'^$',
         view=rest_v1_views.ApiRoot.as_view(),
-        name=rest_v1_views.ApiRoot.name
-        )
+        name=rest_v1_views.ApiRoot.name)
 ]
 
 urlpatterns += (
