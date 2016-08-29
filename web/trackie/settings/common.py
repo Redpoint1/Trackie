@@ -100,3 +100,15 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = (
 # os.path.join(BASE_DIR, 'assets'),
 # )
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('DB_NAME', 'trackie'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PASS', 'root'),
+        'HOST': os.environ.get('DB_SERVICE', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', 5432),
+    }
+}
