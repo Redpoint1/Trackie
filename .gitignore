@@ -4,4 +4,5 @@
 .pydevproject
 .settings/
 web/.dev/
+web/static/
 

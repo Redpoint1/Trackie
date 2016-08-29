@@ -1,11 +1,102 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="sk">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Trackie{% endblock %}</title>
-    {% block pre_scripts %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
-<body>
-    {% block content %}{% endblock %}
+<body class="sticky-body">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    <img id="header-logo" alt="Trackie logo" src="{% static "assets/trackie/img/trackie_logo.svg" %}">
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="header">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/"><span class="fa fa-home">&nbsp;</span>Domov</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle"
+                           data-toggle="dropdown" role="button"
+                           aria-haspopup="true" aria-expanded="false"><span class="fa fa-bicycle"></span>&nbsp;Preteky
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Online</a></li>
+                            <li><a href="#">Nadchádzajúce</a></li>
+                            <li><a href="#">Ukončené</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left searchbar">
+                    <div class="form-group position-relative">
+                        <input type="text" class="form-control searchbar-text" placeholder="Hľadať">
+                        <button class="searchbar-button" type="submit"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#"><span class="fa fa-sign-in"></span>&nbsp;Prihlásiť sa</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="sticky-content">
+        <div class="container-fluid">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer>
+        <div class="container-fluid">
+             <div class="row">
+                <div class="col-xs-2">
+                    <u>Developer</u>
+                    <ul>
+                        <li>API</li>
+                        <li>Dokumentácia</li>
+                        <li>Status</li>
+                    </ul>
+                </div>
+                <div class="col-xs-2">
+                    <u>Preteky</u>
+                    <ul>
+                        <li>Online</li>
+                        <li>Nadchádzajúce</li>
+                        <li>Ukončené</li>
+                    </ul>
+                </div>
+                <div class="col-xs-2">
+                    <u>Trackie</u>
+                    <ul>
+                        <li>O projekte</li>
+                        <li>O autorovi</li>
+                        <li>Novinky</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 text-center">Richard Rožár 2016</div>
+            </div>
+        </div>
+    </footer>
+    <link rel="stylesheet" href="{% static 'third-party/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'third-party/bootstrap/css/bootstrap-theme.min.css' %}">
+    <link rel="stylesheet" href="{% static 'third-party/font-awesome/css/font-awesome.min.css' %}">
+
+    <link rel="stylesheet" href="{% static 'assets/trackie/css/bootstrap-trackie.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/trackie/css/custom-trackie.css' %}">
+
+    <script src="{% static 'third-party/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'third-party/bootstrap/js/bootstrap.min.js' %}"></script>
+    {% block footer %}{% endblock %}
 </body>
 </html>

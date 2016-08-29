@@ -1,0 +1,57 @@
+.position-relative {
+    position: relative;
+}
+
+#header-logo {
+    height: 100%;
+}
+
+.searchbar-text {
+    width: 150px;
+    padding-right: 35px;
+}
+
+.searchbar-button {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    border: medium none;
+    height: 34px;
+    width: 34px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+main {
+    margin-top: 65px;
+}
+
+footer {
+    background-color: #DDDDDD;
+}
+
+/* Sticky footer */
+html {
+    height: 100%;
+}
+
+.sticky-body {
+    display: flex;
+    height: 100%;
+    -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+            flex-direction: column;
+}
+
+.sticky-content {
+    width: 100%;
+    -webkit-flex: 1 0 auto;
+        -ms-flex: 1 0 auto;
+            flex: 1 0 auto;
+}
+
+.sticky-content::after {
+    content: "\00a0";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
