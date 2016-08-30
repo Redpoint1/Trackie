@@ -26,7 +26,31 @@ main {
 }
 
 footer {
-    background-color: #DDDDDD;
+    background-color: #f2f2f2;
+    border-top: 1px solid #e8e8e8;
+}
+
+footer .row {
+    padding-top: 1em;
+}
+
+nav #header .dropdown-menu {
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    background-color: #343232;
+    border: none;
+    margin-top: 1px; /* instead of 1px border */
+}
+
+nav #header .dropdown-menu > li > a:focus, nav #header .dropdown-menu > li > a:hover {
+    background-color: #403d3d;
+    background-image: none;
+}
+
+nav #header .dropdown-menu > li > a {
+    color: #ffffff;
+    padding: 5px 20px;
 }
 
 /* Sticky footer */
@@ -55,3 +79,5 @@ html {
     height: 0;
     visibility: hidden;
 }
+
+/* End sticky footer */

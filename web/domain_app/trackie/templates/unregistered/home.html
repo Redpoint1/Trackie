@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap3 %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <img src="{% static 'assets/trackie/img/cyklista.png' %}" alt="cyclist" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    .find.watch.enjoy
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <form action="#" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% bootstrap_form_errors form %}
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                        Registrovať
+                    </button>
+                {% endbuttons %}
+            </form>
+        </div>
+    </div>
+{% endblock %}

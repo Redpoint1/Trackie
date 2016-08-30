@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     # 3d party
     'django_extensions',
     'rest_framework',
+    'bootstrap3',
 
     # apps
     'app.api',
@@ -100,7 +101,6 @@ STATIC_URL = '/static/'
 # STATICFILES_DIRS = (
 # os.path.join(BASE_DIR, 'assets'),
 # )
-
 
 DATABASES = {
     'default': {

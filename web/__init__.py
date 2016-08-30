@@ -1,4 +1,4 @@
-"""Meta information's about project"""
+"""Meta informations about project"""
 __title__ = 'Trackie'
 __version__ = '0.0.1'
 __author__ = 'Richard Rozar'
