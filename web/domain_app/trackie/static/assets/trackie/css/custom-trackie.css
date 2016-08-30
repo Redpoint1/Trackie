@@ -2,8 +2,25 @@
     position: relative;
 }
 
+.bold-text {
+    font-weight: bold;
+}
+.underline-text {
+    text-decoration: underline;
+}
+
 #header-logo {
     height: 100%;
+}
+
+#cyclist {
+    height: 400px;
+}
+
+#cyclist-text {
+    font-family: sans-serif;
+    font-size: 40px;
+    color: #e74c3c;
 }
 
 .searchbar-text {
@@ -34,6 +51,14 @@ footer .row {
     padding-top: 1em;
 }
 
+footer ul.footer-menu {
+    padding-left: 1em;
+}
+
+footer ul.footer-menu li {
+    list-style: none;
+}
+
 nav #header .dropdown-menu {
     padding: 0;
     box-shadow: none;
@@ -53,6 +78,12 @@ nav #header .dropdown-menu > li > a {
     padding: 5px 20px;
 }
 
+.registration-form {
+    border: 1px solid #e8e8e8;
+    background-color: #f2f2f2;
+    padding: 15px;
+}
+
 /* Sticky footer */
 html {
     height: 100%;
@@ -67,6 +98,7 @@ html {
 }
 
 .sticky-content {
+    margin-bottom: 15px;
     width: 100%;
     -webkit-flex: 1 0 auto;
         -ms-flex: 1 0 auto;

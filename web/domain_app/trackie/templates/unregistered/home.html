@@ -7,23 +7,22 @@
         <div class="col-sm-7">
             <div class="row">
                 <div class="col-xs-12 text-center">
-                    <img src="{% static 'assets/trackie/img/cyklista.png' %}" alt="cyclist" />
+                    <img src="{% static 'assets/trackie/img/cyclist.svg' %}" id="cyclist" alt="cyclist" />
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12 text-center">
+                <div class="col-xs-12 text-center" id="cyclist-text">
                     .find.watch.enjoy
                 </div>
             </div>
         </div>
         <div class="col-sm-5">
-            <form action="#" method="post">
+            <form action="#" method="post" class="registration-form">
                 {% csrf_token %}
                 {% bootstrap_form form %}
-                {% bootstrap_form_errors form %}
                 {% buttons %}
                     <button type="submit" class="btn btn-primary">
-                        Registrovať
+                        Registrovať sa
                     </button>
                 {% endbuttons %}
             </form>
