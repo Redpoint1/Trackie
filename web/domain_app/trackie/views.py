@@ -11,7 +11,7 @@ class HomePageView(views.TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated():
-            self.template_name = 'registered/home.html'
+            self.template_name = 'trackie/registered/home.html'
         else:
             self.form = RegisterForm()
             kwargs['form'] = self.form

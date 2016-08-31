@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="sk">
+<html lang="sk" data-ng-app="trackie">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,7 +51,7 @@
         </div>
     </nav>
     <main class="sticky-content">
-        <div class="container-fluid">
+        <div class="container-fluid" data-ng-cloak>
             {% block content %}{% endblock %}
         </div>
     </main>
@@ -107,14 +107,23 @@
         </div>
     </footer>
     <link rel="stylesheet" href="{% static 'third-party/bootstrap/css/bootstrap.min.css' %}">
-
     <link rel="stylesheet" href="{% static 'third-party/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'third-party/angular/angular-csp.css' %}">
 
     <link rel="stylesheet" href="{% static 'assets/trackie/css/bootstrap-trackie.css' %}">
     <link rel="stylesheet" href="{% static 'assets/trackie/css/custom-trackie.css' %}">
 
     <script src="{% static 'third-party/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'third-party/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script src="{% static 'third-party/angular/angular.min.js' %}"></script>
+    <script src="{% static 'third-party/angular-route/angular-route.min.js' %}"></script>
+    <script src="{% static 'third-party/angular-sanitize/angular-sanitize.min.js' %}"></script>
+    <script src="{% static 'third-party/angular-resource/angular-resource.min.js' %}"></script>
+    <script src="{% static 'third-party/lodash/lodash.min.js' %}"></script>
+    <script src="{% static 'third-party/restangular/restangular.min.js' %}"></script>
+
+    <script src="{% static 'assets/trackie/js/angular_modules/trackie.js' %}"></script>
     {% block footer %}{% endblock %}
 </body>
 </html>
