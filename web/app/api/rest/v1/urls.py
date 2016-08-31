@@ -5,9 +5,13 @@ from django.conf.urls import include, url
 from . import views as rest_v1_views
 
 urlpatterns = [  # pylint: disable=invalid-name
+    # url(r'^auth/',
+    #    include('rest_framework.urls', namespace='rest_framework')),
+    url(r'^auth/', include('rest_auth.urls')),
+    url(r'^auth/registration/', include('rest_auth.registration.urls')),
     url(r'^$',
         view=rest_v1_views.ApiRoot.as_view(),
-        name=rest_v1_views.ApiRoot.name)
+        name=rest_v1_views.ApiRoot.name),
 ]
 
 urlpatterns += (

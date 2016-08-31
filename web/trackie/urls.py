@@ -6,6 +6,7 @@ from django.conf import settings
 
 urlpatterns = [  # pylint: disable=invalid-name
     url(r'^admin/', include(admin.site.urls)),
+    # url(r'^accounts/', include('allauth.urls')),
     url(r'^api/', include('app.api.urls')),
     url(r'^', include('domain_app.trackie.urls')),
 ]

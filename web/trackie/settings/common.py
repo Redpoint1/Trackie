@@ -27,6 +27,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'secret_key')
 
 ALLOWED_HOSTS = []
 
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 
 # Application definition
 
@@ -37,10 +44,18 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # 3d party
     'django_extensions',
     'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    #'allauth.socialaccount.providers.facebook',
     'bootstrap3',
 
     # apps
@@ -102,6 +117,14 @@ STATIC_URL = '/static/'
 # os.path.join(BASE_DIR, 'assets'),
 # )
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -112,3 +135,5 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', 5432),
     }
 }
+
+SITE_ID = 1

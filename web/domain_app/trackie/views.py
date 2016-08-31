@@ -6,7 +6,7 @@ from .forms import RegisterForm
 class HomePageView(views.TemplateView):
 
     name = 'trackie.home'
-    template_name = 'unregistered/home.html'
+    template_name = 'trackie/unregistered/home.html'
     form = None
 
     def get(self, request, *args, **kwargs):
