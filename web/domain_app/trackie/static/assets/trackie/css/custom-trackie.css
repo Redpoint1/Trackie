@@ -43,8 +43,8 @@ main {
 }
 
 footer {
-    background-color: #f2f2f2;
-    border-top: 1px solid #e8e8e8;
+    background-color: #f4f4f4;
+    border-top: 1px solid #e3e3e3;
 }
 
 footer .row {
@@ -57,31 +57,6 @@ footer ul.footer-menu {
 
 footer ul.footer-menu li {
     list-style: none;
-}
-
-nav #header .dropdown-menu {
-    padding: 0;
-    box-shadow: none;
-    border-radius: 0;
-    background-color: #343232;
-    border: none;
-    margin-top: 1px; /* instead of 1px border */
-}
-
-nav #header .dropdown-menu > li > a:focus, nav #header .dropdown-menu > li > a:hover {
-    background-color: #403d3d;
-    background-image: none;
-}
-
-nav #header .dropdown-menu > li > a {
-    color: #ffffff;
-    padding: 5px 20px;
-}
-
-.registration-form {
-    border: 1px solid #e8e8e8;
-    background-color: #f2f2f2;
-    padding: 15px;
 }
 
 /* Sticky footer */

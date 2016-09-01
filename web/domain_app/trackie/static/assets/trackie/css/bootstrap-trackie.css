@@ -1,17 +1,19 @@
-.navbar-inverse {
-    background-color: #000000;
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+    background-color: #c11f0d;
 }
 
-.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:focus, .navbar-inverse .navbar-nav > .active > a:hover {
-    background-color: #403d3d;
+.navbar-nav > li > .dropdown-menu {
+    padding: 0;
+    box-shadow: none;
+    border-radius: 0;
+    background-color: #d9230f;
+    border: none;
+    margin-top: 1px; /* instead of 1px border */
 }
 
-.navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover {
-     background-color: #403d3d;
-}
-
-.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:focus, .navbar-inverse .navbar-nav > .open > a:hover {
-    background-color: #403d3d;
+.dropdown-menu > li > a {
+    color: #ffffff;
+    padding: 5px 20px;
 }
 
 .navbar-brand {
