@@ -3,12 +3,12 @@
 }
 
 .navbar-nav > li > .dropdown-menu {
-    padding: 0;
-    box-shadow: none;
-    border-radius: 0;
     background-color: #d9230f;
     border: none;
+    border-radius: 0;
+    box-shadow: none;
     margin-top: 1px; /* instead of 1px border */
+    padding: 0;
 }
 
 .dropdown-menu > li > a {

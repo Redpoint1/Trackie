@@ -5,37 +5,38 @@
 .bold-text {
     font-weight: bold;
 }
+
 .underline-text {
     text-decoration: underline;
 }
 
-#header-logo {
+.header-logo {
     height: 100%;
 }
 
-#cyclist {
+.cyclist {
     height: 400px;
 }
 
-#cyclist-text {
+.cyclist-text {
+    color: #e74c3c;
     font-family: sans-serif;
     font-size: 40px;
-    color: #e74c3c;
 }
 
 .searchbar-text {
-    width: 150px;
     padding-right: 35px;
+    width: 150px;
 }
 
 .searchbar-button {
-    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
-    border: medium none;
+    background: #000000 none repeat scroll 0 0;
+    border: none;
     height: 34px;
-    width: 34px;
     position: absolute;
     right: 0;
     top: 0;
+    width: 34px;
 }
 
 main {
@@ -66,18 +67,18 @@ html {
 
 .sticky-body {
     display: flex;
-    height: 100%;
     -webkit-flex-direction: column;
         -ms-flex-direction: column;
             flex-direction: column;
+    height: 100%;
 }
 
 .sticky-content {
-    margin-bottom: 15px;
-    width: 100%;
     -webkit-flex: 1 0 auto;
         -ms-flex: 1 0 auto;
             flex: 1 0 auto;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
 .sticky-content::after {
