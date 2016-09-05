@@ -30,7 +30,7 @@
 }
 
 .searchbar-button {
-    background: #000000 none repeat scroll 0 0;
+    background: none;
     border: none;
     height: 34px;
     position: absolute;
