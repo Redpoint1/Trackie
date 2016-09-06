@@ -1,4 +1,7 @@
 import django.views.generic as views
+import django.template.loader as template_loader
+import django.template.exceptions as template_exceptions
+import django.http.response as http_response
 
 from .forms import RegisterForm
 
@@ -14,3 +17,24 @@ class HomePageView(views.TemplateView):
         kwargs['form'] = self.form
 
         return super(HomePageView, self).get(request, *args, **kwargs)
+
+
+class PartialView(views.TemplateView):
+    http_method_names = ('get',)
+
+    name = 'trackie.partial '
+
+    def get_template_names(self):
+
+        partial_tpl_name = 'partials/%s' % self.kwargs['partial']
+
+        try:
+            template_loader.get_template(partial_tpl_name)
+        except template_exceptions.TemplateDoesNotExist as e:
+            # Prevent template rendering errors to return 404
+            if e.args[0] == partial_tpl_name:
+                raise http_response.Http404('partial not found')
+            else:
+                raise
+
+        return partial_tpl_name,

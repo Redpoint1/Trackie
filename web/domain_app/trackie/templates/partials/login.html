@@ -1,0 +1,36 @@
+<ul class="nav navbar-nav navbar-right">
+    <li data-ng-if="!djangoAuth.authenticated">
+        <a href="#" onClick="event.preventDefault(); $('#login-modal').show().addClass('in'); $('#login-modal-backdrop').show().addClass('in');"><span class="fa fa-sign-in"></span>&nbsp;Prihlásiť sa</a>
+    </li>
+    <li data-ng-if="djangoAuth.authenticated">
+        <a href="#"><b>{$ djangoAuth.user.username $}</b></a>
+    </li>
+    <li data-ng-if="djangoAuth.authenticated">
+        <a href="#" data-ng-click="logout()"><span class="fa fa-sign-in"></span>&nbsp;Odhlásiť sa</a>
+    </li>
+</ul>
+<div class="modal fade" id="login-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form data-ng-submit="login(username, password)">
+                <div class="modal-body">
+                    <input type="hidden" value="RBHGASkPlwbAm5mPhZjSM5LChEOlzP6b" name="csrfmiddlewaretoken">
+                    <div class="form-group" id="non_field_errors"></div>
+                    <div class="form-group">
+                        <label for="username" class="control-label">Username</label>
+                        <input type="text" data-ng-model="username" required="required" placeholder="Username" name="username" maxlength="30" id="username" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" data-ng-model="password" required="required" placeholder="Password" name="password" id="password" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button type="button" class="btn btn-default" onClick="event.preventDefault(); $('#login-modal').removeClass('in').hide(); $('#login-modal-backdrop').fadeOut().removeClass('in');">Zavrieť</button>
+                        <button type="submit" class="btn btn-primary">Prihlásiť sa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="login-modal-backdrop" class="modal-backdrop fade" style="display: none;"></div>

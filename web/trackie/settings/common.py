@@ -122,7 +122,11 @@ REST_FRAMEWORK = {
         'app.api.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+}
+
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'app.api.rest.serializers.TokenSerializer'
 }
 
 DATABASES = {

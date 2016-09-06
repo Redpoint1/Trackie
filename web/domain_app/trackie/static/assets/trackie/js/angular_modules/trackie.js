@@ -32,6 +32,7 @@
             "use_session": true,
             "authenticated": null,
             "authPromise": null,
+            "user": null,
             "request": function (args) {
                 if ($cookies.token) {
                     $http.defaults.headers.common.Authorization = "Token " + $cookies.token;
@@ -100,6 +101,7 @@
                         $cookies.token = data.key;
                     }
                     djangoAuth.authenticated = true;
+                    djangoAuth.user = data.user;
                     $rootScope.$broadcast("djangoAuth.logged_in", data);
                 });
             },
@@ -112,6 +114,7 @@
                     delete $http.defaults.headers.common.Authorization;
                     delete $cookies.token;
                     djangoAuth.authenticated = false;
+                    djangoAuth.user = null;
                     $rootScope.$broadcast("djangoAuth.logged_out");
                 });
             },
@@ -184,17 +187,19 @@
                         defer.resolve();
                     }
                 } else {
-                    this.authPromise.then(function () {
+                    this.authPromise.then(function (data) {
                         if (!self.authenticated) {
                             $templateCache.removeAll();
                         }
                         self.authenticated = true;
+                        self.user = data;
                         defer.resolve();
                     }, function () {
                         if (self.authenticated) {
                             $templateCache.removeAll();
                         }
                         self.authenticated = false;
+                        self.user = null;
                         if (restrict) {
                             defer.reject("User is not logged in.");
                         } else {
@@ -211,6 +216,46 @@
             }
         };
     }]);
+
+    // Directives
+
+    trackie_module.directive("loginModal", ["djangoAuth", "$window", function (djangoAuth, $window) {
+        function link(scope, element, attrs) {
+            scope.djangoAuth = djangoAuth;
+            scope.login = function (username, password) {
+                djangoAuth.login(username, password).then(function (data) {
+                    element.find("#login-modal").removeClass("in").hide();
+                    element.find("#login-modal-backdrop").fadeOut().removeClass("in");
+                    //location /home or if template have 2 modes route reload
+                }, function (error) {
+                    element.find("form").find(".error").remove();
+                    for (var key in error){
+                        var list = $("<ul class='error'></ul>");
+                        for (var i=0; i < error[key].length; i++){
+                            list.append("<li>" + error[key][i] + "</li>");
+                        }
+                        element.find("#"+key).append(list);
+                    }
+                });
+            };
+            scope.logout = function () {
+                djangoAuth.logout().then(function () {
+                    // nothing now, location / maybe?
+                }, function () {
+                    $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
+                });
+            }
+        }
+
+        return {
+            link: link,
+            restrict: "AE",
+            templateUrl: "partials/login.html",
+            scope: {}
+        };
+    }]);
+
+    // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
         djangoAuth.initialize();
