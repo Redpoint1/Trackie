@@ -20,22 +20,33 @@
             $routeProvider.when("/", {
                 templateUrl: "main.html",
                 controller: "MainController",
-                reloadAfterAuthChange: true
+                reloadAfterAuthChange: true,
+                //needToBeLogged: true
+            }).when("/unauthorized", {
+                templateUrl: "partials/unauthorized.html"
             }).otherwise({
                 redirectTo: "/"
             });
 
             //$locationProvider.html5Mode(true);
         }])
-        .run(function ($rootScope, $location, djangoAuth) {
+        .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
             djangoAuth.initialize();
             $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
                 // console.log(event);
-                // console.log(toState);
-                // console.log(toParams);
+                console.log(toState);
+                console.log(toParams);
                 // console.log($location);
+
+                var state = toState.redirectTo ? $route.routes[toState.redirectTo]: toState;
+                var needToBeLogged = state.needToBeLogged || false;
+                djangoAuth.authenticationStatus().then(function () {
+                   if (needToBeLogged && !djangoAuth.authenticated) {
+                        $location.path("unauthorized");
+                    }
+                });
             });
-       });
+       }]);
 
     // Services
 
@@ -224,8 +235,8 @@
             },
             "changedAuth": function () {
                 $templateCache.removeAll();
-                var key = $route.current.redirectTo || $route.current.originalPath;
-                var reload = $route.routes[key].reloadAfterAuthChange || $route.routes[key].authenticated || false;
+                var route = $route.current.redirectTo ? $route.routes[$route.current.redirectTo] : $route.current;
+                var reload = route.reloadAfterAuthChange || route.authenticated || false;
                 if (reload) {
                     $route.reload();
                 }
