@@ -29,7 +29,7 @@
         }])
         .run(function ($rootScope, $location, djangoAuth) {
             djangoAuth.initialize();
-            $rootScope.$on('$routeChangeStart', function (event, toState, toParams) {
+            $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
                 // console.log(event);
                 // console.log(toState);
                 // console.log(toParams);
@@ -241,10 +241,10 @@
     // Directives
 
     trackie_module.directive("loginModal", ["djangoAuth", "$window", function (djangoAuth, $window) {
-        function link(scope, element, attrs) {
+        function link(scope, element) {
             scope.djangoAuth = djangoAuth;
             scope.login = function (username, password) {
-                djangoAuth.login(username, password).then(function (data) {
+                djangoAuth.login(username, password).then(function () {
                     element.find("#login-modal").removeClass("in").hide();
                     element.find("#login-modal-backdrop").fadeOut().removeClass("in");
                     //location /home or if template have 2 modes route reload

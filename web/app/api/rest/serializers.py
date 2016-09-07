@@ -2,7 +2,7 @@ from rest_auth.serializers import TokenSerializer
 from rest_auth.app_settings import DefaultUserDetailsSerializer
 
 
-class TokenSerializer(TokenSerializer):
+class ExtendedTokenSerializer(TokenSerializer):
     """Extended TokenSerializer"""
 
     user = DefaultUserDetailsSerializer(read_only=True)

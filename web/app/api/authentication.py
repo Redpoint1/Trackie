@@ -1,7 +1,7 @@
 from rest_framework.authentication import BasicAuthentication
 
 
-class BasicAuthentication(BasicAuthentication):
+class ExtendedBasicAuthentication(BasicAuthentication):
     """Extended class of the BasicAuthentication to avoid to show the
     authentication dialog in the browser"""
 

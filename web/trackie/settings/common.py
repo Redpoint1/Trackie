@@ -119,14 +119,14 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'app.api.authentication.BasicAuthentication',
+        'app.api.authentication.ExtendedBasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
 REST_AUTH_SERIALIZERS = {
-    'TOKEN_SERIALIZER': 'app.api.rest.serializers.TokenSerializer'
+    'TOKEN_SERIALIZER': 'app.api.rest.serializers.ExtendedTokenSerializer'
 }
 
 DATABASES = {
