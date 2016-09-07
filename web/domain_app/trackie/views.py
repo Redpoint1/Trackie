@@ -6,17 +6,25 @@ import django.http.response as http_response
 from .forms import RegisterForm
 
 
-class HomePageView(views.TemplateView):
+class BasePageView(views.TemplateView):
+
+    name = 'trackie.base'
+    template_name = 'trackie/base.html'
+
+
+class MainPageView(views.TemplateView):
 
     name = 'trackie.home'
-    template_name = 'trackie/home.html'
+    template_name = 'trackie/main/unregistered.html'
     form = None
 
     def get(self, request, *args, **kwargs):
         self.form = RegisterForm()
         kwargs['form'] = self.form
+        if request.user.is_authenticated():
+            self.template_name = 'trackie/main/registered.html'
 
-        return super(HomePageView, self).get(request, *args, **kwargs)
+        return super(MainPageView, self).get(request, *args, **kwargs)
 
 
 class PartialView(views.TemplateView):

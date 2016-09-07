@@ -5,28 +5,41 @@
             $interpolateProvider.startSymbol("{$");
             $interpolateProvider.endSymbol("$}");
         }])
+        .config(["$resourceProvider", function($resourceProvider) {
+            $resourceProvider.defaults.stripTrailingSlashes = false;
+        }])
         .config(["$httpProvider", function ($httpProvider) {
             $httpProvider.defaults.xsrfCookieName = "csrftoken";
             $httpProvider.defaults.xsrfHeaderName = "X-CSRFToken";
         }])
         .config(["RestangularProvider", function (RestangularProvider) {
             RestangularProvider.setBaseUrl("/api/v1");
-            RestangularProvider.setRequestSuffix("/");
+            //RestangularProvider.setRequestSuffix("/");
         }])
         .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
             $routeProvider.when("/", {
                 templateUrl: "main.html",
-                controller: "MainController"
+                controller: "MainController",
+                reloadAfterAuthChange: true
             }).otherwise({
                 redirectTo: "/"
             });
 
             //$locationProvider.html5Mode(true);
-        }]);
+        }])
+        .run(function ($rootScope, $location, djangoAuth) {
+            djangoAuth.initialize();
+            $rootScope.$on('$routeChangeStart', function (event, toState, toParams) {
+                // console.log(event);
+                // console.log(toState);
+                // console.log(toParams);
+                // console.log($location);
+            });
+       });
 
     // Services
 
-    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", function ($q, $http, $cookies, $rootScope, $templateCache) {
+    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", function ($q, $http, $cookies, $rootScope, $templateCache, $route) {
         return {
             "API_URL": "api/v1/auth",
             "use_session": true,
@@ -102,6 +115,7 @@
                     }
                     djangoAuth.authenticated = true;
                     djangoAuth.user = data.user;
+                    djangoAuth.changedAuth();
                     $rootScope.$broadcast("djangoAuth.logged_in", data);
                 });
             },
@@ -113,8 +127,10 @@
                 }).then(function () {
                     delete $http.defaults.headers.common.Authorization;
                     delete $cookies.token;
+                    // delete $cookies.sessionid;
                     djangoAuth.authenticated = false;
                     djangoAuth.user = null;
+                    djangoAuth.changedAuth();
                     $rootScope.$broadcast("djangoAuth.logged_out");
                 });
             },
@@ -173,10 +189,7 @@
                 restrict = restrict || false;
                 force = force || false;
                 if (this.authPromise === null || force) {
-                    this.authPromise = this.request({
-                        "method": "GET",
-                        "url": "/user/"
-                    });
+                    this.authPromise = this.profile();
                 }
                 var self = this;
                 var defer = $q.defer();
@@ -208,6 +221,14 @@
                     });
                 }
                 return defer.promise;
+            },
+            "changedAuth": function () {
+                $templateCache.removeAll();
+                var key = $route.current.redirectTo || $route.current.originalPath;
+                var reload = $route.routes[key].reloadAfterAuthChange || $route.routes[key].authenticated || false;
+                if (reload) {
+                    $route.reload();
+                }
             },
             "initialize": function (url, sessions) {
                 this.API_URL = url || this.API_URL;
@@ -258,6 +279,6 @@
     // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
-        djangoAuth.initialize();
+        // todo fill
     }]);
 }());
