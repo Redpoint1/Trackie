@@ -3,7 +3,6 @@
 import django.db.models as db_models
 import django.contrib.auth.models as auth_model
 
-from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
 
 
