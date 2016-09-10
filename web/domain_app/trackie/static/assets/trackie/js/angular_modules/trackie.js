@@ -20,8 +20,7 @@
             $routeProvider.when("/", {
                 templateUrl: "main.html",
                 controller: "MainController",
-                reloadAfterAuthChange: true,
-                //needToBeLogged: true
+                reloadAfterAuthChange: true
             }).when("/unauthorized", {
                 templateUrl: "partials/unauthorized.html"
             }).otherwise({
@@ -39,18 +38,15 @@
                 // console.log($location);
 
                 var state = toState.redirectTo ? $route.routes[toState.redirectTo]: toState;
-                var needToBeLogged = state.needToBeLogged || false;
                 djangoAuth.authenticationStatus().then(function () {
-                   if (needToBeLogged && !djangoAuth.authenticated) {
-                        $location.path("unauthorized");
-                    }
+                    djangoAuth.checkPageAuth(state.throwAuthError);
                 });
             });
        }]);
 
     // Services
 
-    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", function ($q, $http, $cookies, $rootScope, $templateCache, $route) {
+    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", "$location", function ($q, $http, $cookies, $rootScope, $templateCache, $route, $location) {
         return {
             "API_URL": "api/v1/auth",
             "use_session": true,
@@ -236,9 +232,22 @@
             "changedAuth": function () {
                 $templateCache.removeAll();
                 var route = $route.current.redirectTo ? $route.routes[$route.current.redirectTo] : $route.current;
-                var reload = route.reloadAfterAuthChange || route.authenticated || false;
-                if (reload) {
-                    $route.reload();
+                this.checkPageAuth(route.throwAuthError, route.reloadAfterAuthChange);
+            },
+            "checkPageAuth": function (throwAuthError, reload) {
+                var currentPath = $location.path();
+
+                if (currentPath !== "/unauthorized") {
+                    if (throwAuthError && !this.authenticated) {
+                        $location.path("unauthorized").search("from", currentPath);
+                    } else if (reload) {
+                        $route.reload();
+                    }
+                } else {
+                    if (this.authenticated) {
+                        var redirectTo = $location.search("from") || "/";
+                        $location.url(redirectTo);
+                    }
                 }
             },
             "initialize": function (url, sessions) {
