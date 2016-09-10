@@ -1,6 +1,12 @@
 (function () {
     "use strict";
     var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "restangular"])
+        .constant("CONFIG", {
+            "DEBUG": false
+        })
+        .constant("VARS", {
+            "FORBIDDEN_URL": "/forbidden"
+        })
         .config(["$interpolateProvider", function ($interpolateProvider) {
             $interpolateProvider.startSymbol("{$");
             $interpolateProvider.endSymbol("$}");
@@ -16,18 +22,20 @@
             RestangularProvider.setBaseUrl("/api/v1");
             //RestangularProvider.setRequestSuffix("/");
         }])
-        .config(["$routeProvider", "$locationProvider", function ($routeProvider, $locationProvider) {
+        .config(["$routeProvider", "$locationProvider", "VARS", function ($routeProvider, $locationProvider, VARS) {
             $routeProvider.when("/", {
                 templateUrl: "main.html",
                 controller: "MainController",
                 reloadAfterAuthChange: true
-            }).when("/unauthorized", {
-                templateUrl: "partials/unauthorized.html"
+            }).when("/404", {
+                templateUrl: "partials/status/404.html"
+            }).when(VARS.FORBIDDEN_URL, {
+                templateUrl: "partials/status/403.html"
             }).otherwise({
-                redirectTo: "/"
+                redirectTo: "/404"
             });
 
-            //$locationProvider.html5Mode(true);
+            $locationProvider.html5Mode(true);
         }])
         .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
             djangoAuth.initialize();
@@ -46,7 +54,7 @@
 
     // Services
 
-    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", "$location", function ($q, $http, $cookies, $rootScope, $templateCache, $route, $location) {
+    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", "$location", "VARS", function ($q, $http, $cookies, $rootScope, $templateCache, $route, $location, VARS) {
         return {
             "API_URL": "api/v1/auth",
             "use_session": true,
@@ -235,17 +243,23 @@
                 this.checkPageAuth(route.throwAuthError, route.reloadAfterAuthChange);
             },
             "checkPageAuth": function (throwAuthError, reload) {
-                var currentPath = $location.path();
+                var currentPath = $location.path() || "/";
 
-                if (currentPath !== "/unauthorized") {
+                if (currentPath !== VARS.FORBIDDEN_URL) {
                     if (throwAuthError && !this.authenticated) {
-                        $location.path("unauthorized").search("from", currentPath);
+                        $location.path("/forbidden");
+                        $location.search("from", currentPath);
                     } else if (reload) {
                         $route.reload();
                     }
                 } else {
-                    if (this.authenticated) {
-                        var redirectTo = $location.search("from") || "/";
+                    var redirectTo  = $route.current.params.from || "/";
+                    var route = $route.routes[redirectTo] || {};
+                    if (route.throwAuthError){
+                        if (this.authenticated) {
+                            $location.url(redirectTo);
+                        }
+                    } else {
                         $location.url(redirectTo);
                     }
                 }

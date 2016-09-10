@@ -30,7 +30,7 @@ class MainPageView(views.TemplateView):
 class PartialView(views.TemplateView):
     http_method_names = ('get',)
 
-    name = 'trackie.partial '
+    name = 'trackie.partial'
 
     def get_template_names(self):
 
