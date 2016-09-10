@@ -310,9 +310,36 @@
         };
     }]);
 
+    trackie_module.directive("sameValueAs", [function () {
+        function link(scope, elem, attrs, ctrl) {
+            var secondField = elem.parents("form").find("#" + attrs.sameValueAs);
+
+            elem.on("keyup", function () {
+                scope.$apply(function () {
+                    var isValid = elem.val() === secondField.val();
+                    ctrl.$setValidity("sameValue", isValid);
+                });
+            });
+
+            secondField.on("keyup", function () {
+                scope.$apply(function () {
+                    var isValid = elem.val() === secondField.val();
+                    ctrl.$setValidity("sameValue", isValid);
+                });
+            });
+        }
+
+        return {
+            require: "ngModel",
+            link: link
+        }
+    }]);
+
     // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
-        // todo fill
+        $scope.register = function () {
+
+        }
     }]);
 }());

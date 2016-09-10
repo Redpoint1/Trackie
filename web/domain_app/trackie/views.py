@@ -3,6 +3,8 @@ import django.template.loader as template_loader
 import django.template.exceptions as template_exceptions
 import django.http.response as http_response
 
+from django.utils.translation import ugettext_lazy as _
+
 from .forms import RegisterForm
 
 
@@ -41,7 +43,7 @@ class PartialView(views.TemplateView):
         except template_exceptions.TemplateDoesNotExist as e:
             # Prevent template rendering errors to return 404
             if e.args[0] == partial_tpl_name:
-                raise http_response.Http404('partial not found')
+                raise http_response.Http404(_('partial not found'))
             else:
                 raise
 

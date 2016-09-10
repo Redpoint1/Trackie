@@ -1,29 +1,31 @@
-import django.contrib.auth.forms as auth_forms
-
-from django.core.validators import EmailValidator
-from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
+from allauth.account.forms import SignupForm
+import allauth.account.app_settings as app_settings
 
 
-class RegisterForm(auth_forms.UserCreationForm):
-    tos = auth_forms.forms.BooleanField(
-        widget=auth_forms.forms.CheckboxInput,
-        label=_('I have read and agree to the Terms of Service'),
-        error_messages={
-            'required': _("You must agree to the terms to register")}
-    )
+class RegisterForm(SignupForm):
 
-    class Meta(auth_forms.UserCreationForm.Meta):
-        fields = ("username", "email",)
-
-    def clean_email(self):
-        cleaned_value = self.cleaned_data['email']
-        validator = EmailValidator()
-        validator(cleaned_value)
-
-        if User.objects.filter(email__iexact=cleaned_value):
-            raise auth_forms.forms.ValidationError(_(
-                "This email address is already in use. Please supply a "
-                "different email address."))
-
-        return cleaned_value
+    def __init__(self, *args, **kwargs):
+        super(SignupForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({
+            'data-ng-model': 'password1',
+            'class': 'form-control',
+            'required': 'form-required',
+            'data-same-value-as': "id_password2"
+        })
+        if app_settings.SIGNUP_PASSWORD_ENTER_TWICE:
+            self.fields['password2'].widget.attrs.update({
+                'data-ng-model': 'password2',
+                'class': 'form-control',
+                'required': 'form-required',
+            })
+        if self.username_required:
+            self.fields['username'].widget.attrs.update({
+                'data-ng-model': 'username',
+                'class': 'form-control',
+                'required': 'form-required',
+            })
+        self.fields['email'].widget.attrs.update({
+            'data-ng-model': 'email',
+            'class': 'form-control',
+            'required': 'form-required',
+        })
