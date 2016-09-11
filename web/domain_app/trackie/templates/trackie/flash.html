@@ -1,0 +1,12 @@
+{% if messages %}
+<div class="row messages">
+    <div class="col-xs-12">
+        {% for message in messages %}
+        <div {% if message.tags != "error" %} class="alert alert-{{ message.tags }} alert-dismissible"{% elif message.tags == "error" %} class="alert alert-danger alert-dismissible"{% else %} class="alert alert-warning alert-dismissible"{% endif %} role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message  }}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

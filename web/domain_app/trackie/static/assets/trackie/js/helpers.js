@@ -1,4 +1,5 @@
 function renderFormErrors(element, error, keyPrefix) {
+    keyPrefix = keyPrefix ? keyPrefix : "";
     element.find(".error").remove();
 
     for (var key in error){

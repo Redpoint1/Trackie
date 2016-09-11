@@ -1,6 +1,7 @@
 {% load static %}
 {% load dictionary %}
 
+{% include "trackie/flash.html" %}
 <div class="row">
     <div class="col-sm-7">
         <div class="row">
@@ -18,7 +19,7 @@
         <div class="well">
             <form name="registrationForm" id="registration-form" data-ng-submit="register(username, password1, password2, email)">
                 {% csrf_token %}
-                <div class="form-group" id="non_field_errors"></div>
+                <div class="form-group" id="id_non_field_errors"></div>
                 {% for field in form %}
                     {% with model_name=field.field.widget.attrs|get_item:'data-ng-model' %}
                     <div class="form-group" data-ng-class="{ 'has-error' : registrationForm.{{ model_name }}.$invalid && !registrationForm.{{ model_name }}.$pristine, 'has-success' : registrationForm.{{ model_name }}.$valid && !registrationForm.{{ model_name }}.$pristine }">

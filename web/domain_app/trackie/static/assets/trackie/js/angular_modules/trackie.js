@@ -277,19 +277,11 @@
                     element.find("#login-modal").removeClass("in").hide();
                     element.find("#login-modal-backdrop").fadeOut().removeClass("in");
                 }, function (error) {
-                    element.find("form").find(".error").remove();
-                    for (var key in error){
-                        var list = $("<ul class='error'></ul>");
-                        for (var i=0; i < error[key].length; i++){
-                            list.append("<li>" + error[key][i] + "</li>");
-                        }
-                        element.find("#"+key).append(list);
-                    }
+                    renderFormErrors(element.find("form"), error);
                 });
             };
             scope.logout = function () {
                 djangoAuth.logout().then(function () {
-                    // nothing now, location / maybe?
                 }, function () {
                     $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
                 });
