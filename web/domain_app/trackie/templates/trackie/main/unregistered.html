@@ -1,4 +1,5 @@
 {% load static %}
+{% load dictionary %}
 
 <div class="row">
     <div class="col-sm-7">
@@ -19,10 +20,12 @@
                 {% csrf_token %}
                 <div class="form-group" id="non_field_errors"></div>
                 {% for field in form %}
-                    <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
-                    {{ field }}
+                    {% with model_name=field.field.widget.attrs|get_item:'data-ng-model' %}
+                    <div class="form-group" ng-class="{ 'has-error' : registrationForm.{{ model_name }}.$invalid && !registrationForm.{{ model_name }}.$pristine, 'has-success' : registrationForm.{{ model_name }}.$valid && !registrationForm.{{ model_name }}.$pristine }">
+                        <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+                        {{ field }}
                     </div>
+                    {% endwith %}
                 {% endfor %}
                 <div class="form-group">
                    <button type="submit" ng-disabled="registrationForm.$invalid" class="btn btn-primary">Registrovať sa</button>

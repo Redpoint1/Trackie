@@ -40,11 +40,6 @@
         .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
             djangoAuth.initialize();
             $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
-                // console.log(event);
-                console.log(toState);
-                console.log(toParams);
-                // console.log($location);
-
                 var state = toState.redirectTo ? $route.routes[toState.redirectTo]: toState;
                 djangoAuth.authenticationStatus().then(function () {
                     djangoAuth.checkPageAuth(state.throwAuthError);
@@ -281,7 +276,6 @@
                 djangoAuth.login(username, password).then(function () {
                     element.find("#login-modal").removeClass("in").hide();
                     element.find("#login-modal-backdrop").fadeOut().removeClass("in");
-                    //location /home or if template have 2 modes route reload
                 }, function (error) {
                     element.find("form").find(".error").remove();
                     for (var key in error){
