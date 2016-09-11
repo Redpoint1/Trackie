@@ -10,13 +10,15 @@ class RegisterForm(SignupForm):
             'data-ng-model': 'password1',
             'class': 'form-control',
             'required': 'required',
-            'data-same-value-as': "id_password2"
+            'data-same-value-as': "id_password2",
+            'pattern': ".{6,}",
         })
         if app_settings.SIGNUP_PASSWORD_ENTER_TWICE:
             self.fields['password2'].widget.attrs.update({
                 'data-ng-model': 'password2',
                 'class': 'form-control',
                 'required': 'required',
+                'pattern': ".{6,}",
             })
         if self.username_required:
             self.fields['username'].widget.attrs.update({

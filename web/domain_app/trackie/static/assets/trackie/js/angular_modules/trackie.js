@@ -302,15 +302,19 @@
 
             elem.on("keyup", function () {
                 scope.$apply(function () {
-                    var isValid = elem.val() === secondField.val();
+                    var ngField = ctrl.$$parentForm[secondField.attr("name")];
+                    var isValid = (ctrl.$pristine || ngField.$pristine) ? true : elem.val() === secondField.val();
                     ctrl.$setValidity("sameValue", isValid);
+                    ngField.$setValidity("sameValue", isValid);
                 });
             });
 
             secondField.on("keyup", function () {
                 scope.$apply(function () {
-                    var isValid = elem.val() === secondField.val();
+                    var ngField = ctrl.$$parentForm[secondField.attr("name")];
+                    var isValid = (ctrl.$pristine || ngField.$pristine) ? true : elem.val() === secondField.val()
                     ctrl.$setValidity("sameValue", isValid);
+                    ngField.$setValidity("sameValue", isValid);
                 });
             });
         }
