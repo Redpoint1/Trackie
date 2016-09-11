@@ -332,8 +332,14 @@
     // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
-        $scope.register = function () {
-
+        $scope.register = function (username, pass1, pass2, email) {
+            djangoAuth.register(username, pass1, pass2, email).then(function (data) {
+                djangoAuth.authenticationStatus(false, true).then(function () {
+                    djangoAuth.changedAuth();
+                });
+            }, function (error) {
+                renderFormErrors($("#registration-form"), error, "id_");
+            });
         }
     }]);
 }());

@@ -16,7 +16,7 @@
     </div>
     <div class="col-sm-5">
         <div class="well">
-            <form name="registrationForm" data-ng-submit="register()">
+            <form name="registrationForm" id="registration-form" data-ng-submit="register(username, password1, password2, email)">
                 {% csrf_token %}
                 <div class="form-group" id="non_field_errors"></div>
                 {% for field in form %}
