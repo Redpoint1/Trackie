@@ -27,6 +27,11 @@
                 templateUrl: "main.html",
                 controller: "MainController",
                 reloadAfterAuthChange: true
+            }).when("/profile", {
+                templateUrl: "profile.html",
+                controller: "ProfileController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -282,6 +287,7 @@
             };
             scope.logout = function () {
                 djangoAuth.logout().then(function () {
+                    // TODO: todo (todoception)
                 }, function () {
                     $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
                 });
@@ -337,5 +343,11 @@
                 renderFormErrors($("#registration-form"), error, "id_");
             });
         }
+    }]);
+
+    trackie_module.controller("ProfileController", ["$scope", "djangoAuth", "Restangular" ,function($scope, djangoAuth, Restangular){
+        Restangular.all("auth").customGET("user/").then(function(user){
+            $scope.user = user;
+        });
     }]);
 }());

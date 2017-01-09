@@ -1,4 +1,4 @@
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, UserForm
 import allauth.account.app_settings as app_settings
 
 
@@ -31,3 +31,9 @@ class RegisterForm(SignupForm):
             'class': 'form-control',
             'required': 'required',
         })
+
+
+class ProfileForm(UserForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)

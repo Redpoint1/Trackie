@@ -3,7 +3,7 @@
         <a href="#" onClick="event.preventDefault(); $('#login-modal').show().addClass('in'); $('#login-modal-backdrop').show().addClass('in');"><span class="fa fa-sign-in"></span>&nbsp;Prihlásiť sa</a>
     </li>
     <li data-ng-if="djangoAuth.authenticated">
-        <a href="/lol"><b>{$ djangoAuth.user.username $}</b></a>
+        <a href="/profile"><b>{$ djangoAuth.user.username $}</b></a>
     </li>
     <li data-ng-if="djangoAuth.authenticated">
         <a href="#" data-ng-click="logout()"><span class="fa fa-sign-in"></span>&nbsp;Odhlásiť sa</a>

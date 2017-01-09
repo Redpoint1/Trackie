@@ -5,7 +5,7 @@ import django.http.response as http_response
 
 from django.utils.translation import ugettext_lazy as _
 
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileForm, UserForm
 
 
 class BasePageView(views.TemplateView):
@@ -24,9 +24,23 @@ class MainPageView(views.TemplateView):
         self.form = RegisterForm()
         kwargs['form'] = self.form
         if request.user.is_authenticated():
+            self.form = None
             self.template_name = 'trackie/main/registered.html'
 
         return super(MainPageView, self).get(request, *args, **kwargs)
+
+
+class ProfilePageView(views.TemplateView):
+
+    name = 'trackie.profile'
+    template_name = 'partials/profile/profile.html'
+    form = None
+
+    def get(self, request, *args, **kwargs):
+        self.form = UserForm()
+        kwargs['form'] = self.form
+
+        return super(ProfilePageView, self).get(request, *args, **kwargs)
 
 
 class PartialView(views.TemplateView):
