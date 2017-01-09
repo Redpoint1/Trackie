@@ -32,6 +32,11 @@
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/map", {
+                templateUrl: "partials/map.html",
+                controller: "MapController"
+                //reloadAfterAuthChange: true,
+                //throwAuthError: true
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -287,7 +292,7 @@
             };
             scope.logout = function () {
                 djangoAuth.logout().then(function () {
-                    // TODO: todo (todoception)
+                    //TODO: todo (todoception)
                 }, function () {
                     $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
                 });
@@ -349,5 +354,9 @@
         Restangular.all("auth").customGET("user/").then(function(user){
             $scope.user = user;
         });
+    }]);
+
+    trackie_module.controller("MapController", [function(){
+        // TODO: Map
     }]);
 }());
