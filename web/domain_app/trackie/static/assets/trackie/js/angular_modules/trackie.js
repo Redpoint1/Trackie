@@ -45,7 +45,7 @@
                 redirectTo: "/404"
             });
 
-            $locationProvider.html5Mode(true);
+            //$locationProvider.html5Mode(true);
         }])
         .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
             djangoAuth.initialize();

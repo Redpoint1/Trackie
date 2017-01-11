@@ -19,7 +19,7 @@ urlpatterns = [  # pylint: disable=invalid-name
         name=trackie_views.PartialView.name,
     ),
     url(
-        r'^.*$',  # .*
+        r'^$',  # .*
         view=trackie_views.BasePageView.as_view(),
         name=trackie_views.BasePageView.name
     ),
