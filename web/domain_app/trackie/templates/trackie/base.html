@@ -132,6 +132,12 @@
 
     <script src="{% static 'assets/trackie/js/helpers.js' %}"></script>
     <script src="{% static 'assets/trackie/js/angular_modules/trackie.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'third-party/openlayers/ol.css' %}">
+    <script src="{% static 'third-party/turf/turf.min.js' %}"></script>
+    <script src="{% static 'third-party/openlayers/ol-debug.js' %}"></script>
+    <script src="{% static 'assets/trackie/js/map.js' %}"></script>
+
     {% block footer %}{% endblock %}
 </body>
 </html>

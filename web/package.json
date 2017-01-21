@@ -29,6 +29,7 @@
     "url": "https://github.com/Redpoint1/Trackie/issues"
   },
   "dependencies": {
+    "@turf/turf": "^3.7.4",
     "bower": "^1.7.7",
     "openlayers": "^3.20.1"
   }
