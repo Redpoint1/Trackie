@@ -16,10 +16,15 @@ class RaceAdmin(contrib_admin.ModelAdmin):
 
 
 class RaceTypeAdmin(contrib_admin.ModelAdmin):
-    """ Race tyoe """
+    """ Race type """
     model = trackie_models.RaceType
 
 
 class SportTypeAdmin(contrib_admin.ModelAdmin):
     """ Sport type """
     model = trackie_models.SportType
+
+
+class TrackAdmin(contrib_admin.ModelAdmin):
+    """ Track """
+    model = trackie_models.Track
