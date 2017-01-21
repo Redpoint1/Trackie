@@ -1,5 +1,7 @@
 node_modules/
 bower_components/
+media/
+domain_app/trackie/migrations/
 
 **/*.pyc
 **/*.sqlite3
