@@ -12,7 +12,11 @@ urlpatterns = [  # pylint: disable=invalid-name
 ]
 
 if settings.DEBUG:
+    from django.conf.urls.static import static
     import debug_toolbar  # pylint: disable=wrong-import-position
     urlpatterns.append(
         url(r'^__debug__/', include(debug_toolbar.urls))
+    )
+    urlpatterns.extend(
+        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     )
