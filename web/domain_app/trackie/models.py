@@ -79,25 +79,34 @@ class RaceType(db_models.Model):
         verbose_name = _("Race type")
         verbose_name_plural = _("Race types")
 
-    type = db_models.CharField(
+    name = db_models.CharField(
         blank=False,
         null=False,
         unique=True,
         max_length=255,
-        verbose_name=_("Type"),
+        verbose_name=_("Race type"),
         help_text=_("Type of the race")
+    )
+
+    slug = db_models.SlugField(
+        blank=False,
+        null=False,
+        unique=True,
+        max_length=255,
+        verbose_name=_("Slug"),
+        help_text=_("Name for the API")
     )
 
     icon = db_models.ImageField(
         upload_to="static/images/race/",
         null=True,
-        blank=False,
+        blank=True,
         verbose_name=_("Icon"),
         help_text=_("Choose icon")
     )
 
     def __str__(self):
-        return self.type
+        return self.name
 
 
 class Track(db_models.Model):
@@ -114,6 +123,15 @@ class Track(db_models.Model):
         max_length=255,
         verbose_name=_("Track name"),
         help_text=_("Name of the track"),
+    )
+
+    slug = db_models.SlugField(
+        blank=False,
+        null=False,
+        unique=True,
+        max_length=255,
+        verbose_name=_("Slug"),
+        help_text=_("Name for the API"),
     )
 
     owner = db_models.ForeignKey(
