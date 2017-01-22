@@ -20,7 +20,16 @@ class SportType(db_models.Model):
         unique=True,
         max_length=255,
         verbose_name=_("Sport name"),
-        help_text=_("Name of the sport")
+        help_text=_("Name of the sport"),
+    )
+
+    slug = db_models.SlugField(
+        blank=False,
+        null=False,
+        unique=True,
+        max_length=255,
+        verbose_name=_("Slug"),
+        help_text=_("Name for the API"),
     )
 
     icon = db_models.ImageField(
@@ -28,7 +37,7 @@ class SportType(db_models.Model):
         null=True,
         blank=True,
         verbose_name=_("Icon"),
-        help_text=_("Choose icon")
+        help_text=_("Choose icon"),
     )
 
     def __str__(self):
@@ -47,7 +56,15 @@ class Tournament(db_models.Model):
         blank=False,
         max_length=255,
         verbose_name=_("Name"),
-        help_text=_("Name of the Tournament")
+        help_text=_("Name of the Tournament"),
+    )
+
+    slug = db_models.SlugField(
+        null=False,
+        blank=False,
+        max_length=255,
+        verbose_name=_("Slug"),
+        help_text=_("Name for the API"),
     )
 
     owner = db_models.ForeignKey(
@@ -55,6 +72,7 @@ class Tournament(db_models.Model):
         null=False,
         blank=False,
         on_delete=db_models.CASCADE,
+        related_name="tournaments",
         verbose_name=_("Owner"),
         help_text=_("Administrator of the Tournament"),
     )
@@ -64,6 +82,7 @@ class Tournament(db_models.Model):
         null=True,
         blank=False,
         on_delete=db_models.SET_NULL,
+        related_name="tournaments",
         verbose_name=_("Sport"),
         help_text=_("Type of the sport of the tournament"),
     )
@@ -85,7 +104,7 @@ class RaceType(db_models.Model):
         unique=True,
         max_length=255,
         verbose_name=_("Race type"),
-        help_text=_("Type of the race")
+        help_text=_("Type of the race"),
     )
 
     slug = db_models.SlugField(
@@ -94,7 +113,7 @@ class RaceType(db_models.Model):
         unique=True,
         max_length=255,
         verbose_name=_("Slug"),
-        help_text=_("Name for the API")
+        help_text=_("Name for the API"),
     )
 
     icon = db_models.ImageField(
@@ -102,7 +121,7 @@ class RaceType(db_models.Model):
         null=True,
         blank=True,
         verbose_name=_("Icon"),
-        help_text=_("Choose icon")
+        help_text=_("Choose icon"),
     )
 
     def __str__(self):
@@ -139,6 +158,7 @@ class Track(db_models.Model):
         null=True,
         blank=False,
         on_delete=db_models.SET_NULL,
+        related_name="tracks",
         verbose_name=_("Owner"),
     )
 
@@ -167,7 +187,7 @@ class Race(db_models.Model):
         blank=False,
         max_length=255,
         verbose_name=_("Name"),
-        help_text=_("Name of the race")
+        help_text=_("Name of the race"),
     )
 
     tournament = db_models.ForeignKey(
@@ -176,7 +196,7 @@ class Race(db_models.Model):
         blank=False,
         related_name="races",
         verbose_name=_("Tournament"),
-        help_text=_("Select under which tournament is assigned")
+        help_text=_("Select under which tournament is assigned"),
     )
 
     type = db_models.ForeignKey(
@@ -184,8 +204,9 @@ class Race(db_models.Model):
         null=True,
         blank=False,
         on_delete=db_models.SET_NULL,
+        related_name="races",
         verbose_name=_("Type"),
-        help_text=_("Determine race type")
+        help_text=_("Determine race type"),
     )
 
     track = db_models.ForeignKey(
@@ -193,6 +214,7 @@ class Race(db_models.Model):
         null=True,
         blank=False,
         on_delete=db_models.SET_NULL,
+        related_name="races",
         verbose_name=_("Track"),
         help_text=_("Select track map"),
     )
@@ -209,6 +231,7 @@ class RaceData(db_models.Model):
         null=True,
         blank=False,
         on_delete=db_models.CASCADE,
+        related_name="data",
     )
 
     data = postgres_fields.JSONField()
