@@ -219,6 +219,19 @@ class Race(db_models.Model):
         help_text=_("Select track map"),
     )
 
+    start = db_models.DateTimeField(
+        null=False,
+        blank=False,
+        verbose_name=_("Begins at"),
+    )
+
+    duration = db_models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Duration"),
+        help_text=_("Estimated time"),
+    )
+
     def __str__(self):
         return self.name
 
@@ -232,6 +245,12 @@ class RaceData(db_models.Model):
         blank=False,
         on_delete=db_models.CASCADE,
         related_name="data",
+    )
+
+    received = db_models.DateTimeField(
+        null=False,
+        blank=False,
+        auto_now_add=True,
     )
 
     data = postgres_fields.JSONField()
