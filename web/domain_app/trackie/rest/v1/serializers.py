@@ -78,3 +78,4 @@ class RaceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Race
+        fields = "__all__"
