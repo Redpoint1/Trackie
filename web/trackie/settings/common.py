@@ -45,11 +45,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'django.contrib.gis',
 
     # 3d party
     'django_extensions',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_gis',
     'rest_auth',
     'allauth',
     'allauth.account',
@@ -140,7 +142,7 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': os.environ.get('DB_NAME', 'trackie'),
         'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PASS', 'root'),
