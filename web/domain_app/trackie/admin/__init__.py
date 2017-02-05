@@ -2,7 +2,7 @@
 
 import inspect
 
-from django.contrib.admin.options import BaseModelAdmin
+from django.contrib.admin.options import ModelAdmin
 import django.contrib.admin.sites as contrib_admin
 
 from . import models as trackie_admin_models
@@ -11,7 +11,7 @@ to_add_models = []  # pylint: disable=invalid-name
 
 for attr in dir(trackie_admin_models):
     cls = getattr(trackie_admin_models, attr)
-    if inspect.isclass(cls) and issubclass(cls, BaseModelAdmin):
+    if inspect.isclass(cls) and issubclass(cls, ModelAdmin):
         to_add_models.append(cls)
 
 for admin_model in to_add_models:

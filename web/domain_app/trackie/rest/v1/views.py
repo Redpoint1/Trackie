@@ -92,3 +92,10 @@ class TournamentRacesEndpoint(views.ListAPIView):
         return models.Tournament.objects.get(**self.kwargs).races.all()
 
 
+class RacerEndpoints(views.RetrieveAPIView):
+    """ Racer detail """
+    name = "racer-detail"
+    serializer_class = serializers.RacerSerializer
+    queryset = models.Racer.objects.all()
+
+

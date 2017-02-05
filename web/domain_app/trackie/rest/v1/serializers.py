@@ -70,11 +70,44 @@ class TrackSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 
+class RacerInRaceSerializer(serializers.ModelSerializer):
+    id = serializers.Field(source='group.id')
+    number = serializers.Field(source='group.name')
+
+    class Meta:
+        model = models.RacerInRace
+        exclude = ("racer", "race",)
+
+
+class RacerSerializer(serializers.HyperlinkedModelSerializer):
+    number = serializers.SerializerMethodField("get_num")
+
+    def get_num(self, instance):
+        item = self.context["view"].queryset[0].race
+        racer_rel = models.RacerInRace.objects.get(racer=instance, race=item)
+        return racer_rel.number
+
+    class Meta:
+        model = models.Racer
+        fields = "__all__"
+
+
 class RaceSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.PrimaryKeyRelatedField(read_only=True)
     type = RaceTypeSerializer()
     track = TrackSerializer()
     tournament = TournamentSerializer()
+    data = serializers.SerializerMethodField("data_url")
+
+    def data_url(self, obj):
+        kwargs = {
+            "race_pk": obj.pk,
+        }
+        return reverse.reverse(
+            "racedata-list",
+            kwargs=kwargs,
+            request=self.context.get("request")
+        )
 
     class Meta:
         model = models.Race

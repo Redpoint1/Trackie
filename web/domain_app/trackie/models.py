@@ -1,6 +1,6 @@
 """ Domain specific DB models """
 
-import django.db.models as db_models
+import django.contrib.gis.db.models as db_models
 import django.contrib.auth.models as auth_model
 import django.contrib.postgres.fields as postgres_fields
 
@@ -175,6 +175,26 @@ class Track(db_models.Model):
         return self.name
 
 
+class Racer(db_models.Model):
+    """ Racer """
+    first_name = db_models.CharField(
+        null=False,
+        blank=False,
+        max_length=255,
+        verbose_name=_("First name"),
+    )
+
+    last_name = db_models.CharField(
+        null=False,
+        blank=False,
+        max_length=255,
+        verbose_name=_("Last name"),
+    )
+
+    def __str__(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+
 class Race(db_models.Model):
     """ Race """
 
@@ -225,11 +245,22 @@ class Race(db_models.Model):
         verbose_name=_("Begins at"),
     )
 
-    duration = db_models.DateTimeField(
+    stream_start = db_models.DateTimeField(
+        null=True,
+        blank=False,
+        verbose_name=_("Stream has been started")
+    )
+
+    end = db_models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name=_("Duration"),
-        help_text=_("Estimated time"),
+    )
+
+    participants = db_models.ManyToManyField(
+        Racer,
+        blank=False,
+        through="RacerInRace",
+        through_fields=("race", "racer"),
     )
 
     def __str__(self):
@@ -250,7 +281,37 @@ class RaceData(db_models.Model):
     received = db_models.DateTimeField(
         null=False,
         blank=False,
-        auto_now_add=True,
     )
 
+    racer = db_models.ForeignKey(
+        Racer,
+        null=False,
+        blank=False,
+        on_delete=db_models.DO_NOTHING,
+    )
+
+    position = db_models.PointField()
+
     data = postgres_fields.JSONField()
+
+
+class RacerInRace(db_models.Model):
+    """ Racer in a race """
+
+    racer = db_models.ForeignKey(
+        Racer,
+        null=False,
+        blank=False,
+        on_delete=db_models.CASCADE,
+        related_name="races",
+    )
+
+    race = db_models.ForeignKey(
+        Race,
+        null=False,
+        blank=False,
+        on_delete=db_models.CASCADE,
+        related_name="racers",
+    )
+
+    number = db_models.IntegerField()

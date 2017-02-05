@@ -1,8 +1,17 @@
 """ Rest api urls v1 for domain """
 
 from django.conf.urls import url
+from rest_framework import routers
 
 from . import views as trackie_rest_v1_views
+from .models.racedata import RaceDataViewSet
+
+router = routers.SimpleRouter()
+router.register(
+    r'race/(?P<race_pk>\d+)/data',
+    RaceDataViewSet,
+    base_name="racedata",
+)
 
 urlpatterns = [  # pylint: disable=invalid-name
     url(r'^races/$',
@@ -49,4 +58,10 @@ urlpatterns = [  # pylint: disable=invalid-name
         view=trackie_rest_v1_views.TournamentRacesEndpoint.as_view(),
         name=trackie_rest_v1_views.TournamentRacesEndpoint.name
         ),
+    url(r'^racer/(?P<pk>[\d]+)$',
+        view=trackie_rest_v1_views.RacerEndpoints.as_view(),
+        name=trackie_rest_v1_views.RacerEndpoints.name
+        ),
 ]
+
+urlpatterns += router.urls

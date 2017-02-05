@@ -10,9 +10,15 @@ class TournamentAdmin(contrib_admin.ModelAdmin):
     model = trackie_models.Tournament
 
 
+class ParticipantsInline(contrib_admin.TabularInline):
+    model = trackie_models.RacerInRace
+    extra = 2 # how many rows to show
+
+
 class RaceAdmin(contrib_admin.ModelAdmin):
     """ Race """
     model = trackie_models.Race
+    inlines = (ParticipantsInline,)
 
 
 class RaceTypeAdmin(contrib_admin.ModelAdmin):
@@ -28,3 +34,8 @@ class SportTypeAdmin(contrib_admin.ModelAdmin):
 class TrackAdmin(contrib_admin.ModelAdmin):
     """ Track """
     model = trackie_models.Track
+
+
+class RacerAdmin(contrib_admin.ModelAdmin):
+    """ Racer """
+    model = trackie_models.Racer
