@@ -85,9 +85,9 @@ class RaceDataViewSet(viewsets.ModelViewSet):
                         ).format(request.data["racer"])})
             return super(RaceDataViewSet, self).create(request, *args, **kwargs)
 
-    def destroy(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         race = Race.objects.get(pk=kwargs["race_pk"])
         race.end = datetime.now()
         race.save()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
