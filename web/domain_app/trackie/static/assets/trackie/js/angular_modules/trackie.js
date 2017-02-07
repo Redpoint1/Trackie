@@ -381,13 +381,15 @@
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
 
                 get_race_data(promise, $scope, track_data_source, projection);
-                $scope.data_interval = $interval(function () {
-                    get_race_data(promise, $scope, track_data_source, projection);
-                }, 5000);
+                if (!data.end) {
+                    $scope.data_interval = $interval(function () {
+                        get_race_data(promise, $scope, track_data_source, projection);
+                    }, 5000);
 
-                $scope.$on("$destroy", function(){
-                    $interval.cancel($scope.data_interval);
-                })
+                    $scope.$on("$destroy", function(){
+                        $interval.cancel($scope.data_interval);
+                    })
+                }
             });
         });
     }]);
