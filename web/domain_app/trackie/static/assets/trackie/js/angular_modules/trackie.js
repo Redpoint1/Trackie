@@ -19,7 +19,7 @@
             $httpProvider.defaults.xsrfHeaderName = "X-CSRFToken";
         }])
         .config(["RestangularProvider", function (RestangularProvider) {
-            RestangularProvider.setBaseUrl("/api/v1");
+            RestangularProvider.setBaseUrl("/api/v1/trackie");
             //RestangularProvider.setRequestSuffix("/");
         }])
         .config(["$routeProvider", "$locationProvider", "VARS", function ($routeProvider, $locationProvider, VARS) {
@@ -32,7 +32,7 @@
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
-            }).when("/map", {
+            }).when("/race/:id", {
                 templateUrl: "partials/map.html",
                 controller: "MapController"
                 //reloadAfterAuthChange: true,
@@ -296,7 +296,7 @@
                 }, function () {
                     $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
                 });
-            }
+            };
         }
 
         return {
@@ -356,7 +356,34 @@
         });
     }]);
 
-    trackie_module.controller("MapController", [function(){
-        // TODO: Map
+    trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", function($scope, $routeParams, $interval, Restangular){
+        function get_race_data(promise, scope, ol_source, projection) {
+            promise.get().then(function (race_data) {
+                scope.race_data = race_data;
+                ol_source.clear();
+                var format = new ol.format.GeoJSON();
+                var features = format.readFeatures(race_data, {featureProjection: projection});
+                ol_source.addFeatures(features);
+            });
+        }
+
+        var race = Restangular.one("race", $routeParams.id);
+        race.get().then(function(data){
+            $scope.race = data;
+
+            Restangular.oneUrl("track", $scope.race.track.file).get().then(function(json){
+                var format = new ol.format.GPX();
+                var features = format.readFeatures(json, {featureProjection: "EPSG:3857"});
+                var promise = race.one("data");
+
+                track_source.addFeatures(features);
+                map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
+
+                get_race_data(promise, $scope, track_data_source, "EPSG:3857");
+                $interval(function () {
+                    get_race_data(promise, $scope, track_data_source, "EPSG:3857");
+                }, 5000);
+            });
+        });
     }]);
 }());

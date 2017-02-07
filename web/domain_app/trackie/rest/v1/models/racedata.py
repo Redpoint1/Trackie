@@ -2,7 +2,7 @@ from django.utils.timezone import datetime
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status
 from rest_framework.exceptions import ValidationError
-from rest_framework.pagination import LimitOffsetPagination
+# from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.serializers import HyperlinkedRelatedField, RelatedField
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
@@ -10,9 +10,9 @@ from ....models import RaceData, Race, Racer
 from ..serializers import RaceSerializer, RacerSerializer
 
 
-class RaceDataPaginator(LimitOffsetPagination):
-    default_limit = 50
-    max_limit = 100
+# class RaceDataPaginator(LimitOffsetPagination):
+#     default_limit = 50
+#     max_limit = 100
 
 
 class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
@@ -30,7 +30,7 @@ class RaceDataGeoJSONSerializer(RaceDataGeoJSONPostSerializer):
 
 
 class RaceDataViewSet(viewsets.ModelViewSet):
-    pagination_class = RaceDataPaginator
+    # pagination_class = RaceDataPaginator
     queryset = Race.objects.all()
 
     def list(self, request, *args, **kwargs):
