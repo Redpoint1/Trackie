@@ -59,8 +59,12 @@ urlpatterns = [  # pylint: disable=invalid-name
         name=trackie_rest_v1_views.TournamentRacesEndpoint.name
         ),
     url(r'^racer/(?P<pk>[\d]+)$',
-        view=trackie_rest_v1_views.RacerEndpoints.as_view(),
-        name=trackie_rest_v1_views.RacerEndpoints.name
+        view=trackie_rest_v1_views.RacerEndpoint.as_view(),
+        name=trackie_rest_v1_views.RacerEndpoint.name
+        ),
+    url(r'^projection/(?P<pk>[\d]+)$',
+        view=trackie_rest_v1_views.ProjectionEndpoint.as_view(),
+        name=trackie_rest_v1_views.ProjectionEndpoint.name
         ),
 ]
 

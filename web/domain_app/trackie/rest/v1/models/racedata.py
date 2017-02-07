@@ -36,7 +36,9 @@ class RaceDataViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.serializer_class = RaceDataGeoJSONSerializer
         last = Race.objects.get(pk=kwargs["race_pk"]).data.last()
-        self.queryset = Race.objects.get(pk=kwargs["race_pk"]).data.filter(received=last.received)
+        self.queryset = Race.objects.get(pk=kwargs["race_pk"]).data
+        if last:
+            self.queryset = self.queryset.filter(received=last.received)
         return super(RaceDataViewSet, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):

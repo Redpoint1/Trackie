@@ -92,12 +92,18 @@ class RacerSerializer(serializers.HyperlinkedModelSerializer):
         fields = "__all__"
 
 
+class ProjectionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = models.Projection
+        fields = "__all__"
+
+
 class RaceSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(read_only=True)
     type = RaceTypeSerializer()
     track = TrackSerializer()
     tournament = TournamentSerializer()
     data = serializers.SerializerMethodField("data_url")
+    projection = ProjectionSerializer()
 
     def data_url(self, obj):
         kwargs = {

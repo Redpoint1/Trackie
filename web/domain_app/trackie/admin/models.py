@@ -19,6 +19,7 @@ class RaceAdmin(contrib_admin.ModelAdmin):
     """ Race """
     model = trackie_models.Race
     inlines = (ParticipantsInline,)
+    exclude = ("end",)
 
 
 class RaceTypeAdmin(contrib_admin.ModelAdmin):
@@ -39,3 +40,7 @@ class TrackAdmin(contrib_admin.ModelAdmin):
 class RacerAdmin(contrib_admin.ModelAdmin):
     """ Racer """
     model = trackie_models.Racer
+
+class ProjectionAdmin(contrib_admin.ModelAdmin):
+    """ Projection """
+    model = trackie_models.Projection

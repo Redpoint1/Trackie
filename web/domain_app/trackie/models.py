@@ -177,6 +177,11 @@ class Track(db_models.Model):
 
 class Racer(db_models.Model):
     """ Racer """
+
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
+        verbose_name = _("Racer")
+        verbose_name_plural = _("Racers")
+
     first_name = db_models.CharField(
         null=False,
         blank=False,
@@ -193,6 +198,24 @@ class Racer(db_models.Model):
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)
+
+
+class Projection(db_models.Model):
+    """ Projection """
+
+    class Meta:  # pylint: disable=missing-docstring,no-init,old-style-class
+        verbose_name = _("Projection")
+        verbose_name_plural = _("Projections")
+
+    code = db_models.CharField(
+        null=False,
+        blank=False,
+        max_length=255,
+        unique=True,
+    )
+
+    def __str__(self):
+        return self.code
 
 
 class Race(db_models.Model):
@@ -245,15 +268,25 @@ class Race(db_models.Model):
         verbose_name=_("Begins at"),
     )
 
-    stream_start = db_models.DateTimeField(
-        null=True,
-        blank=False,
-        verbose_name=_("Stream has been started")
-    )
-
     end = db_models.DateTimeField(
         null=True,
         blank=True,
+    )
+
+    estimated_duration = db_models.IntegerField(
+        null=True,
+        blank=False,
+        verbose_name=_("Estimated duration"),
+        help_text=_("In minutes")
+    )
+
+    projection = db_models.ForeignKey(
+        Projection,
+        null=True,
+        blank=True,
+        on_delete=db_models.SET_NULL,
+        verbose_name=_("Projection"),
+        help_text=_("Default is {}").format("EPSG:3857"),
     )
 
     participants = db_models.ManyToManyField(

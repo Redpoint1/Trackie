@@ -369,20 +369,25 @@
 
         var race = Restangular.one("race", $routeParams.id);
         race.get().then(function(data){
+            var projection = data.projection ? data.projection.code : "EPSG:3857";
             $scope.race = data;
 
             Restangular.oneUrl("track", $scope.race.track.file).get().then(function(json){
                 var format = new ol.format.GPX();
-                var features = format.readFeatures(json, {featureProjection: "EPSG:3857"});
+                var features = format.readFeatures(json, {featureProjection: projection});
                 var promise = race.one("data");
 
                 track_source.addFeatures(features);
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
 
-                get_race_data(promise, $scope, track_data_source, "EPSG:3857");
-                $interval(function () {
-                    get_race_data(promise, $scope, track_data_source, "EPSG:3857");
+                get_race_data(promise, $scope, track_data_source, projection);
+                $scope.data_interval = $interval(function () {
+                    get_race_data(promise, $scope, track_data_source, projection);
                 }, 5000);
+
+                $scope.$on("$destroy", function(){
+                    $interval.cancel($scope.data_interval);
+                })
             });
         });
     }]);
