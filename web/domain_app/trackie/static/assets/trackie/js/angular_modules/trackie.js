@@ -20,6 +20,7 @@
         }])
         .config(["RestangularProvider", function (RestangularProvider) {
             RestangularProvider.setBaseUrl("/api/v1/trackie");
+            RestangularProvider.setFullResponse(true);
             //RestangularProvider.setRequestSuffix("/");
         }])
         .config(["$routeProvider", "$locationProvider", "VARS", function ($routeProvider, $locationProvider, VARS) {
@@ -359,29 +360,36 @@
     trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", function($scope, $routeParams, $interval, Restangular){
         function get_race_data(promise, scope, ol_source, projection) {
             promise.get().then(function (race_data) {
-                scope.race_data = race_data;
+                if (race_data.status == 204) {
+                    $interval.cancel(scope.data_interval);
+                    console.log("Race stream has been ended");
+                    return;
+                }
+                scope.race_data = race_data.data;
                 ol_source.clear();
                 var format = new ol.format.GeoJSON();
-                var features = format.readFeatures(race_data, {featureProjection: projection});
+                var features = format.readFeatures(race_data.data, {featureProjection: projection});
                 ol_source.addFeatures(features);
+            }, function(response) {
+                console.log(response);
             });
         }
 
         var race = Restangular.one("race", $routeParams.id);
-        race.get().then(function(data){
-            var projection = data.projection ? data.projection.code : "EPSG:3857";
-            $scope.race = data;
+        race.get().then(function(response){
+            var projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
+            $scope.race = response.data;
 
             Restangular.oneUrl("track", $scope.race.track.file).get().then(function(json){
                 var format = new ol.format.GPX();
-                var features = format.readFeatures(json, {featureProjection: projection});
+                var features = format.readFeatures(json.data, {featureProjection: projection});
                 var promise = race.one("data");
 
                 track_source.addFeatures(features);
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
 
                 get_race_data(promise, $scope, track_data_source, projection);
-                if (!data.end) {
+                if (!response.data.end) {
                     $scope.data_interval = $interval(function () {
                         get_race_data(promise, $scope, track_data_source, projection);
                     }, 5000);
