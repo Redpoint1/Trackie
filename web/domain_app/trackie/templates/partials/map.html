@@ -1,9 +1,16 @@
 {% load static %}
 
-<div class="row">
+<div class="row" data-ng-show="race">
+    <div class="col-xs-12">
+        <h3 style="margin-top:0;">{$ race.name $}</h3>
+        <a data-ng-href="#/race-type/{$ race.type.slug $}" target="_self">{$ race.type.name $}</a> -
+        <a data-ng-href="#/tournament/{$ race.tournament.slug $}" target="_self">{$ race.tournament.name $}</a> -
+        <a data-ng-href="#/sport/{$ race.tournament.sport.slug $}" target="_self">{$ race.tournament.sport.name $}</a>
+    </div>
+</div>
+<div class="row" data-ng-show="race">
     <div class="col-xs-12">
         <script src="{% static 'assets/trackie/js/map.js' %}"></script>
-        <div id="map" class="map"></div>
+        <div id="map" class="map" style="max-height: 500px;"></div>
     </div>
-    <div class="col-xs-12">{$ race.name $}</div>
 </div>

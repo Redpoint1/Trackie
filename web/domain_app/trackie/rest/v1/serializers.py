@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RaceTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.RaceType
-        exclude = ("slug",)
+        fields = "__all__"
         extra_kwargs = {
             "url": {
                 "lookup_field": "slug",
@@ -24,7 +24,8 @@ class RaceTypeSerializer(serializers.HyperlinkedModelSerializer):
 class SportTypeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = models.SportType
-        exclude = ("slug",)
+        fields = "__all__"
+
         extra_kwargs = {
             "url": {
                 "lookup_field": "slug",
@@ -36,6 +37,7 @@ class TournamentSerializer(serializers.HyperlinkedModelSerializer):
     # override relation
     races = serializers.SerializerMethodField("races_url")
     sport = SportTypeSerializer()
+    owner = UserSerializer()
 
     def races_url(self, obj):
         kwargs = {
@@ -49,7 +51,7 @@ class TournamentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Tournament
-        fields = ("name", "sport", "url", "races",)
+        fields = "__all__"
         extra_kwargs = {
             "url": {
                 "lookup_field": "slug",
@@ -62,7 +64,7 @@ class TrackSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = models.Track
-        exclude = ("slug",)
+        fields = "__all__"
         extra_kwargs = {
             "url": {
                 "lookup_field": "slug",
