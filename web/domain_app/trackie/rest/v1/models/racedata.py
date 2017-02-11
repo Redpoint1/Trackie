@@ -1,6 +1,6 @@
 from django.utils.timezone import datetime
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, exceptions
 from rest_framework.exceptions import ValidationError
 # from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
@@ -13,6 +13,11 @@ from ..serializers import RaceSerializer, RacerSerializer
 # class RaceDataPaginator(LimitOffsetPagination):
 #     default_limit = 50
 #     max_limit = 100
+
+class RaceFinishedException(exceptions.APIException):
+    status_code = status.HTTP_403_FORBIDDEN
+    default_detail = _("The race has already been ended.")
+    default_code = 'forbidden'
 
 
 class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
@@ -35,7 +40,10 @@ class RaceDataViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         self.serializer_class = RaceDataGeoJSONSerializer
-        last = Race.objects.get(pk=kwargs["race_pk"]).data.last()
+        race = Race.objects.get(pk=kwargs["race_pk"])
+        if race.end:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        last = race.data.last()
         self.queryset = Race.objects.get(pk=kwargs["race_pk"]).data
         if last:
             self.queryset = self.queryset.filter(received=last.received)
@@ -45,6 +53,8 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         bulk = isinstance(request.data, list)
         self.serializer_class = RaceDataGeoJSONPostSerializer
         race = Race.objects.get(pk=kwargs["race_pk"])
+        if race.end:
+            raise RaceFinishedException
         racers = race.racers.all().values("number", "racer")
         # dict(racer.number: racer.id)
         racers = dict([(racer["number"], racer["racer"]) for racer in racers])
