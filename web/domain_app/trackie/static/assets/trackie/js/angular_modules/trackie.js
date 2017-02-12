@@ -8,8 +8,8 @@
             "FORBIDDEN_URL": "/forbidden"
         })
         .config(["$interpolateProvider", function ($interpolateProvider) {
-            $interpolateProvider.startSymbol("{$");
-            $interpolateProvider.endSymbol("$}");
+            // $interpolateProvider.startSymbol("{$");
+            // $interpolateProvider.endSymbol("$}");
         }])
         .config(["$resourceProvider", function($resourceProvider) {
             $resourceProvider.defaults.stripTrailingSlashes = false;
@@ -366,6 +366,7 @@
                     return;
                 }
                 scope.race_data = race_data.data;
+
                 ol_source.clear();
                 var format = new ol.format.GeoJSON();
                 var features = format.readFeatures(race_data.data, {featureProjection: projection});
