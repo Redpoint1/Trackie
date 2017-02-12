@@ -1,12 +1,59 @@
 (function () {
     "use strict";
-    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "restangular"])
+    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid"])
         .constant("CONFIG", {
             "DEBUG": false
         })
         .constant("VARS", {
-            "FORBIDDEN_URL": "/forbidden"
+            "FORBIDDEN_URL": "/forbidden",
+            "PARTIALS_REGEX": /partials\/.+/
         })
+        .config(["$provide", function ($provide) {
+            $provide.decorator("$templateCache", [
+                "$delegate", function ($delegate) {
+
+                    var keys = [];
+                    var origPut = $delegate.put;
+                    var origRemove = $delegate.remove;
+                    var origRemoveAll = $delegate.removeAll;
+
+                    $delegate.put = function (key, value) {
+                        origPut(key, value);
+                        keys.push(key);
+                    };
+
+                    $delegate.remove = function (key) {
+                        origRemove(key);
+                        _.pull(keys, key);
+                    };
+
+                    $delegate.removeAll = function () {
+                        origRemoveAll();
+                        keys = [];
+                    };
+
+                    $delegate.put = function (key, value) {
+                        origPut(key, value);
+                        keys.push(key);
+                    };
+
+                    $delegate.getKeys = function () {
+                        return keys;
+                    };
+
+                    $delegate.removeAllByKey = function (regex) {
+                        var keysToDelete = _.filter($delegate.getKeys(), function(n){
+                            return regex.test(n);
+                        });
+                        _.forEach(keysToDelete, function(key){
+                           $delegate.remove(key);
+                        });
+                    };
+
+                    return $delegate;
+                }
+            ]);
+        }])
         .config(["$interpolateProvider", function ($interpolateProvider) {
             // $interpolateProvider.startSymbol("{$");
             // $interpolateProvider.endSymbol("$}");
@@ -223,14 +270,14 @@
                 } else {
                     this.authPromise.then(function (data) {
                         if (!self.authenticated) {
-                            $templateCache.removeAll();
+                            $templateCache.removeAllByKey(VARS.PARTIALS_REGEX);
                         }
                         self.authenticated = true;
                         self.user = data;
                         defer.resolve();
                     }, function () {
                         if (self.authenticated) {
-                            $templateCache.removeAll();
+                            $templateCache.removeAllByKey(VARS.PARTIALS_REGEX);
                         }
                         self.authenticated = false;
                         self.user = null;
@@ -244,7 +291,7 @@
                 return defer.promise;
             },
             "changedAuth": function () {
-                $templateCache.removeAll();
+                $templateCache.removeAllByKey(VARS.PARTIALS_REGEX);
                 var route = $route.current.redirectTo ? $route.routes[$route.current.redirectTo] : $route.current;
                 this.checkPageAuth(route.throwAuthError, route.reloadAfterAuthChange);
             },
@@ -357,7 +404,7 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", function($scope, $routeParams, $interval, Restangular){
+    trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", "uiGridConstants", function($scope, $routeParams, $interval, Restangular, uiGridConstants){
         function get_race_data(promise, scope, ol_source, projection) {
             promise.get().then(function (race_data) {
                 if (race_data.status == 204) {
@@ -366,6 +413,7 @@
                     return;
                 }
                 scope.race_data = race_data.data;
+                scope.gridOptions.data = race_data.data.features;
 
                 ol_source.clear();
                 var format = new ol.format.GeoJSON();
@@ -375,6 +423,15 @@
                 console.log(response);
             });
         }
+
+        $scope.gridOptions = {
+            columnDefs: [
+                {name:"number", field: "properties.racer.number"},
+                {name:"first name", field: "properties.racer.first_name"},
+                {name:"last name", field: "properties.racer.last_name"},
+                {name:"time", field: "properties.racer.data.time"}
+            ]
+        };
 
         var race = Restangular.one("race", $routeParams.id);
         race.get().then(function(response){

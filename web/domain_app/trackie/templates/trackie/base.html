@@ -6,7 +6,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <base href="/">
     <title>{% block title %}Trackie{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>
@@ -116,6 +115,7 @@
     <link rel="stylesheet" href="{% static 'third-party/font-awesome/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'third-party/angular/angular-csp.css' %}">
     <link rel="stylesheet" href="{% static 'third-party/openlayers/ol.css' %}">
+    <link rel="stylesheet" href="{% static 'third-party/angular-ui-grid/ui-grid.min.css' %}">
 
     <link rel="stylesheet" href="{% static 'assets/trackie/css/bootstrap-trackie.css' %}">
     <link rel="stylesheet" href="{% static 'assets/trackie/css/custom-trackie.css' %}">
@@ -128,14 +128,16 @@
     <script src="{% static 'third-party/angular-sanitize/angular-sanitize.min.js' %}"></script>
     <script src="{% static 'third-party/angular-resource/angular-resource.min.js' %}"></script>
     <script src="{% static 'third-party/angular-cookies/angular-cookies.min.js' %}"></script>
+    <script src="{% static 'third-party/angular-touch/angular-touch.min.js' %}"></script>
+    <script src="{% static 'third-party/angular-animate/angular-animate.min.js' %}"></script>
     <script src="{% static 'third-party/lodash/lodash.min.js' %}"></script>
     <script src="{% static 'third-party/restangular/restangular.min.js' %}"></script>
-    <script src="{% static 'third-party/openlayers/ol-debug.js' %}"></script>
+    <script src="{% static 'third-party/angular-ui-grid/ui-grid.min.js' %}"></script>
+    <script src="{% static 'third-party/openlayers/ol.js' %}"></script>
     <script src="{% static 'third-party/turf/turf.min.js' %}"></script>
 
     <script src="{% static 'assets/trackie/js/helpers.js' %}"></script>
     <script src="{% static 'assets/trackie/js/angular_modules/trackie.js' %}"></script>
-    <script src="{% static 'assets/trackie/js/map.js' %}"></script>
 
     {% block footer %}{% endblock %}
 </body>
