@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid"])
+    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid", "ui.grid.selection", "ui.grid.saveState", "ui.grid.pagination"])
         .constant("CONFIG", {
             "DEBUG": false
         })
@@ -425,11 +425,23 @@
         }
 
         $scope.gridOptions = {
+            primaryKey: "properties.racer.number",
+            enableRowSelection: true,
+            multiSelect: true,
+            enableSelectAll: true,
+            paginationPageSizes: false,
+            paginationPageSize: 10,
+            rowIdentity: function (row) {
+                return row.properties.racer.number;
+            },
+            onRegisterApi: function(gridApi){
+                $scope.gridApi = gridApi;
+            },
             columnDefs: [
-                {name:"number", field: "properties.racer.number"},
-                {name:"first name", field: "properties.racer.first_name"},
-                {name:"last name", field: "properties.racer.last_name"},
-                {name:"time", field: "properties.racer.data.time"}
+                {name:"Číslo", field: "properties.racer.number"},
+                {name:"Meno", field: "properties.racer.first_name"},
+                {name:"Priezvisko", field: "properties.racer.last_name"},
+                {name:"Čas", field: "properties.data.time"}
             ]
         };
 

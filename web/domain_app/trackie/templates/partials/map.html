@@ -16,8 +16,8 @@
         <div id="map" class="map" style="max-height: 500px;"></div>
     </div>
 </div>
-<div class="row">
+<div class="row" data-ng-show="gridOptions.data">
     <div class="col-xs-12">
-        <div ui-grid="gridOptions" class="grid"></div>
+        <div ui-grid="gridOptions" data-ui-grid-selection data-ui-grid-pagination class="grid"></div>
     </div>
 </div>
