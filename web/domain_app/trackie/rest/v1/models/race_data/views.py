@@ -4,34 +4,20 @@ from rest_framework import viewsets, status, exceptions
 from rest_framework.exceptions import ValidationError
 # from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
-from rest_framework.serializers import HyperlinkedRelatedField, RelatedField
-from rest_framework_gis.serializers import GeoFeatureModelSerializer
-from ....models import RaceData, Race, Racer
-from ..serializers import RaceSerializer, RacerSerializer
-
+from .serializers import (RaceDataGeoJSONPostSerializer,
+                          RaceDataGeoJSONSerializer)
+from ..race.serializers import RaceSerializer
+from ......trackie.models import Race
 
 # class RaceDataPaginator(LimitOffsetPagination):
 #     default_limit = 50
 #     max_limit = 100
 
+
 class RaceFinishedException(exceptions.APIException):
     status_code = status.HTTP_403_FORBIDDEN
     default_detail = _("The race has already been ended.")
     default_code = 'forbidden'
-
-
-class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
-    race = HyperlinkedRelatedField("race-detail", queryset=Race.objects.all())
-
-    class Meta:
-        model = RaceData
-        geo_field = "position"
-        exclude = []
-
-
-class RaceDataGeoJSONSerializer(RaceDataGeoJSONPostSerializer):
-    race = HyperlinkedRelatedField("race-detail", read_only=True)
-    racer = RacerSerializer()
 
 
 class RaceDataViewSet(viewsets.ModelViewSet):

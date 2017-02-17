@@ -85,6 +85,11 @@
                 controller: "MapController"
                 //reloadAfterAuthChange: true,
                 //throwAuthError: true
+            }).when("/map/add", {
+                templateUrl: "partials/map_add.html",
+                controller: "MapAddController"
+                //reloadAfterAuthChange: true,
+                //throwAuthError: true
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -445,12 +450,12 @@
             ]
         };
 
-        var race = Restangular.one("race", $routeParams.id);
+        var race = Restangular.one("races", $routeParams.id);
         race.get().then(function(response){
             var projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
             $scope.race = response.data;
 
-            Restangular.oneUrl("track", $scope.race.track.file).get().then(function(json){
+            Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function(json){
                 var format = new ol.format.GPX();
                 var features = format.readFeatures(json.data, {featureProjection: projection});
                 var promise = race.one("data");

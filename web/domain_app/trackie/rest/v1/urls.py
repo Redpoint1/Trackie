@@ -3,69 +3,70 @@
 from django.conf.urls import url
 from rest_framework import routers
 
-from . import views as trackie_rest_v1_views
-from .models.racedata import RaceDataViewSet
+from .models.race_data.views import RaceDataViewSet
+from .models.race.views import RaceViewSet, TournamentRacesViewSet
+from .models.race_type.views import RaceTypeViewSet
+from .models.sport_type.views import SportTypeViewSet
+from .models.track.views import TrackViewSet
+from .models.tournament.views import TournamentViewSet
+from .models.racer.views import RacerViewSet
+from .models.projection.views import ProjectionViewSet
+
 
 router = routers.SimpleRouter()
+
 router.register(
-    r'race/(?P<race_pk>\d+)/data',
+    r'races/(?P<race_pk>\d+)/data',
     RaceDataViewSet,
     base_name="racedata",
 )
 
-urlpatterns = [  # pylint: disable=invalid-name
-    url(r'^races/$',
-        view=trackie_rest_v1_views.RacesEndpoint.as_view(),
-        name=trackie_rest_v1_views.RacesEndpoint.name
-        ),
-    url(r'^race/(?P<pk>\d+)$',
-        view=trackie_rest_v1_views.RaceEndpoint.as_view(),
-        name=trackie_rest_v1_views.RaceEndpoint.name
-        ),
-    url(r'^race-types/$',
-        view=trackie_rest_v1_views.RaceTypesEndpoint.as_view(),
-        name=trackie_rest_v1_views.RaceTypesEndpoint.name
-        ),
-    url(r'^race-type/(?P<slug>[-_\w]+)$',
-        view=trackie_rest_v1_views.RaceTypeEndpoint.as_view(),
-        name=trackie_rest_v1_views.RaceTypeEndpoint.name
-        ),
-    url(r'^sport-types/$',
-        view=trackie_rest_v1_views.SportTypesEndpoint.as_view(),
-        name=trackie_rest_v1_views.SportTypesEndpoint.name
-        ),
-    url(r'^sport-type/(?P<slug>[-_\w]+)$',
-        view=trackie_rest_v1_views.SportTypeEndpoint.as_view(),
-        name=trackie_rest_v1_views.SportTypeEndpoint.name
-        ),
-    url(r'^tracks/$',
-        view=trackie_rest_v1_views.TracksEndpoint.as_view(),
-        name=trackie_rest_v1_views.TracksEndpoint.name
-        ),
-    url(r'^track/(?P<slug>[-_\w]+)$',
-        view=trackie_rest_v1_views.TrackEndpoint.as_view(),
-        name=trackie_rest_v1_views.TrackEndpoint.name
-        ),
-    url(r'^tournaments/$',
-        view=trackie_rest_v1_views.TournamentsEndpoint.as_view(),
-        name=trackie_rest_v1_views.TournamentsEndpoint.name
-        ),
-    url(r'^tournament/(?P<slug>[-_\w]+)$',
-        view=trackie_rest_v1_views.TournamentEndpoint.as_view(),
-        name=trackie_rest_v1_views.TournamentEndpoint.name
-        ),
-    url(r'^tournament/(?P<slug>[-_\w]+)/races$',
-        view=trackie_rest_v1_views.TournamentRacesEndpoint.as_view(),
-        name=trackie_rest_v1_views.TournamentRacesEndpoint.name
-        ),
-    url(r'^racer/(?P<pk>[\d]+)$',
-        view=trackie_rest_v1_views.RacerEndpoint.as_view(),
-        name=trackie_rest_v1_views.RacerEndpoint.name
-        ),
-    url(r'^projection/(?P<pk>[\d]+)$',
-        view=trackie_rest_v1_views.ProjectionEndpoint.as_view(),
-        name=trackie_rest_v1_views.ProjectionEndpoint.name
-        ),
-]
+router.register(
+    r'races',
+    RaceViewSet,
+    base_name="race",
+)
 
-urlpatterns += router.urls
+router.register(
+    r'race-types',
+    RaceTypeViewSet,
+    base_name="racetype",
+)
+
+router.register(
+    r'sport-types',
+    SportTypeViewSet,
+    base_name="sporttype",
+)
+
+router.register(
+    r'tracks',
+    TrackViewSet,
+    base_name="track",
+)
+
+router.register(
+    r'tournaments',
+    TournamentViewSet,
+    base_name="tournament",
+)
+
+router.register(
+    r'racers',
+    RacerViewSet,
+    base_name="racer",
+)
+
+router.register(
+    r'projections',
+    ProjectionViewSet,
+    base_name="projection",
+)
+
+router.register(
+    r'tournaments/(?P<slug>[-_\w]+)/races',
+    TournamentRacesViewSet,
+    base_name="tournament-races",
+)
+
+urlpatterns = router.urls
