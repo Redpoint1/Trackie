@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid", "ui.grid.selection", "ui.grid.saveState", "ui.grid.pagination"])
+    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid", "ui.grid.selection", "ui.grid.saveState", "ui.grid.pagination", "naif.base64"])
         .constant("CONFIG", {
             "DEBUG": false
         })
@@ -68,7 +68,7 @@
         .config(["RestangularProvider", function (RestangularProvider) {
             RestangularProvider.setBaseUrl("/api/v1/trackie");
             RestangularProvider.setFullResponse(true);
-            //RestangularProvider.setRequestSuffix("/");
+            RestangularProvider.setRequestSuffix("/");
         }])
         .config(["$routeProvider", "$locationProvider", "VARS", function ($routeProvider, $locationProvider, VARS) {
             $routeProvider.when("/", {
@@ -85,9 +85,9 @@
                 controller: "MapController"
                 //reloadAfterAuthChange: true,
                 //throwAuthError: true
-            }).when("/map/add", {
-                templateUrl: "partials/map_add.html",
-                controller: "MapAddController"
+            }).when("/track/add", {
+                templateUrl: "partials/track/create.html",
+                controller: "TrackCreateController"
                 //reloadAfterAuthChange: true,
                 //throwAuthError: true
             }).when("/404", {
@@ -389,6 +389,21 @@
         }
     }]);
 
+    trackie_module.directive("validFile", function () {
+        return {
+            require: "ngModel",
+            link: function (scope, el, attrs, ngModel) {
+                //change event is fired when file is selected
+                el.bind("change", function () {
+                    scope.$apply(function () {
+                        ngModel.$setViewValue(el.val());
+                        ngModel.$render();
+                    });
+                });
+            }
+        }
+    });
+
     // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
@@ -475,5 +490,14 @@
                 }
             });
         });
+    }])
+    .controller("TrackCreateController", ["$scope", "Restangular", function($scope, Restangular){
+        $scope.trackForm = {};
+
+        $scope.createTrack = function () {
+            var data = angular.copy($scope.trackForm.data);
+            data["file"] = data["file"]["base64"];
+            Restangular.all("tracks").post(data);
+        }
     }]);
 }());

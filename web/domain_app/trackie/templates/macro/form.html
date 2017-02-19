@@ -1,0 +1,15 @@
+{% csrf_token %}
+<div class="form-group" id="id_non_field_errors"></div>
+{% for field in form %}
+    {% with model_name=field.field.widget.attrs|get_item:'data-ng-model' %}
+        {% if field.field.widget.input_type in default_fields %}
+            <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
+            <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+            {{ field }}
+        {% else %}
+            <div class="checkbox" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
+            <label>{{ field }}{{ field.label }}</label>
+        {% endif %}
+    </div>
+    {% endwith %}
+{% endfor %}

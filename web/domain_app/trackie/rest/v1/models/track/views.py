@@ -14,3 +14,8 @@ class TrackViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         return super(TrackViewSet, self).retrieve(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        self.request.data["owner"] = self.request.user.id
+
+        return super(TrackViewSet, self).create(request, *args, **kwargs)

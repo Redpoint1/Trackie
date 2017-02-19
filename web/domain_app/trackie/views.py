@@ -1,3 +1,4 @@
+from importlib import import_module
 import django.views.generic as views
 import django.template.loader as template_loader
 import django.template.exceptions as template_exceptions
@@ -5,7 +6,8 @@ import django.http.response as http_response
 
 from django.utils.translation import ugettext_lazy as _
 
-from .forms import RegisterForm, ProfileForm, UserForm
+import domain_app.trackie.forms as forms
+
 
 
 class BasePageView(views.TemplateView):
@@ -21,7 +23,7 @@ class MainPageView(views.TemplateView):
     form = None
 
     def get(self, request, *args, **kwargs):
-        self.form = RegisterForm()
+        self.form = forms.RegisterForm()
         kwargs['form'] = self.form
         if request.user.is_authenticated():
             self.form = None
@@ -37,7 +39,7 @@ class ProfilePageView(views.TemplateView):
     form = None
 
     def get(self, request, *args, **kwargs):
-        self.form = UserForm()
+        self.form = forms.UserForm()
         kwargs['form'] = self.form
 
         return super(ProfilePageView, self).get(request, *args, **kwargs)
@@ -47,6 +49,16 @@ class PartialView(views.TemplateView):
     http_method_names = ('get',)
 
     name = 'trackie.partial'
+
+    def get_context_data(self, **kwargs):
+        module = import_module(".forms", "domain_app.trackie")
+        partial = kwargs["partial"].split(".")[0].title().replace("/", "")
+        class_name = "{}Form".format(partial)
+        form = getattr(module, class_name, None)
+        if form:
+            kwargs["form"] = form()
+        kwargs["default_fields"] = ["text", "file"]
+        return super(PartialView, self).get_context_data(**kwargs)
 
     def get_template_names(self):
 
