@@ -20,6 +20,7 @@
                     $delegate.put = function (key, value) {
                         origPut(key, value);
                         keys.push(key);
+                        keys = _.uniq(keys);
                     };
 
                     $delegate.remove = function (key) {
@@ -32,11 +33,6 @@
                         keys = [];
                     };
 
-                    $delegate.put = function (key, value) {
-                        origPut(key, value);
-                        keys.push(key);
-                    };
-
                     $delegate.getKeys = function () {
                         return keys;
                     };
@@ -46,7 +42,7 @@
                             return regex.test(n);
                         });
                         _.forEach(keysToDelete, function(key){
-                           $delegate.remove(key);
+                            $delegate.remove(key);
                         });
                     };
 
@@ -72,11 +68,11 @@
         }])
         .config(["$routeProvider", "$locationProvider", "VARS", function ($routeProvider, $locationProvider, VARS) {
             $routeProvider.when("/", {
-                templateUrl: "main.html",
+                templateUrl: "partials/main.html",
                 controller: "MainController",
                 reloadAfterAuthChange: true
             }).when("/profile", {
-                templateUrl: "profile.html",
+                templateUrl: "partials/profile.html",
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
@@ -112,7 +108,7 @@
 
     // Services
 
-    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$route", "$location", "VARS", function ($q, $http, $cookies, $rootScope, $templateCache, $route, $location, VARS) {
+    trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$location", "$routeParams", "$route", "VARS", function ($q, $http, $cookies, $rootScope, $templateCache, $location, $routeParams, $route, VARS) {
         return {
             "API_URL": "api/v1/auth",
             "use_session": true,
@@ -386,7 +382,7 @@
         return {
             require: "ngModel",
             link: link
-        }
+        };
     }]);
 
     trackie_module.directive("validFile", function () {
@@ -513,8 +509,9 @@
                 }
             });
         });
-    }])
-    .controller("TrackCreateController", ["$scope", "Restangular", function($scope, Restangular){
+    }]);
+
+    trackie_module.controller("TrackCreateController", ["$scope", "Restangular", function($scope, Restangular){
         $scope.trackForm = {};
 
         $scope.createTrack = function () {

@@ -4,12 +4,12 @@ from . import views as trackie_views
 
 urlpatterns = [  # pylint: disable=invalid-name
     url(
-        r'^main.html$',
+        r'^partials/main.html$',
         view=trackie_views.MainPageView.as_view(),
         name=trackie_views.MainPageView.name
     ),
     url(
-        r'^profile.html$',
+        r'^partials/profile.html$',
         view=trackie_views.ProfilePageView.as_view(),
         name=trackie_views.ProfilePageView.name
     ),
