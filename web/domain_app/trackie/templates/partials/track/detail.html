@@ -1,0 +1,34 @@
+{% load static %}
+<div class="row">
+    <div class="col-xs-12">
+        {% verbatim %}
+        <h1>{{ track.data.name }}</h1>
+        {% endverbatim %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row">
+            {% verbatim %}
+            <div class="col-xs-12">
+                Owned by: {{ track.data.owner.username }}
+            </div>
+            <div class="col-xs-12">
+                Is public: {{ track.data.public }}
+            </div>
+            <div class="col-xs-12">
+                File: <a data-ng-href="{{ track.data.file }}">{{
+                track.data.file }}</a>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-xs-12">
+                <script src="{% static 'assets/trackie/js/map.js' %}"></script>
+                <div id="map" class="map" style="max-height: 500px;"></div>
+            </div>
+        </div>
+    </div>
+</div>

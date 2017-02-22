@@ -86,6 +86,11 @@
                 controller: "TrackCreateController"
                 //reloadAfterAuthChange: true,
                 //throwAuthError: true
+            }).when("/track/:slug", {
+                templateUrl: "partials/track/detail.html",
+                controller: "TrackController"
+                //reloadAfterAuthChange: true,
+                //throwAuthError: true
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -511,13 +516,33 @@
         });
     }]);
 
-    trackie_module.controller("TrackCreateController", ["$scope", "Restangular", function($scope, Restangular){
+    trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", function($scope, $location, Restangular){
         $scope.trackForm = {};
 
         $scope.createTrack = function () {
             var data = angular.copy($scope.trackForm.data);
             data["file"] = data["file"]["base64"];
-            Restangular.all("tracks").post(data);
+            Restangular.all("tracks").post(data).then(function(response){
+                $location.path("/track/"+response.data.slug);
+            }, function(error){
+                renderFormErrors($("#track-form"), error.data, "id_");
+            });
         }
+    }]);
+
+    trackie_module.controller("TrackController", ["$scope", "$routeParams", "Restangular", function ($scope, $routeParams, Restangular) {
+        $scope.track_source = Restangular.one("tracks", $routeParams.slug);
+        $scope.track_source.get().then(function (response) {
+            $scope.track = response;
+            Restangular.oneUrl("tracks", response.data.file).get().then(function (file) {
+                var format = new ol.format.GPX();
+                var features = format.readFeatures(file.data, {featureProjection: "EPSG:3857"});
+
+                track_source.addFeatures(features);
+                map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
+            })
+        }, function (error) {
+            console.log(error);
+        });
     }]);
 }());
