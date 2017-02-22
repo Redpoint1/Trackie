@@ -425,6 +425,21 @@
     }]);
 
     trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", "uiGridConstants", function($scope, $routeParams, $interval, Restangular, uiGridConstants){
+        function highlight_racers(scope, ol_source) {
+        var selected = scope.gridApi.selection.getSelectedRows();
+        var selectedIds = [];
+        _.forEach(selected, function (i) {
+            selectedIds.push(i.id);
+        });
+        ol_source.forEachFeature(function (i) {
+            if (selected.length == 0 || _.indexOf(selectedIds, i.getId()) == -1) {
+                i.setProperties({"$hide": false});
+            } else {
+                i.setProperties({"$hide": true});
+            }
+        });
+    }
+
         function get_race_data(promise, scope, ol_source, projection) {
             promise.get().then(function (race_data) {
                 if (race_data.status == 204) {
@@ -434,11 +449,13 @@
                 }
                 scope.race_data = race_data.data;
                 scope.gridOptions.data = race_data.data.features;
-
                 ol_source.clear();
+
                 var format = new ol.format.GeoJSON();
                 var features = format.readFeatures(race_data.data, {featureProjection: projection});
                 ol_source.addFeatures(features);
+
+                highlight_racers(scope, ol_source);
             }, function(response) {
                 console.log(response);
             });
@@ -456,6 +473,12 @@
             },
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
+                $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
+                    highlight_racers($scope, track_data_source);
+                });
+                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
+                    highlight_racers($scope, track_data_source);
+                });
             },
             columnDefs: [
                 {name:"Číslo", field: "properties.racer.number"},

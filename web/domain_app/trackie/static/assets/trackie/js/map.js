@@ -1,8 +1,20 @@
+//@ sourceURL=http://localhost:8000/static/assets/trackie/js/map.js
 "use strict";
+
+var unselected = {
+    "Point": new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            fill: null,
+            stroke: new ol.style.Stroke({color: [255, 0, 0, 0.5], width: 1})
+        })
+    })
+};
+
 var image = new ol.style.Circle({
     radius: 5,
     fill: null,
-    stroke: new ol.style.Stroke({color: "red", width: 1})
+    stroke: new ol.style.Stroke({color: [255, 0, 0], width: 1})
 });
 
 var style = {
@@ -86,7 +98,11 @@ var track_data_source = new ol.source.Vector();
 var track_data_layer = new ol.layer.Vector({
     source: track_data_source,
     style: function (feature) {
-        return style[feature.getGeometry().getType()];
+        var type = feature.getGeometry().getType();
+        if (feature.getProperties()["$hide"]) {
+            return unselected[type];
+        }
+        return style[type];
     }
 });
 
