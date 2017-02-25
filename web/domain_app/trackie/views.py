@@ -57,7 +57,6 @@ class PartialView(views.TemplateView):
         form = getattr(module, class_name, None)
         if form:
             kwargs["form"] = form()
-        kwargs["default_fields"] = ["text", "file"]
         return super(PartialView, self).get_context_data(**kwargs)
 
     def get_template_names(self):
