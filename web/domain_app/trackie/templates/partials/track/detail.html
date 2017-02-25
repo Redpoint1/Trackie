@@ -11,14 +11,14 @@
         <div class="row">
             {% verbatim %}
             <div class="col-xs-12">
-                Owned by: {{ track.data.owner.username }}
+                Vlastník: {{ track.data.owner.username }}
             </div>
             <div class="col-xs-12">
-                Is public: {{ track.data.public }}
+                Verejný: {{ track.data.public }}
             </div>
             <div class="col-xs-12">
-                File: <a data-ng-href="{{ track.data.file }}">{{
-                track.data.file }}</a>
+                Súbor:
+                <a data-ng-href="{{ track.data.file }}">{{ track.data.file }}</a>
             </div>
             {% endverbatim %}
         </div>
