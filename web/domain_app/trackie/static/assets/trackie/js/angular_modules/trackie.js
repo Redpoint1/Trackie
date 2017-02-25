@@ -521,7 +521,7 @@
 
         $scope.createTrack = function () {
             var data = angular.copy($scope.trackForm.data);
-            data["file"] = data["file"]["base64"];
+            data["file"] = data["file"] ? data["file"]["base64"] : null;
             Restangular.all("tracks").post(data).then(function(response){
                 $location.path("/track/"+response.data.slug);
             }, function(error){
