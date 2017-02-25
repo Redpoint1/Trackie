@@ -10,6 +10,9 @@
             <div class="checkbox" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
             <label>{{ field }}{{ field.label }}</label>
         {% endif %}
+        {% if field.field.help_text %}
+            <p class="help-block">{{ field.field.help_text }}</p>
+        {% endif %}
     </div>
     {% endwith %}
 {% endfor %}
