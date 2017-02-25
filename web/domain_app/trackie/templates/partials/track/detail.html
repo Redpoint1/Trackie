@@ -1,12 +1,12 @@
 {% load static %}
-<div class="row">
+<div class="row" data-ng-show="track.data">
     <div class="col-xs-12">
         {% verbatim %}
         <h1>{{ track.data.name }}</h1>
         {% endverbatim %}
     </div>
 </div>
-<div class="row">
+<div class="row" data-ng-show="track.data">
     <div class="col-md-6">
         <div class="row">
             {% verbatim %}

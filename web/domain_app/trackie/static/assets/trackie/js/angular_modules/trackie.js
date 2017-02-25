@@ -80,17 +80,17 @@
                 templateUrl: "partials/map.html",
                 controller: "MapController"
                 //reloadAfterAuthChange: true,
-                //throwAuthError: true
             }).when("/track/add", {
                 templateUrl: "partials/track/create.html",
-                controller: "TrackCreateController"
-                //reloadAfterAuthChange: true,
-                //throwAuthError: true
+                controller: "TrackCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/track/:id", {
                 templateUrl: "partials/track/detail.html",
-                controller: "TrackController"
-                //reloadAfterAuthChange: true,
-                //throwAuthError: true
+                controller: "TrackController",
+                reloadAfterAuthChange: true
+            }).when("/403", {
+                templateUrl: "partials/status/403.html",
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -312,14 +312,16 @@
                         $route.reload();
                     }
                 } else {
-                    var redirectTo  = $route.current.params.from || "/";
-                    var route = $route.routes[redirectTo] || {};
+                    // TODO refactor 25.02. 2017
+                    var from  = $route.current.params.from || "/";
+                    // not good for dynamic routes like /tracks/:id
+                    var route = $route.routes[from] || {};
                     if (route.throwAuthError){
                         if (this.authenticated) {
-                            $location.url(redirectTo);
+                            $location.url(from);
                         }
                     } else {
-                        $location.url(redirectTo);
+                        $location.url(from);
                     }
                 }
             },
@@ -348,7 +350,7 @@
                 djangoAuth.logout().then(function () {
                     //TODO: todo (todoception)
                 }, function () {
-                    $window.alert("Nedá sa odhlásiť. Skúste to neskôr.")
+                    $window.alert("Nedá sa odhlásiť. Skúste to neskôr.");
                 });
             };
         }
@@ -530,7 +532,7 @@
         }
     }]);
 
-    trackie_module.controller("TrackController", ["$scope", "$routeParams", "Restangular", function ($scope, $routeParams, Restangular) {
+    trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
         $scope.track_source = Restangular.one("tracks", $routeParams.id);
         $scope.track_source.get().then(function (response) {
             $scope.track = response;
@@ -542,7 +544,7 @@
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
             })
         }, function (error) {
-            console.log(error);
+            $location.url("/" + error.status + "?from="+$location.path());
         });
     }]);
 }());
