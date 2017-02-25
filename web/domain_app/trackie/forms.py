@@ -53,11 +53,6 @@ class TrackCreateForm(ModelForm):
             'class': 'form-control',
             'required': 'required',
         })
-        self.fields['slug'].widget.attrs.update({
-            'data-ng-model': 'trackForm.data.slug',
-            'class': 'form-control',
-            'required': 'required',
-        })
         self.fields['file'].widget.attrs.update({
             'data-ng-model': 'trackForm.data.file',
             'data-valid-file': '',

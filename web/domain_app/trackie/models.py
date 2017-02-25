@@ -141,16 +141,6 @@ class Track(db_models.Model):
         unique=False,
         max_length=255,
         verbose_name=_("Track name"),
-        help_text=_("Name of the track"),
-    )
-
-    slug = db_models.SlugField(
-        blank=False,
-        null=False,
-        unique=True,
-        max_length=255,
-        verbose_name=_("Slug"),
-        help_text=_("Name for the API"),
     )
 
     owner = db_models.ForeignKey(

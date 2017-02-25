@@ -25,9 +25,4 @@ class TrackSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Track
-        fields = "__all__"
-        extra_kwargs = {
-            "url": {
-                "lookup_field": "slug",
-            },
-        }
+        fields = ("id", "url", "name", "file", "public", "owner")

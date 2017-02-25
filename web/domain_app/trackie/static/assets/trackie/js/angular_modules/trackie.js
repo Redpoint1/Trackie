@@ -86,7 +86,7 @@
                 controller: "TrackCreateController"
                 //reloadAfterAuthChange: true,
                 //throwAuthError: true
-            }).when("/track/:slug", {
+            }).when("/track/:id", {
                 templateUrl: "partials/track/detail.html",
                 controller: "TrackController"
                 //reloadAfterAuthChange: true,
@@ -523,7 +523,7 @@
             var data = angular.copy($scope.trackForm.data);
             data["file"] = data["file"] ? data["file"]["base64"] : null;
             Restangular.all("tracks").post(data).then(function(response){
-                $location.path("/track/"+response.data.slug);
+                $location.path("/track/"+response.data.id);
             }, function(error){
                 renderFormErrors($("#track-form"), error.data, "id_");
             });
@@ -531,7 +531,7 @@
     }]);
 
     trackie_module.controller("TrackController", ["$scope", "$routeParams", "Restangular", function ($scope, $routeParams, Restangular) {
-        $scope.track_source = Restangular.one("tracks", $routeParams.slug);
+        $scope.track_source = Restangular.one("tracks", $routeParams.id);
         $scope.track_source.get().then(function (response) {
             $scope.track = response;
             Restangular.oneUrl("tracks", response.data.file).get().then(function (file) {
