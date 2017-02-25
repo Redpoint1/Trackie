@@ -58,7 +58,6 @@ INSTALLED_APPS = (
     'rest_auth.registration',
     'allauth.socialaccount',
     #'allauth.socialaccount.providers.facebook',
-    'bootstrap3',
 
     # apps
     'app.api',
