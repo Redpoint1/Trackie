@@ -8,7 +8,7 @@
         {% endverbatim %}
     </li>
     <li data-ng-if="djangoAuth.authenticated">
-        <a href="#" target="_self" data-ng-click="logout()"><span class="fa fa-sign-in"></span>&nbsp;Odhlásiť sa</a>
+        <a href="#" target="_self" onClick="event.preventDefault();" data-ng-click="logout();"><span class="fa fa-sign-in"></span>&nbsp;Odhlásiť sa</a>
     </li>
 </ul>
 <div class="modal fade" id="login-modal" tabindex="-1" role="dialog">

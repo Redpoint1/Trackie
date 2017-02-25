@@ -90,7 +90,7 @@
                 controller: "TrackController",
                 reloadAfterAuthChange: true
             }).when("/403", {
-                templateUrl: "partials/status/403.html",
+                templateUrl: "partials/status/403.html"
             }).when("/404", {
                 templateUrl: "partials/status/404.html"
             }).when(VARS.FORBIDDEN_URL, {
@@ -544,7 +544,9 @@
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
             })
         }, function (error) {
-            $location.url("/" + error.status + "?from="+$location.path());
+            if (error.status.toString()[0] == 4){
+                $location.url("/" + error.status + "?from="+$location.path());
+            }
         });
     }]);
 }());
