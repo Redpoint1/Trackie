@@ -60,6 +60,10 @@ footer ul.footer-menu li {
     list-style: none;
 }
 
+form .error {
+    color: #d9230f;
+}
+
 /* Sticky footer */
 html {
     height: 100%;
@@ -90,6 +94,9 @@ html {
 
 /* End sticky footer */
 
+/* ui-grid */
 .grid {
     margin-top: 15px;
 }
+
+/* End ui-grid */
