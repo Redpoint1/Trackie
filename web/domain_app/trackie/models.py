@@ -167,8 +167,9 @@ class Track(db_models.Model):
     )
 
     public = db_models.BooleanField(
-        default=True,
+        default=False,
         verbose_name=_("Public"),
+        help_text=_("Public tracks can't be updated/deleted")
     )
 
     def __str__(self):

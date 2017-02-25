@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer, Field
 from drf_extra_fields.fields import Base64FileField
 from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 from ..user.serializers import UserSerializer
@@ -18,10 +18,10 @@ class GPXFieldBase(Base64FileField):
 
 class TrackSerializer(HyperlinkedModelSerializer):
     owner = PresentablePrimaryKeyRelatedField(
-        queryset=User.objects,
-        presentation_serializer=UserSerializer
+        presentation_serializer=UserSerializer,
+        read_only=True
     )
-    file = GPXFieldBase(required=True)
+    file = GPXFieldBase()
 
     class Meta:
         model = Track

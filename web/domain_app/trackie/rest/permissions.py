@@ -1,0 +1,31 @@
+from rest_framework.permissions import BasePermission, SAFE_METHODS
+
+
+class IsOwnerOrReadOnly(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+
+        if hasattr(view, "trackie_owner"):
+            field = view.trackie_owner
+            owner = getattr(obj, field)
+        else:
+            owner = getattr(obj, "owner")
+
+        return owner == request.user
+
+
+class IsNotPublicOrReadOnly(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in SAFE_METHODS:
+            return True
+
+        if hasattr(view, "trackie_public"):
+            field = view.trackie_public
+            public = getattr(obj, field)
+        else:
+            public = getattr(obj, "public")
+
+        return not public
