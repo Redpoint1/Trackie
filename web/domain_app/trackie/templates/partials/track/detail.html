@@ -1,9 +1,13 @@
 {% load static %}
 <div class="row" data-ng-show="track.data">
     <div class="col-xs-12">
-        {% verbatim %}
-        <h1>{{ track.data.name }}</h1>
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+        <h1 style="margin-top: 0;">{{ track.data.name }}
+            <small>Trať</small>
+        </h1>
         {% endverbatim %}
+        </div>
     </div>
 </div>
 <div class="row" data-ng-show="track.data">
@@ -11,14 +15,19 @@
         <div class="row">
             {% verbatim %}
             <div class="col-xs-12">
-                Vlastník: {{ track.data.owner.username }}
+                <dl>
+                    <dt>Vlastník</dt>
+                    <dd>{{ track.data.owner.username }}</dd>
+                    <dt>Verejný</dt>
+                    <dd><code>{{ track.data.public }}</code></dd>
+                    <dt>Súbor</dt>
+                    <dd>
+                        <a data-ng-href="{{ track.data.file }}">{{ track.data.file }}</a>
+                    </dd>
+                </dl>
             </div>
-            <div class="col-xs-12">
-                Verejný: {{ track.data.public }}
-            </div>
-            <div class="col-xs-12">
-                Súbor:
-                <a data-ng-href="{{ track.data.file }}">{{ track.data.file }}</a>
+            <div class="col-xs-12" data-ng-if="user.username && user.username == track.data.owner.username">
+                <a target="_self" class="btn btn-primary" data-ng-href="#/track/{{ track.data.id }}/update/">Upraviť</a>
             </div>
             {% endverbatim %}
         </div>

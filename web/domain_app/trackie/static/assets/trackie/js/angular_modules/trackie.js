@@ -532,7 +532,11 @@
         }
     }]);
 
-    trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+    trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
+        djangoAuth.authenticationStatus().then(function(){
+            $scope.user = djangoAuth.user;
+        });
+
         $scope.track_source = Restangular.one("tracks", $routeParams.id);
         $scope.track_source.get().then(function (response) {
             $scope.track = response;
@@ -544,7 +548,7 @@
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
             })
         }, function (error) {
-            if (error.status.toString()[0] == 4){
+            if (error.status.toString()[0] == 4){ //4xx
                 $location.url("/" + error.status + "?from="+$location.path());
             }
         });
