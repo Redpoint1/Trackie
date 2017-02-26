@@ -89,6 +89,11 @@
                 templateUrl: "partials/track/detail.html",
                 controller: "TrackController",
                 reloadAfterAuthChange: true
+            }).when("/track/:id/update", {
+                templateUrl: "partials/track/update.html",
+                controller: "TrackUpdateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -548,6 +553,29 @@
                 map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
             })
         }, function (error) {
+            if (error.status.toString()[0] == 4){ //4xx
+                $location.url("/" + error.status + "?from="+$location.path());
+            }
+        });
+    }]);
+
+    trackie_module.controller("TrackUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
+        $scope.updateTrack = function(){
+            $scope.track = angular.extend($scope.track, $scope.trackForm.data);
+            $scope.track.put().then(function (response) {
+                $location.path("/track/" + response.data.id);
+            }, function (error) {
+                if (error.status.toString()[0] == 4){ //4xx
+                    $location.url("/" + error.status + "?from="+$location.path());
+                }
+            })
+        };
+
+        Restangular.one("tracks", $routeParams.id).get().then(function(response){
+            $scope.track = response.data;
+            $scope.trackForm.data = response.data.plain();
+            console.log($scope.track);
+        }, function(error){
             if (error.status.toString()[0] == 4){ //4xx
                 $location.url("/" + error.status + "?from="+$location.path());
             }

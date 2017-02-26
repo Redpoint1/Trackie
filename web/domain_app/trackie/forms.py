@@ -61,3 +61,12 @@ class TrackCreateForm(ModelForm):
         self.fields['public'].widget.attrs.update({
             'data-ng-model': 'trackForm.data.public',
         })
+
+
+class TrackUpdateForm(TrackCreateForm):
+    class Meta(TrackCreateForm.Meta):
+        pass
+
+    def __init__(self, *args, **kwargs):
+        super(TrackUpdateForm, self).__init__(*args, **kwargs)
+        self.fields.pop('file')

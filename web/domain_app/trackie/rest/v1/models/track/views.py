@@ -1,22 +1,19 @@
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
-from .serializers import TrackSerializer
-from ....permissions import IsOwnerOrReadOnly, IsNotPublicOrReadOnly
+from .serializers import TrackSerializer, UpdateTrackSerializer
+from ....permissions import IsOwnerOrReadOnly
 from ......trackie.models import Track
 
 
 class TrackViewSet(ModelViewSet):
     serializer_class = TrackSerializer
-    permission_classes = (IsOwnerOrReadOnly, IsNotPublicOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly,)
 
     def list(self, request, *args, **kwargs):
         return super(TrackViewSet, self).list(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         return super(TrackViewSet, self).create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
 
     def retrieve(self, request, *args, **kwargs):
         return super(TrackViewSet, self).retrieve(request, *args, **kwargs)
@@ -36,3 +33,9 @@ class TrackViewSet(ModelViewSet):
                 Q(public=True) | Q(owner=self.request.user)
             )
         return queryset
+
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return UpdateTrackSerializer
+        else:
+            return super(TrackViewSet, self).get_serializer_class()

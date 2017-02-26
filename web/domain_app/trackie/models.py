@@ -154,12 +154,12 @@ class Track(db_models.Model):
 
     file = db_models.FileField(
         upload_to="maps/",
+        help_text=_("The file can't be changed")
     )
 
     public = db_models.BooleanField(
         default=False,
         verbose_name=_("Public"),
-        help_text=_("Public tracks can't be updated/deleted")
     )
 
     def __str__(self):
