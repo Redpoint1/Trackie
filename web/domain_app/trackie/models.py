@@ -247,7 +247,7 @@ class Race(db_models.Model):
         Track,
         null=True,
         blank=False,
-        on_delete=db_models.SET_NULL,
+        on_delete=db_models.PROTECT,
         related_name="races",
         verbose_name=_("Track"),
         help_text=_("Select track map"),

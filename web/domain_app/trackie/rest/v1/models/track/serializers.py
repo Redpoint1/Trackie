@@ -1,5 +1,6 @@
 from rest_framework.serializers import (HyperlinkedModelSerializer,
-                                        CurrentUserDefault)
+                                        CurrentUserDefault,
+                                        SerializerMethodField)
 from drf_extra_fields.fields import Base64FileField
 from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 from ..user.serializers import UserSerializer
@@ -24,10 +25,14 @@ class TrackSerializer(HyperlinkedModelSerializer):
         default=CurrentUserDefault()
     )
     file = GPXFieldBase()
+    used = SerializerMethodField()
+
+    def get_used(self, obj):
+        return obj.races.count()
 
     class Meta:
         model = Track
-        fields = ("id", "url", "name", "file", "public", "owner")
+        fields = ("id", "url", "name", "file", "public", "owner", "used")
 
 
 class UpdateTrackSerializer(TrackSerializer):

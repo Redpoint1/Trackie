@@ -1,13 +1,14 @@
 from django.db.models import Q
 from rest_framework.viewsets import ModelViewSet
 from .serializers import TrackSerializer, UpdateTrackSerializer
-from ....permissions import IsOwnerOrReadOnly
+from ....permissions import IsOwnerOrReadOnly, NotProtectedOrReadOnly
 from ......trackie.models import Track
 
 
 class TrackViewSet(ModelViewSet):
     serializer_class = TrackSerializer
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly, NotProtectedOrReadOnly)
+    trackie_protect = "races"
 
     def list(self, request, *args, **kwargs):
         return super(TrackViewSet, self).list(request, *args, **kwargs)

@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
@@ -29,3 +31,19 @@ class IsNotPublicOrReadOnly(BasePermission):
             public = getattr(obj, "public")
 
         return not public
+
+
+class NotProtectedOrReadOnly(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method != "DELETE":
+            return True
+
+        assert hasattr(view, "trackie_protect"), _(
+            "Tarckie_protect is not set"
+        )
+
+        field = view.trackie_protect
+        protected = getattr(obj, field)
+
+        return not protected.count()

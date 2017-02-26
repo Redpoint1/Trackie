@@ -1,33 +1,34 @@
 {% load static %}
-<div class="row" data-ng-show="track.data">
+<div class="row" data-ng-show="track">
     <div class="col-xs-12">
         <div class="page-header" style="margin-top: 0;">
             {% verbatim %}
-        <h1 style="margin-top: 0;">{{ track.data.name }}
+        <h1 style="margin-top: 0;">{{ track.name }}
             <small>Trať</small>
         </h1>
         {% endverbatim %}
         </div>
     </div>
 </div>
-<div class="row" data-ng-show="track.data">
+<div class="row" data-ng-show="track">
     <div class="col-md-6">
         <div class="row">
             {% verbatim %}
             <div class="col-xs-12">
                 <dl>
                     <dt>Vlastník</dt>
-                    <dd>{{ track.data.owner.username }}</dd>
+                    <dd>{{ track.owner.username }}</dd>
                     <dt>Verejný</dt>
-                    <dd><code>{{ track.data.public }}</code></dd>
+                    <dd><code>{{ track.public }}</code></dd>
                     <dt>Súbor</dt>
                     <dd>
-                        <a data-ng-href="{{ track.data.file }}">{{ track.data.file }}</a>
+                        <a data-ng-href="{{ track.file }}">{{ track.file }}</a>
                     </dd>
                 </dl>
             </div>
-            <div class="col-xs-12" data-ng-if="user.username && user.username == track.data.owner.username">
-                <a target="_self" class="btn btn-primary" data-ng-href="#/track/{{ track.data.id }}/update/">Upraviť</a>
+            <div class="col-xs-12">
+                <a target="_self" class="btn btn-primary" data-ng-href="#/track/{{ track.id }}/update/" data-ng-if="user.username && user.username == track.owner.username">Upraviť</a>
+                <button class="btn btn-danger" data-ng-click="deleteTrack()" data-ng-if="user.username && user.username == track.owner.username && !track.used">Odstrániť</button>
             </div>
             {% endverbatim %}
         </div>

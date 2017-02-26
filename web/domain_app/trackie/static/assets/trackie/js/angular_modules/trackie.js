@@ -538,13 +538,23 @@
     }]);
 
     trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
+        $scope.deleteTrack = function(){
+            $scope.track.remove().then(function (response) {
+                $location.path("/");
+            }, function (error) {
+                if (error.status.toString()[0] == 4){ //4xx
+                    $location.url("/" + error.status + "?from="+$location.path());
+                }
+            })
+        };
+
         djangoAuth.authenticationStatus().then(function(){
             $scope.user = djangoAuth.user;
         });
 
         $scope.track_source = Restangular.one("tracks", $routeParams.id);
         $scope.track_source.get().then(function (response) {
-            $scope.track = response;
+            $scope.track = response.data;
             Restangular.oneUrl("tracks", response.data.file).get().then(function (file) {
                 var format = new ol.format.GPX();
                 var features = format.readFeatures(file.data, {featureProjection: "EPSG:3857"});
