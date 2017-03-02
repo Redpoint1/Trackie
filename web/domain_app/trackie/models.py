@@ -187,6 +187,13 @@ class Racer(db_models.Model):
         verbose_name=_("Last name"),
     )
 
+    photo = db_models.ImageField(
+        null=True,
+        blank=True,
+        upload_to="racers/",
+        verbose_name=_("Racer's photo")
+    )
+
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)
 
