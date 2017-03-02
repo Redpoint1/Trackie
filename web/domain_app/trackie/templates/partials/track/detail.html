@@ -28,7 +28,7 @@
             </div>
             <div class="col-xs-12">
                 <a target="_self" class="btn btn-primary" data-ng-href="#/track/{{ track.id }}/update/" data-ng-if="user.username && user.username == track.owner.username">Upraviť</a>
-                <button class="btn btn-danger" data-ng-click="deleteTrack()" data-ng-if="user.username && user.username == track.owner.username && !track.used">Odstrániť</button>
+                <button class="btn btn-danger" data-ng-click="deleteTrack()" data-ng-if="user.username && user.username == track.owner.username" data-ng-disabled="track.used">Odstrániť</button>
             </div>
             {% endverbatim %}
         </div>
