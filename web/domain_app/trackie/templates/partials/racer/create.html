@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            <h1 style="margin-top: 0;">Pridať pretekára</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="well">
+            {% with form_name="racerForm" %}
+            <form name="{{ form_name }}" id="racer-form" data-ng-submit="createRacer()">
+                {% include "macro/form.html" %}
+                <div class="form-group">
+                   <button type="submit" data-ng-disabled="{{ form_name }}.$invalid" class="btn btn-primary">Pridať</button>
+                </div>
+            </form>
+            {% endwith %}
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 from django.forms.models import ModelForm
 from allauth.account.forms import SignupForm, UserForm
 import allauth.account.app_settings as app_settings
-from .models import Track
+from .models import Track, Racer
 
 
 class RegisterForm(SignupForm):
@@ -70,3 +70,27 @@ class TrackUpdateForm(TrackCreateForm):
     def __init__(self, *args, **kwargs):
         super(TrackUpdateForm, self).__init__(*args, **kwargs)
         self.fields.pop('file')
+
+
+class RacerCreateForm(ModelForm):
+    class Meta:
+        model = Racer
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(RacerCreateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.first_name',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.last_name',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['photo'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.photo',
+            'data-valid-file': '',
+            'data-base-sixty-four-input': '',
+        })

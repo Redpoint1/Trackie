@@ -94,6 +94,11 @@
                 controller: "TrackUpdateController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/racer/add", {
+                templateUrl: "partials/racer/create.html",
+                controller: "RacerCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -591,5 +596,19 @@
                 $location.url("/" + error.status + "?from="+$location.path());
             }
         });
+    }]);
+
+    trackie_module.controller("RacerCreateController", ["$scope", "$location", "Restangular", function($scope, $location, Restangular){
+        $scope.racerForm = {};
+
+        $scope.createRacer = function () {
+            var data = angular.copy($scope.racerForm.data);
+            data["photo"] = data["photo"] ? data["photo"]["base64"] : null;
+            Restangular.all("racers").post(data).then(function(response){
+                $location.path("/racer/"+response.data.id);
+            }, function(error){
+                renderFormErrors($("#racer-form"), error.data, "id_");
+            });
+        }
     }]);
 }());
