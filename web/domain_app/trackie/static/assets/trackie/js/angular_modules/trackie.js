@@ -453,6 +453,7 @@
                 if (race_data.status == 204) {
                     $interval.cancel(scope.data_interval);
                     console.log("Race stream has been ended");
+                    // TODO inform users about finished race
                     return;
                 }
                 scope.race_data = race_data.data;
