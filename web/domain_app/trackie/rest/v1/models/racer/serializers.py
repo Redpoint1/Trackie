@@ -9,7 +9,7 @@ class RacerSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Racer
-        fields = "__all__"
+        fields = ("id", "url", "first_name", "last_name", "photo",)
 
 
 class RaceRacerSerializer(RacerSerializer):

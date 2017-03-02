@@ -101,7 +101,10 @@
                 throwAuthError: true
             }).when("/racer/:id", {
                 templateUrl: "partials/racer/detail.html",
-                controller: "RacerController",
+                controller: "RacerController"
+            }).when("/racer/:id/update", {
+                templateUrl: "partials/racer/update.html",
+                controller: "RacerUpdateController"
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -593,7 +596,6 @@
         Restangular.one("tracks", $routeParams.id).get().then(function(response){
             $scope.track = response.data;
             $scope.trackForm.data = response.data.plain();
-            console.log($scope.track);
         }, function(error){
             if (error.status.toString()[0] == 4){ //4xx
                 $location.url("/" + error.status + "?from="+$location.path());
@@ -624,6 +626,36 @@
         $scope.racer_source.get().then(function (response) {
             $scope.racer = response.data;
         }, function (error) {
+            if (error.status.toString()[0] == 4){ //4xx
+                $location.url("/" + error.status + "?from="+$location.path());
+            }
+        });
+    }]);
+
+    trackie_module.controller("RacerUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
+        $scope.updateRacer = function(){
+            $scope.racer = angular.extend($scope.racer, $scope.racerForm.data);
+            if (!$scope.racerForm.data["photo"]["base64"]){
+                 delete $scope.racer["photo"];
+                $scope.racer.patch().then(function (response) {
+                    $location.path("/racer/" + response.data.id);
+                }, function (error) {
+                   renderFormErrors($("#racer-form"), error.data, "id_");
+                });
+            } else {
+                $scope.racer.photo = $scope.racer.photo["base64"];
+                $scope.racer.put().then(function (response) {
+                    $location.path("/racer/" + response.data.id);
+                }, function (error) {
+                    renderFormErrors($("#racer-form"), error.data, "id_");
+                });
+            }
+        };
+
+        Restangular.one("racers", $routeParams.id).get().then(function(response){
+            $scope.racer = response.data;
+            $scope.racerForm.data = response.data.plain();
+        }, function(error){
             if (error.status.toString()[0] == 4){ //4xx
                 $location.url("/" + error.status + "?from="+$location.path());
             }

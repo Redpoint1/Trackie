@@ -94,3 +94,11 @@ class RacerCreateForm(ModelForm):
             'data-valid-file': '',
             'data-base-sixty-four-input': '',
         })
+
+
+class RacerUpdateForm(RacerCreateForm):
+    class Meta(RacerCreateForm.Meta):
+        pass
+
+    def __init__(self, *args, **kwargs):
+        super(RacerUpdateForm, self).__init__(*args, **kwargs)
