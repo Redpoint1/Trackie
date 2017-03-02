@@ -443,7 +443,7 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$routeParams", "$interval", "Restangular", "uiGridConstants", function($scope, $routeParams, $interval, Restangular, uiGridConstants){
+    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$interval", "Restangular", "uiGridConstants", function($scope, $location, $routeParams, $interval, Restangular, uiGridConstants){
         function highlight_racers(scope, ol_source) {
         var selected = scope.gridApi.selection.getSelectedRows();
         var selectedIds = [];
@@ -532,6 +532,10 @@
                     })
                 }
             });
+        }, function(error){
+            if (error.status.toString()[0] == 4){ //4xx
+                $location.url("/" + error.status + "?from="+$location.path());
+            }
         });
     }]);
 
