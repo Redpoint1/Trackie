@@ -1,0 +1,36 @@
+{% load static %}
+<div class="row" data-ng-show="racer">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+            <h1 style="margin-top: 0;">{{ racer.first_name }} {{ racer.last_name }}
+                <small>Pretekár</small>
+            </h1>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="racer">
+    <div class="col-md-6">
+        <div class="row">
+            {% verbatim %}
+            <div class="col-xs-12">
+                <dl>
+                    <dt>Meno</dt>
+                    <dd>{{ racer.first_name }}</dd>
+                    <dt>Priezvisko</dt>
+                    <dd>{{ racer.last_name }}</dd>
+                </dl>
+            </div>
+            <div class="col-xs-12">
+                <a target="_self" class="btn btn-primary" data-ng-if="auth.authenticated" data-ng-href="#/racer/{{ racer.id }}/update/">Upraviť</a>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        {% verbatim %}
+        <img class="img-responsive" data-ng-src="{{ racer.photo }}"/>
+        {% endverbatim %}
+    </div>
+</div>

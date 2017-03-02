@@ -99,6 +99,9 @@
                 controller: "RacerCreateController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/racer/:id", {
+                templateUrl: "partials/racer/detail.html",
+                controller: "RacerController",
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -610,5 +613,20 @@
                 renderFormErrors($("#racer-form"), error.data, "id_");
             });
         }
+    }]);
+
+    trackie_module.controller("RacerController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
+        djangoAuth.authenticationStatus().then(function(){
+            $scope.auth = djangoAuth;
+        });
+
+        $scope.racer_source = Restangular.one("racers", $routeParams.id);
+        $scope.racer_source.get().then(function (response) {
+            $scope.racer = response.data;
+        }, function (error) {
+            if (error.status.toString()[0] == 4){ //4xx
+                $location.url("/" + error.status + "?from="+$location.path());
+            }
+        });
     }]);
 }());
