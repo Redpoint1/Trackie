@@ -425,7 +425,7 @@
         };
 
         OLMapFactory.prototype.fitBySource = function (name) {
-            this.map.getView().fit(this.sources[name].getExtent(), this.map.getSize());
+            this.map.getView().fit(this.sources[name].getExtent());
         };
 
         return OLMapFactory;
