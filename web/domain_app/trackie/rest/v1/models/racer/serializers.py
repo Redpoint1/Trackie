@@ -27,4 +27,4 @@ class RaceRacerSerializer(RacerSerializer):
         return racer_rel.number
 
     class Meta(RacerSerializer.Meta):
-        pass
+        fields = ("id", "url", "first_name", "last_name", "photo", "number",)
