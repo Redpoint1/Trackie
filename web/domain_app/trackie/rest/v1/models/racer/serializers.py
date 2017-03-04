@@ -1,11 +1,17 @@
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         SerializerMethodField)
-from drf_extra_fields.fields import Base64ImageField
+from ....serializers import ImageSerializer
 from ......trackie.models import RacerInRace, Racer
 
 
 class RacerSerializer(HyperlinkedModelSerializer):
-    photo = Base64ImageField(required=False)
+    photo = ImageSerializer(
+        sizes=[
+            ('normal', 'url'),
+            ('thumbnail', 'crop__150x200'),
+        ],
+        required=False
+    )
 
     class Meta:
         model = Racer

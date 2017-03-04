@@ -6,6 +6,8 @@ import django.contrib.postgres.fields as postgres_fields
 
 from django.utils.translation import ugettext_lazy as _
 
+from versatileimagefield.fields import VersatileImageField
+
 
 class SportType(db_models.Model):
     """ Sport type """
@@ -187,10 +189,11 @@ class Racer(db_models.Model):
         verbose_name=_("Last name"),
     )
 
-    photo = db_models.ImageField(
+    photo = VersatileImageField(
         null=True,
         blank=True,
         upload_to="racers/",
+        # placeholder_image
         verbose_name=_("Racer's photo")
     )
 
