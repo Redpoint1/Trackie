@@ -349,6 +349,88 @@
         };
     }]);
 
+    // Factories
+
+    trackie_module.factory("OLMap", [function () {
+        function OLMapFactory(target) {
+            this.target = target;
+            this.sources = {};
+            this.layers = {
+                "tile": new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                })
+            };
+            this.style = {
+                "Point": new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        fill: null,
+                        stroke: new ol.style.Stroke({
+                            color: [255, 0, 0],
+                            width: 1
+                        })
+                    })
+                }),
+                "Point_unselected": new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        fill: null,
+                        stroke: new ol.style.Stroke({
+                            color: [255, 0, 0, 0.5],
+                            width: 1
+                        })
+                    })
+                }),
+                "LineString": new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: "green",
+                        width: 1
+                    })
+                }),
+                "MultiLineString": new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: "green",
+                        width: 1
+                    })
+                })
+            };
+            this.map = new ol.Map({
+                target: this.target,
+                layers: [
+                    this.layers.tile
+                ],
+                view: new ol.View({
+                    center: [0, 0],
+                    zoom: 1
+                })
+            });
+        }
+
+        OLMapFactory.prototype.addVectorLayer = function (options) {
+            var name = options.name;
+            var source = !options["source"] ? new ol.source.Vector() : options.source;
+            var style = options["style"] ? options["style"] : undefined;
+
+            var layer = new ol.layer.Vector({
+                source: source,
+                style: style
+            });
+
+            this.sources[name] = source;
+            this.layers[name] = layer;
+            this.map.addLayer(layer);
+            window.map = this.map;
+
+            return layer;
+        };
+
+        OLMapFactory.prototype.fitBySource = function (name) {
+            this.map.getView().fit(this.sources[name].getExtent(), this.map.getSize());
+        };
+
+        return OLMapFactory;
+    }]);
+
     // Directives
 
     trackie_module.directive("loginModal", ["djangoAuth", "$window", function (djangoAuth, $window) {
@@ -443,21 +525,22 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$interval", "Restangular", "uiGridConstants", function($scope, $location, $routeParams, $interval, Restangular, uiGridConstants){
+    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $interval, Restangular, OLMap){
         function highlight_racers(scope, ol_source) {
-        var selected = scope.gridApi.selection.getSelectedRows();
-        var selectedIds = [];
-        _.forEach(selected, function (i) {
-            selectedIds.push(i.id);
-        });
-        ol_source.forEachFeature(function (i) {
-            if (selected.length == 0 || _.indexOf(selectedIds, i.getId()) == -1) {
-                i.setProperties({"$hide": false});
-            } else {
-                i.setProperties({"$hide": true});
-            }
-        });
-    }
+            if (!scope.gridApi) return;
+            var selected = scope.gridApi.selection.getSelectedRows();
+            var selectedIds = [];
+            _.forEach(selected, function (i) {
+                selectedIds.push(i.id);
+            });
+            ol_source.forEachFeature(function (i) {
+                if (selected.length == 0 || _.indexOf(selectedIds, i.getId()) == -1) {
+                    i.setProperties({"$hide": false});
+                } else {
+                    i.setProperties({"$hide": true});
+                }
+            });
+        }
 
         function get_race_data(promise, scope, ol_source, projection) {
             promise.get().then(function (race_data) {
@@ -481,6 +564,19 @@
             });
         }
 
+        $scope.map = new OLMap("map");
+        $scope.map.addVectorLayer({name: "track"});
+        $scope.map.addVectorLayer({
+            name: "data",
+            style: function (feature) {
+                var type = feature.getGeometry().getType();
+                if (feature.getProperties()["$hide"]) {
+                    type += "_unselected";
+                }
+                return $scope.map.style[type];
+            }
+        });
+
         $scope.gridOptions = {
             primaryKey: "properties.racer.number",
             enableRowSelection: true,
@@ -494,10 +590,10 @@
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
                 $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
-                    highlight_racers($scope, track_data_source);
+                    highlight_racers($scope, $scope.map.sources["data"]);
                 });
                 $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
-                    highlight_racers($scope, track_data_source);
+                    highlight_racers($scope, $scope.map.sources["data"]);
                 });
             },
             columnDefs: [
@@ -518,13 +614,13 @@
                 var features = format.readFeatures(json.data, {featureProjection: projection});
                 var promise = race.one("data");
 
-                track_source.addFeatures(features);
-                map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
+                $scope.map.sources["track"].addFeatures(features);
+                $scope.map.fitBySource("track");
 
-                get_race_data(promise, $scope, track_data_source, projection);
+                get_race_data(promise, $scope, $scope.map.sources["data"], projection);
                 if (!response.data.end) {
                     $scope.data_interval = $interval(function () {
-                        get_race_data(promise, $scope, track_data_source, projection);
+                        get_race_data(promise, $scope, $scope.map.sources["data"], projection);
                     }, 5000);
 
                     $scope.$on("$destroy", function(){
@@ -553,7 +649,7 @@
         }
     }]);
 
-    trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
+    trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", "OLMap", function ($scope, $location, $routeParams, Restangular, djangoAuth, OLMap) {
         $scope.deleteTrack = function(){
             $scope.track.remove().then(function (response) {
                 $location.path("/");
@@ -563,6 +659,9 @@
                 }
             })
         };
+
+        $scope.map = new OLMap("track-map");
+        $scope.map.addVectorLayer({name: "track"});
 
         djangoAuth.authenticationStatus().then(function(){
             $scope.user = djangoAuth.user;
@@ -575,8 +674,8 @@
                 var format = new ol.format.GPX();
                 var features = format.readFeatures(file.data, {featureProjection: "EPSG:3857"});
 
-                track_source.addFeatures(features);
-                map.getView().fit(map.getLayers().getArray()[1].getSource().getExtent(), map.getSize());
+                $scope.map.sources["track"].addFeatures(features);
+                $scope.map.fitBySource("track");
             })
         }, function (error) {
             if (error.status.toString()[0] == 4){ //4xx

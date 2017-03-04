@@ -12,11 +12,10 @@
 <div class="row" data-ng-show="race">
     <div class="col-xs-12">
 {% endverbatim %}
-        <script src="{% static 'assets/trackie/js/map.js' %}"></script>
         <div id="map" class="map" style="max-height: 500px;"></div>
     </div>
 </div>
-<div class="row" data-ng-show="gridOptions.data.lenght">
+<div class="row" data-ng-if="gridOptions.data.length">
     <div class="col-xs-12">
         <div ui-grid="gridOptions" data-ui-grid-selection data-ui-grid-pagination class="grid"></div>
     </div>
