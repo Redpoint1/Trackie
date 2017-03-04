@@ -100,3 +100,15 @@ html {
 }
 
 /* End ui-grid */
+
+/* ol-sidebar2 */
+.sidebar.sidebar-left {
+    margin-left: 15px;
+    z-index: 10;
+    box-sizing: content-box;
+}
+
+.ol-zoom {
+    margin-left: 55px;
+}
+/* End old-sidebar2 */

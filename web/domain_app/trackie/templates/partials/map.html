@@ -11,9 +11,24 @@
 </div>
 <div class="row" data-ng-show="race">
     <div class="col-xs-12">
-{% endverbatim %}
+        <div id="sidebar" class="sidebar collapsed">
+            <div class="sidebar-tabs">
+                <ul role="tablist">
+                    <li><a href="#profile" target="_self" role="tab"><i class="fa fa-user"></i></a></li>
+                </ul>
+                <ul role="tablist">
+                    <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+                </ul>
+            </div>
+            <div class="sidebar-content">
+                <div class="sidebar-pane" id="profile">
+                    <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                </div>
+            </div>
+        </div>
         <div id="map" class="map" style="max-height: 500px;"></div>
     </div>
+    {% endverbatim %}
 </div>
 <div class="row" data-ng-if="gridOptions.data.length">
     <div class="col-xs-12">

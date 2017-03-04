@@ -355,6 +355,7 @@
         function OLMapFactory(target) {
             this.target = target;
             this.sources = {};
+            this.sidebar = null;
             this.layers = {
                 "tile": new ol.layer.Tile({
                     source: new ol.source.OSM()
@@ -422,6 +423,11 @@
             window.map = this.map;
 
             return layer;
+        };
+
+        OLMapFactory.prototype.addSidebar = function(options){
+            this.sidebar = new ol.control.Sidebar(options);
+            this.map.addControl(this.sidebar);
         };
 
         OLMapFactory.prototype.fitBySource = function (name) {
@@ -576,6 +582,7 @@
                 return $scope.map.style[type];
             }
         });
+        $scope.map.addSidebar({element: "sidebar", position: "left"});
 
         $scope.gridOptions = {
             primaryKey: "properties.racer.number",
