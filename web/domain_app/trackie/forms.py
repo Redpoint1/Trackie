@@ -93,6 +93,7 @@ class RacerCreateForm(ModelForm):
             'data-ng-model': 'racerForm.data.photo',
             'data-valid-file': '',
             'data-base-sixty-four-input': '',
+            'accept': 'image/jpeg, image/jpg, image/png, image/gif',
         })
 
 
