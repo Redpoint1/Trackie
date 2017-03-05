@@ -108,7 +108,7 @@ html {
     box-sizing: content-box;
 }
 
-.ol-zoom {
+.map-with-sidebar .ol-zoom {
     margin-left: 55px;
 }
 /* End old-sidebar2 */
