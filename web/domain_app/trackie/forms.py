@@ -57,6 +57,8 @@ class TrackCreateForm(ModelForm):
             'data-ng-model': 'trackForm.data.file',
             'data-valid-file': '',
             'data-base-sixty-four-input': '',
+            'data-ng-change': 'trackPreview()',
+            'accept': '.gpx',
         })
         self.fields['public'].widget.attrs.update({
             'data-ng-model': 'trackForm.data.public',

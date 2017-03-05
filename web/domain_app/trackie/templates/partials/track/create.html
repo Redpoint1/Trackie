@@ -6,7 +6,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <div class="well">
             {% with form_name="trackForm" %}
             <form name="{{ form_name }}" id="track-form" data-ng-submit="createTrack()">
@@ -17,5 +17,8 @@
             </form>
             {% endwith %}
         </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="map" id="track-preview" style="max-height: 500px;"></div>
     </div>
 </div>

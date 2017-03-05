@@ -456,6 +456,11 @@
             return features;
         };
 
+        OLMapFactory.prototype.destroy = function () {
+            this.map.setTarget(null);
+            return null;
+        };
+
         return OLMapFactory;
     }]);
 
@@ -672,7 +677,7 @@
         });
     }]);
 
-    trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", function($scope, $location, Restangular){
+    trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", "OLMap", function($scope, $location, Restangular, OLMap){
         $scope.trackForm = {};
 
         $scope.createTrack = function () {
@@ -683,7 +688,26 @@
             }, function(error){
                 renderFormErrors($("#track-form"), error.data, "id_");
             });
-        }
+        };
+
+        $scope.trackPreview = function () {
+            if (!$scope.trackForm.data["file"]){
+                $scope.map = $scope.map.destroy();
+            } else {
+                $scope.map = new OLMap("track-preview");
+                $scope.map.addVectorLayer({name:"track"});
+                $scope.map.clearSource("track");
+                $scope.map.addFeaturesForSource({
+                    name: "track",
+                    features: $scope.map.readFeaturesFromGPX(
+                        atob($scope.trackForm.data["file"]["base64"])
+                    )
+                });
+                $scope.map.fitBySource("track");
+            }
+        };
+
+        $scope.$watch("")
     }]);
 
     trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", "OLMap", function ($scope, $location, $routeParams, Restangular, djangoAuth, OLMap) {
