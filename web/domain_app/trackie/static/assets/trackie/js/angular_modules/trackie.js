@@ -553,16 +553,17 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $interval, Restangular, OLMap){
+    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
         function highlight_racers(scope, ol_source) {
             if (!scope.gridApi) return;
             var selected = scope.gridApi.selection.getSelectedRows();
+            var all_selected = scope.gridApi.selection.getSelectAllState();
             var selectedIds = [];
             _.forEach(selected, function (i) {
                 selectedIds.push(i.id);
             });
             scope.map.sources[ol_source].forEachFeature(function (i) {
-                if (selected.length == 0 || _.indexOf(selectedIds, i.getId()) == -1) {
+                if (selected.length == 0 || all_selected || _.indexOf(selectedIds, i.getId()) == -1) {
                     i.setProperties({"$hide": false});
                 } else {
                     i.setProperties({"$hide": true});
@@ -626,7 +627,9 @@
                     highlight_racers($scope, "data");
                 });
                 $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
-                    highlight_racers($scope, "data");
+                    $timeout(function(){
+                        highlight_racers($scope, "data");
+                    });
                 });
             },
             columnDefs: [
