@@ -363,23 +363,19 @@
             };
             this.style = {
                 "Point": new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 5,
-                        fill: null,
-                        stroke: new ol.style.Stroke({
-                            color: [255, 0, 0],
-                            width: 1
-                        })
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        src: "/static/assets/trackie/img/marker.png",
+                        opacity: 1,
+                        scale: 0.4
                     })
                 }),
                 "Point_unselected": new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 5,
-                        fill: null,
-                        stroke: new ol.style.Stroke({
-                            color: [255, 0, 0, 0.5],
-                            width: 1
-                        })
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        src: "/static/assets/trackie/img/marker.png",
+                        opacity: 0.3,
+                        scale: 0.4
                     })
                 }),
                 "LineString": new ol.style.Style({
