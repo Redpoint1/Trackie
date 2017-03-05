@@ -64,6 +64,35 @@ form .error {
     color: #d9230f;
 }
 
+.map-end {
+    height: 100%;
+    width: calc(100% - 30px);
+    z-index: 11;
+    position: absolute;
+    left: 15px;
+}
+
+.map-end-background {
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+}
+
+.map-end .bg-warning {
+    position: absolute;
+    height: 100px;
+    top: calc(50% - 50px);
+    left: 15px;
+    width: calc(100% - 30px);
+}
+
+.text-end {
+    padding: 15px 0;
+    font-size: 2.5em;
+    text-align: center;
+    line-height: 70px;
+}
+
 /* Sticky footer */
 html {
     height: 100%;
