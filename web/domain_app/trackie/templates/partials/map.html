@@ -11,7 +11,7 @@
 </div>
 <div class="row" data-ng-show="race">
     <div class="col-xs-12">
-        <div id="sidebar" class="sidebar collapsed">
+        <div id="sidebar" onclick="event.preventDefault();" class="sidebar collapsed">
             <div class="sidebar-tabs">
                 <ul role="tablist">
                     <li><a href="#profile" target="_self" role="tab"><i class="fa fa-user"></i></a></li>
@@ -26,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div id="map" class="map" style="max-height: 500px;"></div>
+        <div id="map" class="map map-with-sidebar" style="max-height: 500px;"></div>
     </div>
     {% endverbatim %}
 </div>
