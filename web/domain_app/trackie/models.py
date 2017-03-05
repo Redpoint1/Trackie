@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from versatileimagefield.fields import VersatileImageField
 
+from .validators import FileSizeMaxValidator
+
 
 class SportType(db_models.Model):
     """ Sport type """
@@ -192,9 +194,12 @@ class Racer(db_models.Model):
     photo = VersatileImageField(
         null=True,
         blank=True,
+        # only admin can upload big files
+        # validators=[FileSizeMaxValidator(512*1024)],
         upload_to="racers/",
         # placeholder_image
-        verbose_name=_("Racer's photo")
+        verbose_name=_("Racer's photo"),
+        help_text=_("Image will be resized and cropped to 175x200")
     )
 
     def __str__(self):

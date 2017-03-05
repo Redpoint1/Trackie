@@ -4,6 +4,7 @@ from rest_framework.serializers import (HyperlinkedModelSerializer,
 from drf_extra_fields.fields import Base64FileField
 from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 from ..user.serializers import UserSerializer
+from .....validators import FileSizeMaxValidator
 from ......trackie.models import Track
 import xml.etree.ElementTree as ET
 
@@ -24,7 +25,9 @@ class TrackSerializer(HyperlinkedModelSerializer):
         read_only=True,
         default=CurrentUserDefault()
     )
-    file = GPXFieldBase()
+    file = GPXFieldBase(
+        validators=[FileSizeMaxValidator(512*1024)]
+    )
     used = SerializerMethodField()
 
     def get_used(self, obj):

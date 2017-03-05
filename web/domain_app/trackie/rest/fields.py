@@ -6,7 +6,7 @@ from versatileimagefield.utils import (
 )
 
 
-class ImageSerializer(Base64ImageField):
+class ImageLimitField(Base64ImageField):
     read_only = True
 
     ALLOWED_TYPES = (
@@ -19,7 +19,7 @@ class ImageSerializer(Base64ImageField):
         if isinstance(sizes, str):
             sizes = get_rendition_key_set(sizes)
         self.sizes = validate_versatileimagefield_sizekey_list(sizes)
-        super(ImageSerializer, self).__init__(*args, **kwargs)
+        super(ImageLimitField, self).__init__(*args, **kwargs)
 
     def to_representation(self, file):
         context_request = None

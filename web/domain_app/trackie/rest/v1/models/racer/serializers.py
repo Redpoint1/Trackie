@@ -1,16 +1,18 @@
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         SerializerMethodField)
-from ....serializers import ImageSerializer
+from ....fields import ImageLimitField
+from .....validators import FileSizeMaxValidator
 from ......trackie.models import RacerInRace, Racer
 
 
 class RacerSerializer(HyperlinkedModelSerializer):
-    photo = ImageSerializer(
+    photo = ImageLimitField(
         sizes=[
             ('normal', 'url'),
             ('thumbnail', 'crop__150x200'),
         ],
-        required=False
+        validators=[FileSizeMaxValidator(512*1024)],
+        required=False,
     )
 
     class Meta:
