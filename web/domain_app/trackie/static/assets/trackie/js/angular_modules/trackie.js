@@ -434,6 +434,28 @@
             this.map.getView().fit(this.sources[name].getExtent());
         };
 
+        OLMapFactory.prototype.clearSource = function (name) {
+            this.sources[name].clear();
+        };
+
+        OLMapFactory.prototype.addFeaturesForSource = function (options) {
+            this.sources[options.name].addFeatures(options.features);
+        };
+
+        OLMapFactory.prototype.readFeaturesFromGPX = function (data) {
+            var format = new ol.format.GPX();
+            var features = format.readFeatures(data, {featureProjection: "EPSG:3857"});
+
+            return features;
+        };
+
+        OLMapFactory.prototype.readFeaturesFromGeoJSON = function(options){
+            var format = new ol.format.GeoJSON();
+            var features = format.readFeatures(options.data, {featureProjection: options.projection});
+
+            return features;
+        };
+
         return OLMapFactory;
     }]);
 
@@ -539,7 +561,7 @@
             _.forEach(selected, function (i) {
                 selectedIds.push(i.id);
             });
-            ol_source.forEachFeature(function (i) {
+            scope.map.sources[ol_source].forEachFeature(function (i) {
                 if (selected.length == 0 || _.indexOf(selectedIds, i.getId()) == -1) {
                     i.setProperties({"$hide": false});
                 } else {
@@ -558,11 +580,15 @@
                 }
                 scope.race_data = race_data.data;
                 scope.gridOptions.data = race_data.data.features;
-                ol_source.clear();
+                scope.map.clearSource(ol_source);
 
-                var format = new ol.format.GeoJSON();
-                var features = format.readFeatures(race_data.data, {featureProjection: projection});
-                ol_source.addFeatures(features);
+                scope.map.addFeaturesForSource({
+                    name: ol_source,
+                    features: scope.map.readFeaturesFromGeoJSON({
+                        data: race_data.data,
+                        projection: projection
+                    })
+                });
 
                 highlight_racers(scope, ol_source);
             }, function(response) {
@@ -597,10 +623,10 @@
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
                 $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
-                    highlight_racers($scope, $scope.map.sources["data"]);
+                    highlight_racers($scope, "data");
                 });
                 $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
-                    highlight_racers($scope, $scope.map.sources["data"]);
+                    highlight_racers($scope, "data");
                 });
             },
             columnDefs: [
@@ -617,17 +643,18 @@
             $scope.race = response.data;
 
             Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function(json){
-                var format = new ol.format.GPX();
-                var features = format.readFeatures(json.data, {featureProjection: projection});
                 var promise = race.one("data");
 
-                $scope.map.sources["track"].addFeatures(features);
+                $scope.map.addFeaturesForSource({
+                    name: "track",
+                    features: $scope.map.readFeaturesFromGPX(json.data)
+                });
                 $scope.map.fitBySource("track");
 
-                get_race_data(promise, $scope, $scope.map.sources["data"], projection);
+                get_race_data(promise, $scope, "data", projection);
                 if (!response.data.end) {
                     $scope.data_interval = $interval(function () {
-                        get_race_data(promise, $scope, $scope.map.sources["data"], projection);
+                        get_race_data(promise, $scope, "data", projection);
                     }, 5000);
 
                     $scope.$on("$destroy", function(){
@@ -678,10 +705,10 @@
         $scope.track_source.get().then(function (response) {
             $scope.track = response.data;
             Restangular.oneUrl("tracks", response.data.file).get().then(function (file) {
-                var format = new ol.format.GPX();
-                var features = format.readFeatures(file.data, {featureProjection: "EPSG:3857"});
-
-                $scope.map.sources["track"].addFeatures(features);
+                $scope.map.addFeaturesForSource({
+                    name: "track",
+                    features:  $scope.map.readFeaturesFromGPX(file.data)
+                });
                 $scope.map.fitBySource("track");
             })
         }, function (error) {
