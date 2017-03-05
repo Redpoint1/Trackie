@@ -59,6 +59,9 @@ class TrackCreateForm(ModelForm):
             'data-base-sixty-four-input': '',
             'data-ng-change': 'trackPreview()',
             'accept': '.gpx',
+            'required': '',
+            'data-maxsize': 512,
+            'data-do-not-parse-if-oversize': '',
         })
         self.fields['public'].widget.attrs.update({
             'data-ng-model': 'trackForm.data.public',
@@ -96,6 +99,7 @@ class RacerCreateForm(ModelForm):
             'data-valid-file': '',
             'data-base-sixty-four-input': '',
             'accept': 'image/jpeg, image/jpg, image/png',
+            'data-maxsize': 512,
         })
 
 

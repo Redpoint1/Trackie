@@ -158,7 +158,7 @@ class Track(db_models.Model):
 
     file = db_models.FileField(
         upload_to="maps/",
-        help_text=_("The file can't be changed")
+        help_text=_("The file can't be changed. Maximum file size is 512 KiB")
     )
 
     public = db_models.BooleanField(
@@ -199,7 +199,10 @@ class Racer(db_models.Model):
         upload_to="racers/",
         # placeholder_image
         verbose_name=_("Racer's photo"),
-        help_text=_("Image will be resized and cropped to 175x200")
+        help_text=_(
+            "Image will be resized and cropped to 175x200, Maximum image size "
+            "is 512 KiB"
+        )
     )
 
     def __str__(self):
