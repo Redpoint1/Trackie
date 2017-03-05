@@ -563,7 +563,7 @@
                 selectedIds.push(i.id);
             });
             scope.map.sources[ol_source].forEachFeature(function (i) {
-                if (selected.length == 0 || all_selected || _.indexOf(selectedIds, i.getId()) == -1) {
+                if (selected.length == 0 || all_selected || _.indexOf(selectedIds, i.getId()) > -1) {
                     i.setProperties({"$hide": false});
                 } else {
                     i.setProperties({"$hide": true});
