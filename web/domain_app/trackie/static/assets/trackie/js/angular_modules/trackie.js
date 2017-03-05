@@ -659,7 +659,7 @@
                 if (!response.data.end) {
                     $scope.data_interval = $interval(function () {
                         get_race_data(promise, $scope, "data", projection);
-                    }, 5000);
+                    }, 1000);
 
                     $scope.$on("$destroy", function(){
                         $interval.cancel($scope.data_interval);
