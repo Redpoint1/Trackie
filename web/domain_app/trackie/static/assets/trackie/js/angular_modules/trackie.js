@@ -555,21 +555,32 @@
     }]);
 
     trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
-        function highlight_racers(scope, ol_source) {
-            if (!scope.gridApi) return;
-            var selected = scope.gridApi.selection.getSelectedRows();
+        function highlight_racers(scope, source) {
+            if (!scope.gridApi) return source;
+            var selected_features = scope.gridApi.selection.getSelectedRows();
             var all_selected = scope.gridApi.selection.getSelectAllState();
             var selectedIds = [];
-            _.forEach(selected, function (i) {
-                selectedIds.push(i.id);
+            _.forEach(selected_features, function (selected_fature) {
+                selectedIds.push(selected_fature.properties.racer.id);
             });
-            scope.map.sources[ol_source].forEachFeature(function (i) {
-                if (selected.length == 0 || all_selected || _.indexOf(selectedIds, i.getId()) > -1) {
-                    i.setProperties({"$hide": false});
-                } else {
-                    i.setProperties({"$hide": true});
-                }
-            });
+            if (typeof source == "string") {
+                scope.map.sources[source].forEachFeature(function (feature) {
+                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, feature.getProperties().racer.id) > -1) {
+                        feature.setProperties({"$hide": false});
+                    } else {
+                        feature.setProperties({"$hide": true});
+                    }
+                });
+            } else {
+                _.forEach(source, function (feature) {
+                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, feature.getProperties().racer.id) > -1) {
+                        feature.setProperties({"$hide": false});
+                    } else {
+                        feature.setProperties({"$hide": true});
+                    }
+                });
+            }
+            return source;
         }
 
         function get_race_data(promise, scope, ol_source, projection) {
@@ -584,15 +595,15 @@
                 scope.gridOptions.data = race_data.data.features;
                 scope.map.clearSource(ol_source);
 
+                var features = scope.map.readFeaturesFromGeoJSON({
+                    data: race_data.data,
+                    projection: projection
+                });
+                features = highlight_racers(scope, features);
                 scope.map.addFeaturesForSource({
                     name: ol_source,
-                    features: scope.map.readFeaturesFromGeoJSON({
-                        data: race_data.data,
-                        projection: projection
-                    })
+                    features: features
                 });
-
-                highlight_racers(scope, ol_source);
             }, function(response) {
                 console.log(response);
             });
