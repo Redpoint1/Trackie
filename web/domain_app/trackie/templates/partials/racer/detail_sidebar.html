@@ -1,0 +1,26 @@
+<div class="row" data-ng-show="racer">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0; padding-bottom: 0px; margin: 10px 0 10px;">
+            {% verbatim %}
+            <h3 style="margin-top: 0;">{{ racer.first_name }} {{ racer.last_name }}</h3>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="racer">
+    <div class="col-sm-12 text-center">
+        {% verbatim %}
+        <img data-ng-if="racer.photo.thumbnail" data-ng-src="{{ racer.photo.thumbnail }}"/>
+        {% endverbatim %}
+    </div>
+</div>
+<div class="row" style="margin-top: 10px;" data-ng-show="racer">
+    <div class="col-sm-12">
+        {% verbatim %}
+        <dl>
+            <dt>O pretekárovi</dt>
+            <dd class="text-pre-line">{{ racer.about || "Prázdné" }}</dd>
+        </dl>
+        {% endverbatim %}
+    </div>
+</div>

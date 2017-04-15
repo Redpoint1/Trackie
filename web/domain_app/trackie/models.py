@@ -8,8 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from versatileimagefield.fields import VersatileImageField
 
-from .validators import FileSizeMaxValidator
-
 
 class SportType(db_models.Model):
     """ Sport type """
@@ -189,6 +187,12 @@ class Racer(db_models.Model):
         blank=False,
         max_length=255,
         verbose_name=_("Last name"),
+    )
+
+    about = db_models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_("About racer")
     )
 
     photo = VersatileImageField(

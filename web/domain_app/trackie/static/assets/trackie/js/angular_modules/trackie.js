@@ -105,6 +105,9 @@
             }).when("/racer/:id/update", {
                 templateUrl: "partials/racer/update.html",
                 controller: "RacerUpdateController"
+            }).when("/sports/:id", {
+                templateUrl: "partials/sport_type/detail.html",
+                controller: "SportDetailController"
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -361,11 +364,21 @@
                     source: new ol.source.OSM()
                 })
             };
+            this.interactions = {};
+            this.selectedFeature = null;
             this.style = {
                 "Point": new ol.style.Style({
                     image: new ol.style.Icon({
                         anchor: [0.5, 1],
                         src: "/static/assets/trackie/img/marker.png",
+                        opacity: 1,
+                        scale: 0.4
+                    })
+                }),
+                "Point_selected": new ol.style.Style({
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        src: "/static/assets/trackie/img/marker_select.png",
                         opacity: 1,
                         scale: 0.4
                     })
@@ -426,6 +439,16 @@
             this.map.addControl(this.sidebar);
         };
 
+        OLMapFactory.prototype.openSidebar = function(tab_name){
+            if (!this.sidebar) {return;}
+            this.sidebar.open(tab_name);
+        };
+
+        OLMapFactory.prototype.closeSidebar = function(){
+            if (!this.sidebar) {return;}
+            this.sidebar.close();
+        };
+
         OLMapFactory.prototype.fitBySource = function (name) {
             this.map.getView().fit(this.sources[name].getExtent());
         };
@@ -436,6 +459,10 @@
 
         OLMapFactory.prototype.addFeaturesForSource = function (options) {
             this.sources[options.name].addFeatures(options.features);
+        };
+
+        OLMapFactory.prototype.selectFeature = function(feature){
+            this.selectedFeature = feature;
         };
 
         OLMapFactory.prototype.readFeaturesFromGPX = function (data) {
@@ -556,27 +583,49 @@
 
     trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
         function highlight_racers(scope, source) {
+            ol.control.Sidebar.prototype._onCloseClick = function() {
+                console.log("HWUR");
+                this.close();
+            };
+
             if (!scope.gridApi) return source;
             var selected_features = scope.gridApi.selection.getSelectedRows();
             var all_selected = scope.gridApi.selection.getSelectAllState();
             var selectedIds = [];
+            var selectedInMapId = scope.map.selectedFeature ? scope.map.selectedFeature.getProperties().racer.id : null;
+
             _.forEach(selected_features, function (selected_fature) {
                 selectedIds.push(selected_fature.properties.racer.id);
             });
+
             if (typeof source == "string") {
                 scope.map.sources[source].forEachFeature(function (feature) {
-                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, feature.getProperties().racer.id) > -1) {
+                    var featureId = feature.getProperties().racer.id;
+                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, featureId) > -1) {
                         feature.setProperties({"$hide": false});
                     } else {
                         feature.setProperties({"$hide": true});
                     }
+
+                    if (selectedInMapId && selectedInMapId == featureId) {
+                        feature.setProperties({"$selected": true});
+                    } else {
+                        feature.setProperties({"$selected": false});
+                    }
                 });
             } else {
                 _.forEach(source, function (feature) {
-                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, feature.getProperties().racer.id) > -1) {
+                    var featureId = feature.getProperties().racer.id;
+                    if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, featureId) > -1) {
                         feature.setProperties({"$hide": false});
                     } else {
                         feature.setProperties({"$hide": true});
+                    }
+
+                    if (selectedInMapId && selectedInMapId == featureId) {
+                        feature.setProperties({"$selected": true});
+                    } else {
+                        feature.setProperties({"$selected": false});
                     }
                 });
             }
@@ -600,10 +649,12 @@
                     projection: projection
                 });
                 features = highlight_racers(scope, features);
+
                 scope.map.addFeaturesForSource({
                     name: ol_source,
                     features: features
                 });
+
             }, function(response) {
                 console.log(response);
             });
@@ -617,10 +668,47 @@
                 var type = feature.getGeometry().getType();
                 if (feature.getProperties()["$hide"]) {
                     type += "_unselected";
+                } else if (feature.getProperties()["$selected"]){
+                    type += "_selected";
                 }
                 return $scope.map.style[type];
             }
         });
+
+        $("#map").on("click", function(event){
+            $scope.map.map.forEachFeatureAtPixel([event.offsetX, event.offsetY], function(feature){
+                if (feature.getGeometry().getType() == "Point"){
+                    if ($scope.map.selectedFeature && $scope.map.selectedFeature.getProperties().racer.id == feature.getProperties().racer.id) {
+                        $scope.map.selectedFeature = null;
+                    } else {
+                        $scope.map.selectedFeature = feature;
+                    }
+                    highlight_racers($scope, "data");
+
+                    if (!$scope.map.selectedFeature) {
+                        $scope.map.closeSidebar();
+                        return;
+                    }
+                    var _racer = feature.getProperties()["racer"];
+                    var regex = new RegExp(Restangular.configuration.baseUrl + "(.*)$");
+                    var endpoint = regex.exec(_racer.url);
+                    Restangular.oneUrl(endpoint[1]).get().then(function (response) {
+                        if (response.status == 200) {
+                            $scope.racer = response.data;
+                            $scope.map.openSidebar("profile");
+                        }
+                    })
+                }
+            }, {
+                hitTolerance: 5
+            });
+        });
+
+        $(".sidebar-close").on("click", function(){
+            $scope.map.selectedFeature = null;
+            highlight_racers($scope, "data");
+        });
+
         $scope.map.addSidebar({element: "sidebar", position: "left"});
 
         $scope.gridOptions = {
@@ -831,5 +919,37 @@
                 $location.url("/" + error.status + "?from="+$location.path());
             }
         });
+    }]);
+
+    trackie_module.controller("SportDetailController", ["$scope", "Restangular", function($scope, Restangular){
+        // TODO
+        $scope.gridOptions = {
+            primaryKey: "properties.racer.number",
+            enableRowSelection: false,
+            multiSelect: false,
+            enableSelectAll: false,
+            paginationPageSizes: false,
+            paginationPageSize: 10,
+            rowIdentity: function (row) {
+                return row.properties.racer.number;
+            },
+            onRegisterApi: function(gridApi){
+                $scope.gridApi = gridApi;
+                $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
+                    highlight_racers($scope, "data");
+                });
+                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
+                    $timeout(function(){
+                        highlight_racers($scope, "data");
+                    });
+                });
+            },
+            columnDefs: [
+                {name:"Číslo", field: "properties.racer.number"},
+                {name:"Meno", field: "properties.racer.first_name"},
+                {name:"Priezvisko", field: "properties.racer.last_name"},
+                {name:"Čas", field: "properties.data.time"}
+            ]
+        };
     }]);
 }());

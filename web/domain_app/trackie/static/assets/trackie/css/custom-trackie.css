@@ -6,6 +6,10 @@
     font-weight: bold;
 }
 
+.text-pre-line {
+    white-space: pre-line;
+}
+
 .underline-text {
     text-decoration: underline;
 }

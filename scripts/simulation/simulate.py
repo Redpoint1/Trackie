@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 import time
@@ -5,7 +6,10 @@ import datetime
 import requests
 
 if __name__ == "__main__":
-    f = open("json.txt")
+    file_path = os.path.abspath(__file__)
+    current_path = os.path.dirname(file_path)
+    json_path = os.path.join(current_path, "json.txt")
+    f = open(json_path)
     coords = json.load(f)
     racer_1 = 0
     racer_2 = 0

@@ -7,7 +7,7 @@ from .models import Track, Racer
 class RegisterForm(SignupForm):
 
     def __init__(self, *args, **kwargs):
-        super(SignupForm, self).__init__(*args, **kwargs)
+        super(RegisterForm, self).__init__(*args, **kwargs)
         self.fields['password1'].widget.attrs.update({
             'data-ng-model': 'password1',
             'class': 'form-control',
