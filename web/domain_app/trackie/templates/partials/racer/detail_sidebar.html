@@ -2,7 +2,10 @@
     <div class="col-xs-12">
         <div class="page-header" style="margin-top: 0; padding-bottom: 0px; margin: 10px 0 10px;">
             {% verbatim %}
-            <h3 style="margin-top: 0;">{{ racer.first_name }} {{ racer.last_name }}</h3>
+            <h3 style="margin-top: 0;">{{ racer.first_name }} {{ racer.last_name }}
+                <i data-ng-if="racer.id == map.focusOnRacer" class="fa fa-eye-slash" title="Ukončiť sledovanie pretekára" data-ng-click="map.toggleRacerFocus(racer, 'data')"></i>
+                <i data-ng-if="racer.id != map.focusOnRacer" class="fa fa-eye" title="Sledovať pretekára" data-ng-click="map.toggleRacerFocus(racer, 'data')"></i>
+            </h3>
             {% endverbatim %}
         </div>
     </div>
@@ -22,5 +25,11 @@
             <dd class="text-pre-line">{{ racer.about || "Prázdné" }}</dd>
         </dl>
         {% endverbatim %}
+    </div>
+</div>
+
+<div class="row" data-ng-hide="racer">
+    <div class="col-xs-12 text-center">
+        Vyberte pretekára
     </div>
 </div>

@@ -366,6 +366,7 @@
             };
             this.interactions = {};
             this.selectedFeature = null;
+            this.focusOnRacer = null;
             this.style = {
                 "Point": new ol.style.Style({
                     image: new ol.style.Icon({
@@ -482,6 +483,24 @@
         OLMapFactory.prototype.destroy = function () {
             this.map.setTarget(null);
             return null;
+        };
+
+        OLMapFactory.prototype.toggleRacerFocus = function (racer, source) {
+            if (racer.id == this.focusOnRacer) {
+                this.focusOnRacer = null;
+            } else {
+                this.focusOnRacer = racer.id;
+                this.setCenter(source);
+            }
+        };
+
+        OLMapFactory.prototype.setCenter = function (source) {
+            var self = this;
+            this.sources[source].forEachFeature(function (feature) {
+                if (feature.getProperties().racer.id == self.focusOnRacer){
+                    self.map.getView().setCenter(feature.getGeometry().getExtent());
+                }
+            });
         };
 
         return OLMapFactory;
@@ -654,6 +673,7 @@
                     name: ol_source,
                     features: features
                 });
+                scope.map.setCenter(ol_source);
 
             }, function(response) {
                 console.log(response);
@@ -675,8 +695,8 @@
             }
         });
 
-        $("#map").on("click", function(event){
-            $scope.map.map.forEachFeatureAtPixel([event.offsetX, event.offsetY], function(feature){
+        $scope.map.map.on("click", function(event){
+            $scope.map.map.forEachFeatureAtPixel(event.pixel, function(feature){
                 if (feature.getGeometry().getType() == "Point"){
                     if ($scope.map.selectedFeature && $scope.map.selectedFeature.getProperties().racer.id == feature.getProperties().racer.id) {
                         $scope.map.selectedFeature = null;
