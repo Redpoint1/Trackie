@@ -145,3 +145,98 @@ html {
     margin-left: 55px;
 }
 /* End old-sidebar2 */
+
+/* player */
+.player {
+    background-color: #1c1d1d;
+    height: 50px;
+}
+
+.player-progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #2e2f2f;
+    display: inline-block;
+    position: relative;
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    -ms-transition: height 0.2s;
+    -o-transition: height 0.2s;
+    transition: height 0.2s;
+}
+
+.player-progress-bar:hover {
+    height: 20px;
+}
+
+.player-progress-bar-done {
+    height: 100%;
+    background-color: #e74c3c;
+}
+
+.player-progress-bar-text {
+    transform: scale(0);
+    position: absolute;
+    top: 0;
+    left: 5px;
+    color: #fff;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    -webkit-transition: transform 0.2s;
+    -moz-transition: transform 0.2s;
+    -ms-transition:transform 0.2s;
+    -o-transition: transform 0.2s;
+    transition: transform 0.2s;
+}
+
+
+.player-progress-bar:hover > .player-progress-bar-text {
+    transform: scale(1);
+}
+
+.timestamp {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: #1b6d85;
+    font-size: 0.75em;
+}
+
+.timestamp-body {
+    position: relative;
+}
+
+.timestamp-text {
+    padding: 5px 5px 0;
+    color: #fff;
+}
+
+.timestamp-bottom {
+    position: absolute;
+    left: 50%;
+}
+
+.timestamp-caret {
+    height: 0;
+    width: 0;
+    position: relative;
+    left: -50%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #1b6d85;
+}
+
+.flex {
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    align-items: center;
+    height: 100%
+}
+
+.flex-item {
+    margin: 0 5px;
+}
+/* End player*/

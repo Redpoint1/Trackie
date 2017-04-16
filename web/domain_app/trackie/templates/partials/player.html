@@ -1,0 +1,30 @@
+<div class="timestamp">
+    <div class="timestamp-body">
+        <div class="timestamp-text">Ola</div>
+        <div class="timestamp-bottom">
+            <div class="timestamp-caret"></div>
+        </div>
+    </div>
+</div>
+<div class="player">
+    <div class="flex">
+        <div class="flex-item">
+            <select>
+                <option value="1" SELECTED>1x</option>
+                <option value="2">2x</option>
+                <option value="5">5x</option>
+                <option value="10">10x</option>
+                <option value="20">20x</option>
+            </select>
+        </div>
+        <div class="flex-item" style="width: 18px;">
+            <i class="fa fa-lg fa-inverse" data-ng-class="{'fa-pause': play, 'fa-play': !play}" data-ng-click="play = !play"></i>
+        </div>
+        {% verbatim %}
+        <div class="flex-item player-progress-bar">
+            <div class="player-progress-bar-done" data-ng-style="{width: width + 'px'}"></div>
+            <div class="player-progress-bar-text">{{ current }}</div>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>

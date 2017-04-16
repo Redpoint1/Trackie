@@ -580,6 +580,51 @@
         }
     });
 
+    trackie_module.directive("player", ["$timeout", function ($timeout) {
+        function link(scope, element) {
+            var top_position = 0;
+            var count = 10;
+            var done_bar = element.find(".player-progress-bar");
+
+            scope.play = false;
+            scope.current = 2;
+            window.done_bar = done_bar;
+            scope.width = 0;
+            $timeout(function () {
+                scope.width = Math.max(Math.floor((scope.current + 1) * (done_bar.width() / count) - 1), 0);
+
+                var timestamp = element.find(".timestamp");
+                var timestamp_text = timestamp.find(".timestamp-text");
+                element.find(".player-progress-bar")
+                    .on("mousemove", function (e) {
+                        timestamp.offset({
+                            top: top_position,
+                            left: e.clientX - timestamp.width() / 2
+                        });
+                        timestamp_text.text(Math.floor(e.offsetX / ($(e.currentTarget).width() / count)));
+                        e.preventDefault();
+                    })
+                    .on("mouseleave", function () {
+                        timestamp.hide();
+                    })
+                    .on("mouseenter", function (e) {
+                        var bar = $(e.currentTarget);
+                        top_position = bar.offset().top - (20 - bar.height()) - 25;
+                        timestamp.show();
+                    });
+            }, 500);
+        }
+
+        return {
+            link: link,
+            restrict: "E",
+            templateUrl: "partials/player.html",
+            scope: {
+                race: "=ngRace"
+            }
+        };
+    }]);
+
     // Controllers
 
     trackie_module.controller("MainController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {

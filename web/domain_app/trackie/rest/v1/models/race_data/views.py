@@ -40,6 +40,9 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         bulk = isinstance(request.data, list)
         self.serializer_class = RaceDataGeoJSONPostSerializer
         race = Race.objects.get(pk=kwargs["race_pk"])
+        if not race.data.count():
+            race.real_start = datetime.now()
+            race.save()
         if race.end:
             raise RaceFinishedException
         racers = race.racers.all().values("number", "racer")

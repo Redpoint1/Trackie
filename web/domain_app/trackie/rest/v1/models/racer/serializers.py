@@ -17,7 +17,14 @@ class RacerSerializer(HyperlinkedModelSerializer):
 
     class Meta:
         model = Racer
-        fields = ("id", "url", "first_name", "last_name", "photo", "about",)
+        fields = (
+            "id",
+            "url",
+            "first_name",
+            "last_name",
+            "photo",
+            "about",
+        )
 
 
 class RaceRacerSerializer(RacerSerializer):

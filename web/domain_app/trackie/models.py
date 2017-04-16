@@ -281,6 +281,12 @@ class Race(db_models.Model):
         verbose_name=_("Begins at"),
     )
 
+    real_start = db_models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("First data received at")
+    )
+
     end = db_models.DateTimeField(
         null=True,
         blank=True,
