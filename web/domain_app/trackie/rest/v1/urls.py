@@ -3,7 +3,7 @@
 from django.conf.urls import url
 from rest_framework import routers
 
-from .models.race_data.views import RaceDataViewSet
+from .models.race_data.views import RaceDataViewSet, RaceDataReplayViewSet
 from .models.race.views import RaceViewSet, TournamentRacesViewSet
 from .models.race_type.views import RaceTypeViewSet
 from .models.sport_type.views import SportTypeViewSet
@@ -19,6 +19,12 @@ router.register(
     r'races/(?P<race_pk>\d+)/data',
     RaceDataViewSet,
     base_name="racedata",
+)
+
+router.register(
+    r'races/(?P<race_pk>\d+)/replay',
+    RaceDataReplayViewSet,
+    base_name="racereplay",
 )
 
 router.register(

@@ -9,7 +9,11 @@ INSTALLED_APPS += (
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    )
+)
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = True
 SHOW_TOOLBAR_CALLBACK = True
+
+INTERNAL_IPS = [
+    "127.0.0.1"
+]

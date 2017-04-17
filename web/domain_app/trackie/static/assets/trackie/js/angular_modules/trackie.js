@@ -647,11 +647,6 @@
 
     trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
         function highlight_racers(scope, source) {
-            ol.control.Sidebar.prototype._onCloseClick = function() {
-                console.log("HWUR");
-                this.close();
-            };
-
             if (!scope.gridApi) return source;
             var selected_features = scope.gridApi.selection.getSelectedRows();
             var all_selected = scope.gridApi.selection.getSelectAllState();
@@ -700,8 +695,10 @@
             promise.get().then(function (race_data) {
                 if (race_data.status == 204) {
                     $interval.cancel(scope.data_interval);
-                    console.log("Race stream has been ended");
                     scope.endOfRace = true;
+                    $scope.race_rest.get().then(function (response) {
+                        $scope.race = response.data;
+                    }, function (error) {});
                     return;
                 }
                 scope.race_data = race_data.data;
@@ -724,6 +721,9 @@
                 console.log(response);
             });
         }
+
+        $scope.endOfRace = false;
+        $scope.showPlayer = false;
 
         $scope.map = new OLMap("map");
         $scope.map.addVectorLayer({name: "track"});
@@ -805,13 +805,13 @@
             ]
         };
 
-        var race = Restangular.one("races", $routeParams.id);
-        race.get().then(function(response){
+        $scope.race_rest = Restangular.one("races", $routeParams.id);
+        $scope.race_rest.get().then(function(response){
             var projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
             $scope.race = response.data;
 
             Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function(json){
-                var promise = race.one("data");
+                var promise = $scope.race_rest.one("data");
 
                 $scope.map.addFeaturesForSource({
                     name: "track",

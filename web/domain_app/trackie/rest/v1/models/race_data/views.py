@@ -1,4 +1,4 @@
-from django.utils.timezone import datetime
+from django.utils.timezone import datetime, timedelta
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status, exceptions
 from rest_framework.exceptions import ValidationError
@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from .serializers import (RaceDataGeoJSONPostSerializer,
                           RaceDataGeoJSONSerializer)
 from ..race.serializers import RaceSerializer
-from ......trackie.models import Race
+from ......trackie.models import Race, RaceData
 
 
 # class RaceDataPaginator(LimitOffsetPagination):
@@ -91,3 +91,39 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         race.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+class RaceDataReplayViewSet(viewsets.ModelViewSet):
+    # pagination_class = RaceDataPaginator
+    queryset = Race.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        self.serializer_class = RaceDataGeoJSONSerializer
+
+        from_seconds = int(request.query_params.get("from", 0))
+        count = int(request.query_params.get("count", 10))
+
+        from_time = datetime.fromtimestamp(from_seconds)
+
+        time_ranges = RaceData.objects.filter(
+            received__gt=from_time,
+            race=kwargs["race_pk"]
+        ).order_by("received").datetimes("received", "second")[:count]
+
+        result = []
+        for time_range in time_ranges:
+            time_range_max = time_range + timedelta(
+                microseconds=timedelta.max.microseconds
+            )
+
+            self.queryset = RaceData.objects.filter(
+                race=kwargs["race_pk"],
+                received__range=(
+                    time_range,
+                    time_range_max
+                )
+            ).order_by("received", "racer_id")
+
+            queryset = self.filter_queryset(self.get_queryset())
+            serializer = self.get_serializer(queryset, many=True)
+            result.append(serializer.data)
+        return Response(result)
