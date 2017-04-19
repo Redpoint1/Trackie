@@ -1,4 +1,4 @@
-from django.utils.timezone import datetime, timedelta
+import django.utils.timezone as timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status, exceptions
 from rest_framework.exceptions import ValidationError
@@ -41,7 +41,7 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         self.serializer_class = RaceDataGeoJSONPostSerializer
         race = Race.objects.get(pk=kwargs["race_pk"])
         if not race.data.count():
-            race.real_start = datetime.now()
+            race.real_start = timezone.now()
             race.save()
         if race.end:
             raise RaceFinishedException
@@ -49,7 +49,7 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         # dict(racer.number: racer.id)
         racers = dict([(racer["number"], racer["racer"]) for racer in racers])
         url = RaceSerializer(race, context={'request': request}).data["url"]
-        now = datetime.now()
+        now = timezone.now()
 
         if bulk:
             errors = []
@@ -87,7 +87,8 @@ class RaceDataViewSet(viewsets.ModelViewSet):
 
     def delete(self, request, *args, **kwargs):
         race = Race.objects.get(pk=kwargs["race_pk"])
-        race.end = datetime.now()
+        race.end = timezone.now()
+        race.real_end = race.data.last().received
         race.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -99,10 +100,10 @@ class RaceDataReplayViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         self.serializer_class = RaceDataGeoJSONSerializer
 
-        from_seconds = int(request.query_params.get("from", 0))
-        count = int(request.query_params.get("count", 10))
+        from_miliseconds = int(request.query_params.get("from") or 0)
+        count = int(request.query_params.get("count") or 10)
 
-        from_time = datetime.fromtimestamp(from_seconds)
+        from_time = timezone.datetime.utcfromtimestamp(from_miliseconds // 1000) + timezone.timedelta(microseconds=timezone.timedelta.max.microseconds)
 
         time_ranges = RaceData.objects.filter(
             received__gt=from_time,
@@ -111,8 +112,8 @@ class RaceDataReplayViewSet(viewsets.ModelViewSet):
 
         result = []
         for time_range in time_ranges:
-            time_range_max = time_range + timedelta(
-                microseconds=timedelta.max.microseconds
+            time_range_max = time_range + timezone.timedelta(
+                microseconds=timezone.timedelta.max.microseconds
             )
 
             self.queryset = RaceData.objects.filter(

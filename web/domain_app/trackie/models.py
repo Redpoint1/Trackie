@@ -292,6 +292,12 @@ class Race(db_models.Model):
         blank=True,
     )
 
+    real_end = db_models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_("Last data received at")
+    )
+
     estimated_duration = db_models.IntegerField(
         null=True,
         blank=False,

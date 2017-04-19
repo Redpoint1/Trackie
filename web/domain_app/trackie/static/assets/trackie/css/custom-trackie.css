@@ -14,6 +14,19 @@
     text-decoration: underline;
 }
 
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
 .header-logo {
     height: 100%;
 }
@@ -84,8 +97,8 @@ form .error {
 
 .map-end .bg-warning {
     position: absolute;
-    height: 100px;
-    top: calc(50% - 50px);
+    height: 130px;
+    top: calc(50% - 130px / 2);
     left: 15px;
     width: calc(100% - 30px);
 }
@@ -152,11 +165,18 @@ html {
     height: 50px;
 }
 
-.player-progress-bar {
+.player-progress {
     width: 100%;
     height: 10px;
-    background-color: #2e2f2f;
+    display: inline-flex;
+    align-items: center;
+}
+
+.player-progress-bar {
+    height: 100%;
+    width: 100%;
     display: inline-block;
+    background-color: #2e2f2f;
     position: relative;
     -webkit-transition: height 0.2s;
     -moz-transition: height 0.2s;
@@ -171,7 +191,15 @@ html {
 
 .player-progress-bar-done {
     height: 100%;
+    background-color: #6c6d6d;
+}
+
+.player-progress-bar-played {
+height: 100%;
     background-color: #e74c3c;
+    position: absolute;
+    top: 0;
+    left: 0
 }
 
 .player-progress-bar-text {
@@ -189,6 +217,7 @@ html {
     -ms-transition:transform 0.2s;
     -o-transition: transform 0.2s;
     transition: transform 0.2s;
+    overflow: hidden;
 }
 
 
@@ -204,21 +233,21 @@ html {
     font-size: 0.75em;
 }
 
-.timestamp-body {
+.timestamp > .timestamp-body {
     position: relative;
 }
 
-.timestamp-text {
-    padding: 5px 5px 0;
+.timestamp .timestamp-body > .timestamp-text {
+    padding: 5px;
     color: #fff;
 }
 
-.timestamp-bottom {
+.timestamp .timestamp-body > .timestamp-bottom {
     position: absolute;
     left: 50%;
 }
 
-.timestamp-caret {
+.timestamp .timestamp-bottom > .timestamp-caret {
     height: 0;
     width: 0;
     position: relative;

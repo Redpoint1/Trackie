@@ -1,3 +1,4 @@
+from django.db.models import Count
 from rest_framework.serializers import (HyperlinkedModelSerializer,
                                         SerializerMethodField)
 import rest_framework.reverse as reverse
@@ -14,6 +15,10 @@ class RaceSerializer(HyperlinkedModelSerializer):
     tournament = TournamentSerializer()
     data = SerializerMethodField("data_url")
     projection = ProjectionSerializer()
+    records_count = SerializerMethodField("count")
+
+    def count(self, obj):
+        return obj.data.datetimes("received", "second").count()
 
     def data_url(self, obj):
         kwargs = {

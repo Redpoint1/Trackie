@@ -30,13 +30,18 @@
         <div class="map-end" data-ng-show="endOfRace">
             <div class="map-end-background"></div>
             <div class="bg-warning">
-                <div class="text-end">Živý prenos bol ukončený</div>
+                <div class="text-end">
+                    <div>Živý prenos bol ukončený</div>
+                    <div style="line-height: 30px">
+                        <button data-ng-click="replay();" class="btn btn-primary">Sledovať záznam</button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="map" class="map map-with-sidebar" style="max-height: 500px;"></div>
     </div>
     <div class="col-xs-12">
-        <player data-ng-show="race.end && showPlayer" data-ng-race="race"></player>
+        <player data-ng-show="showPlayer"></player>
     </div>
     {% endverbatim %}
 </div>

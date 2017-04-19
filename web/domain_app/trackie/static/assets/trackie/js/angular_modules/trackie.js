@@ -506,6 +506,168 @@
         return OLMapFactory;
     }]);
 
+    trackie_module.factory("Player", ["Restangular", function (Restangular) {
+        function Player(element, scope) {
+            this.scope = scope;
+            this.element = element;
+            this.start = new Date(scope.race.real_start);
+            this.end = new Date(scope.race.real_end);
+            this.total_count = scope.race.records_count;
+            this.scope.play = false;
+            this.scope.diff_time = true;
+            this.step = 0;
+            this.data = [];
+
+            var top_position = 0;
+            var timestamp = $(
+                "<div class='timestamp'>" +
+                "<div class='timestamp-body'>" +
+                "<div class='timestamp-text'></div>" +
+                "<div class='timestamp-bottom'>" +
+                "<div class='timestamp-caret'></div>" +
+                "</div></div></div>"
+            );
+            $("body").append(timestamp);
+            var self = this;
+            element.find(".player-progress-bar")
+                .on("mousemove", function (e) {
+                    e.preventDefault();
+                    var step = Math.floor((e.offsetX) / (($(e.currentTarget).width()) / self.total_count));
+                    if (step > self.loaded_records()){
+                        timestamp.hide();
+                    } else {
+                        timestamp.show();
+                            timestamp.offset({
+                            top: top_position - timestamp.height() - 15,
+                            left: e.clientX - timestamp.width() / 2
+                        });
+                        timestamp.find(".timestamp-text").text(self.timestamp(step));
+                    }
+                })
+                .on("mouseleave", function () {
+                    timestamp.hide();
+                })
+                .on("mouseenter", function (e) {
+                    var bar = $(e.currentTarget);
+                    top_position = bar.offset().top;
+                })
+                .on("click", function (e) {
+                    e.preventDefault();
+                    var step = Math.floor((e.offsetX) / (($(e.currentTarget).width()) / self.total_count));
+                    if (step > self.loaded_records()){
+                        timestamp.hide();
+                    } else {
+                        self.setStep(step + 1);
+                    }
+                });
+        }
+
+        Player.prototype.setData = function (data, i) {
+            var parsed_data = [];
+            var self = this;
+            _.forEach(data, function(record){
+                parsed_data.push(self.parseRecord(record));
+            });
+            Array.prototype.push.apply(this.data, parsed_data);
+        };
+
+        Player.prototype.parseRecord = function (record) {
+            return {
+                time: this.getDateFromRecord(record),
+                data: record
+            }
+        };
+
+        Player.prototype.getDateFromRecord = function(record) {
+            return new Date(record.features[0].properties.received);
+        };
+
+        Player.prototype.loadData = function(race, from){
+            from = from || "";
+            if (!this.complete()){
+                var self = this;
+                Restangular.one("races", race).getList("replay", {from: from}).then(function(response){
+                    self.setData(response.data.plain());
+                    self.element.find(".player-progress-bar-done").width("calc(100% / " + self.total_count + " * " + self.loaded_records() + ")");
+                    self.loadData(race, self.getLastRecordTimestamp());
+                });
+            }
+        };
+
+        Player.prototype.complete = function () {
+            return this.end.getTime() == this.getLastRecordTimestamp();
+        };
+
+        Player.prototype.getLastRecordTimestamp = function(){
+            var record = this.data[this.data.length - 1];
+            if (record){
+                return record.time.getTime();
+            }
+            return 0;
+        };
+
+        Player.prototype.resume = function (skip_inc) {
+            if (this.step >= (this.loaded_records())) return;
+            this.scope.play = true;
+            this.scope.$applyAsync();
+            this.render(skip_inc);
+            var self = this;
+            this.interval = setInterval(function () {
+                self.render();
+            }, 1000 / this.scope.play_speed);
+        };
+
+        Player.prototype.stop = function () {
+            this.scope.play = false;
+            this.scope.$applyAsync();
+            clearInterval(this.interval);
+        };
+
+        Player.prototype.togglePlay = function () {
+            if (this.scope.play)
+                this.stop();
+            else
+                this.resume();
+        };
+
+        Player.prototype.render = function (skip_inc) {
+            if (this.scope.play && !skip_inc) this.step++;
+            this.element.find(".player-progress-bar-played").width("calc(100% / " + this.total_count + " * " + this.step + ")");
+            this.element.find(".player-progress-bar-text").text(this.timestamp(this.step - 1));
+            if (this.data.length)
+                this.scope.$parent.set_data(this.data[this.step - 1].data);
+            if (this.step >= (this.loaded_records())){
+                this.stop();
+            }
+        };
+
+        Player.prototype.loaded_records = function () {
+            return this.data.length;
+        };
+
+        Player.prototype.timestamp = function (step) {
+            var result = this.data[step];
+            result = result ? result.time : this.start;
+
+            if (this.scope.diff_time){
+                result = new Date(result - this.start);
+            }
+            return result.toISOString().match(/\d\d:\d\d:\d\d/)[0];
+        };
+
+        Player.prototype.setStep = function(step){
+            this.step = step;
+            if (this.scope.play){
+                this.stop();
+                this.resume(true);
+            } else {
+                this.render(true);
+            }
+        };
+
+        return Player;
+    }]);
+
     // Directives
 
     trackie_module.directive("loginModal", ["djangoAuth", "$window", function (djangoAuth, $window) {
@@ -580,48 +742,34 @@
         }
     });
 
-    trackie_module.directive("player", ["$timeout", function ($timeout) {
+    trackie_module.directive("player", ["Player", function (Player) {
         function link(scope, element) {
-            var top_position = 0;
-            var count = 10;
-            var done_bar = element.find(".player-progress-bar");
+            scope.play_speed = "1";
 
-            scope.play = false;
-            scope.current = 2;
-            window.done_bar = done_bar;
-            scope.width = 0;
-            $timeout(function () {
-                scope.width = Math.max(Math.floor((scope.current + 1) * (done_bar.width() / count) - 1), 0);
+            scope.$parent.$watch("race", function(newItem){
+                if (newItem && newItem.end && !scope.player){
+                    scope.player = new Player(element, scope);
+                    scope.$parent.player = scope.player;
+                }
+            });
 
-                var timestamp = element.find(".timestamp");
-                var timestamp_text = timestamp.find(".timestamp-text");
-                element.find(".player-progress-bar")
-                    .on("mousemove", function (e) {
-                        timestamp.offset({
-                            top: top_position,
-                            left: e.clientX - timestamp.width() / 2
-                        });
-                        timestamp_text.text(Math.floor(e.offsetX / ($(e.currentTarget).width() / count)));
-                        e.preventDefault();
-                    })
-                    .on("mouseleave", function () {
-                        timestamp.hide();
-                    })
-                    .on("mouseenter", function (e) {
-                        var bar = $(e.currentTarget);
-                        top_position = bar.offset().top - (20 - bar.height()) - 25;
-                        timestamp.show();
-                    });
-            }, 500);
+            scope.$watch("play_speed", function (newValue) {
+                if (newValue && scope.player && scope.play){
+                    scope.player.stop();
+                    scope.player.resume();
+                }
+            });
+
+            scope.$watch("diff_time", function () {
+                if (scope.player) scope.player.render(true);
+            });
         }
 
         return {
             link: link,
             restrict: "E",
             templateUrl: "partials/player.html",
-            scope: {
-                race: "=ngRace"
-            }
+            scope: true
         };
     }]);
 
@@ -646,19 +794,19 @@
     }]);
 
     trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
-        function highlight_racers(scope, source) {
-            if (!scope.gridApi) return source;
-            var selected_features = scope.gridApi.selection.getSelectedRows();
-            var all_selected = scope.gridApi.selection.getSelectAllState();
+        $scope.highlight_racers = function(source) {
+            if (!$scope.gridApi) return source;
+            var selected_features = $scope.gridApi.selection.getSelectedRows();
+            var all_selected = $scope.gridApi.selection.getSelectAllState();
             var selectedIds = [];
-            var selectedInMapId = scope.map.selectedFeature ? scope.map.selectedFeature.getProperties().racer.id : null;
+            var selectedInMapId = $scope.map.selectedFeature ? $scope.map.selectedFeature.getProperties().racer.id : null;
 
             _.forEach(selected_features, function (selected_fature) {
                 selectedIds.push(selected_fature.properties.racer.id);
             });
 
             if (typeof source == "string") {
-                scope.map.sources[source].forEachFeature(function (feature) {
+                $scope.map.sources[source].forEachFeature(function (feature) {
                     var featureId = feature.getProperties().racer.id;
                     if (selected_features.length == 0 || all_selected || _.indexOf(selectedIds, featureId) > -1) {
                         feature.setProperties({"$hide": false});
@@ -689,41 +837,53 @@
                 });
             }
             return source;
-        }
+        };
 
-        function get_race_data(promise, scope, ol_source, projection) {
+        $scope.set_data = function(data){
+            $scope.race_data = data;
+            $scope.gridOptions.data = data.features;
+            $scope.map.clearSource("data");
+
+            var features = $scope.map.readFeaturesFromGeoJSON({
+                data: data,
+                projection: $scope.projection
+            });
+            features = $scope.highlight_racers(features);
+
+            $scope.map.addFeaturesForSource({
+                name: "data",
+                features: features
+            });
+            $scope.map.setCenter("data");
+            $scope.$applyAsync();
+        };
+
+        $scope.get_race_data = function(promise) {
             promise.get().then(function (race_data) {
                 if (race_data.status == 204) {
-                    $interval.cancel(scope.data_interval);
-                    scope.endOfRace = true;
+                    $interval.cancel($scope.data_interval);
+                    $scope.endOfRace = true;
+                    if ($scope.race.end) return;
                     $scope.race_rest.get().then(function (response) {
                         $scope.race = response.data;
                     }, function (error) {});
                     return;
                 }
-                scope.race_data = race_data.data;
-                scope.gridOptions.data = race_data.data.features;
-                scope.map.clearSource(ol_source);
-
-                var features = scope.map.readFeaturesFromGeoJSON({
-                    data: race_data.data,
-                    projection: projection
-                });
-                features = highlight_racers(scope, features);
-
-                scope.map.addFeaturesForSource({
-                    name: ol_source,
-                    features: features
-                });
-                scope.map.setCenter(ol_source);
-
+                $scope.set_data(race_data.data);
             }, function(response) {
                 console.log(response);
             });
-        }
+        };
+
+        $scope.replay = function () {
+            $scope.endOfRace = false;
+            $scope.showPlayer = true;
+            $scope.player.loadData($routeParams.id);
+        };
 
         $scope.endOfRace = false;
         $scope.showPlayer = false;
+        $scope.player = null;
 
         $scope.map = new OLMap("map");
         $scope.map.addVectorLayer({name: "track"});
@@ -748,7 +908,7 @@
                     } else {
                         $scope.map.selectedFeature = feature;
                     }
-                    highlight_racers($scope, "data");
+                    $scope.highlight_racers("data");
 
                     if (!$scope.map.selectedFeature) {
                         $scope.map.closeSidebar();
@@ -771,7 +931,7 @@
 
         $(".sidebar-close").on("click", function(){
             $scope.map.selectedFeature = null;
-            highlight_racers($scope, "data");
+            $scope.highlight_racers("data");
         });
 
         $scope.map.addSidebar({element: "sidebar", position: "left"});
@@ -789,11 +949,11 @@
             onRegisterApi: function(gridApi){
                 $scope.gridApi = gridApi;
                 $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
-                    highlight_racers($scope, "data");
+                    $scope.highlight_racers("data");
                 });
                 $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
                     $timeout(function(){
-                        highlight_racers($scope, "data");
+                        $scope.highlight_racers("data");
                     });
                 });
             },
@@ -807,7 +967,7 @@
 
         $scope.race_rest = Restangular.one("races", $routeParams.id);
         $scope.race_rest.get().then(function(response){
-            var projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
+            $scope.projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
             $scope.race = response.data;
 
             Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function(json){
@@ -819,10 +979,14 @@
                 });
                 $scope.map.fitBySource("track");
 
-                get_race_data(promise, $scope, "data", projection);
+                if ($scope.race.end) {
+                    $scope.endOfRace = true;
+                    return;
+                }
+                $scope.get_race_data(promise);
                 if (!response.data.end) {
                     $scope.data_interval = $interval(function () {
-                        get_race_data(promise, $scope, "data", projection);
+                        $scope.get_race_data(promise);
                     }, 1000);
 
                     $scope.$on("$destroy", function(){
