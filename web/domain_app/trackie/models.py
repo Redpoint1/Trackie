@@ -178,15 +178,23 @@ class Racer(db_models.Model):
     first_name = db_models.CharField(
         null=False,
         blank=False,
-        max_length=255,
+        max_length=100,
         verbose_name=_("First name"),
     )
 
     last_name = db_models.CharField(
         null=False,
         blank=False,
-        max_length=255,
+        max_length=100,
         verbose_name=_("Last name"),
+    )
+
+    full_name = db_models.CharField(
+        null=True,
+        blank=True,
+        max_length=255,
+        verbose_name=_("Full name"),
+        help_text=_("Only for search purpose (automatically filled)")
     )
 
     about = db_models.TextField(
@@ -208,6 +216,10 @@ class Racer(db_models.Model):
             "is 512 KiB"
         )
     )
+
+    def save(self, *args, **kwargs):
+        self.full_name = '{0} {1}'.format(self.first_name, self.last_name)
+        super(Racer, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)

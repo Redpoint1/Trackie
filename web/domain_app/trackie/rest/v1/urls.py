@@ -1,6 +1,5 @@
 """ Rest api urls v1 for domain """
 
-from django.conf.urls import url
 from rest_framework import routers
 
 from .models.race_data.views import RaceDataViewSet, RaceDataReplayViewSet
@@ -11,6 +10,7 @@ from .models.track.views import TrackViewSet
 from .models.tournament.views import TournamentViewSet
 from .models.racer.views import RacerViewSet
 from .models.projection.views import ProjectionViewSet
+from .models.search.views import SearchViewSet
 
 
 router = routers.SimpleRouter()
@@ -73,6 +73,12 @@ router.register(
     r'tournaments/(?P<slug>[-_\w]+)/races',
     TournamentRacesViewSet,
     base_name="tournament-races",
+)
+
+router.register(
+    r'search',
+    SearchViewSet,
+    base_name="search",
 )
 
 urlpatterns = router.urls

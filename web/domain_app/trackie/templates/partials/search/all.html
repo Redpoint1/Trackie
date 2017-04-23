@@ -1,0 +1,33 @@
+<div class="row" data-ng-if="!q">
+    <div class="col-xs-12">
+        <div class="bg-danger" style="padding: 1em; font-size: 12pt;">Musíte zadať vyhľadávací výraz</div>
+    </div>
+</div>
+<div class="row" data-ng-if="q">
+    <div class="col-sm-3 col-md-2 search-category">
+        <div class="header">Filtrovanie</div>
+        <ul>
+            {% verbatim %}
+            <li id="{{ key }}" data-ng-repeat="(key, list) in result" data-ng-click="showSearchResult(key)">
+                <span>{{ categoryTranslate(key) }}</span>
+                <span class="text-right">({{ list.length }})</span>
+            </li>
+            {% endverbatim %}
+        </ul>
+    </div>
+    <div class="col-sm-9 col-md-10">
+        {% verbatim %}
+        <div class="col-xs-12">
+            <h3>Výsledky pre výraz "{{ q }}" ({{ resultCategory.length }})</h3>
+        </div>
+        <div class="col-xs-12" data-ng-if="result != null && !resultCategory.length">
+            <div class="bg-danger" style="padding: 10px;">
+                Nenašla sa zhoda
+            </div>
+        </div>
+        <div class="col-xs-12 search-result" data-ng-repeat="object in resultCategory">
+            <a data-ng-href="{{ renderUrl(category, object) }}">{{ renderResult(category, object) }}</a>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>

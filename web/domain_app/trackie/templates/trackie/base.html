@@ -42,14 +42,16 @@
                         </ul>
                     </li>
                 </ul>
-                <form class="navbar-form navbar-left searchbar">
-                    <div class="form-group position-relative">
-                        <input type="text" class="form-control searchbar-text" placeholder="Hľadať...">
+                {% verbatim %}
+                <form class="navbar-form navbar-left searchbar" name="searchForm" data-ng-submit="searchForm.$valid && searchIt()" data-ng-controller="SearchBarController">
+                    <div class="form-group position-relative" data-ng-class="{'has-error' : !searchForm.$pristine && searchForm.$invalid, 'has-success' : searchForm.$valid}">
+                        <input type="text" class="form-control searchbar-text" required="required" pattern=".{3,}" data-ng-minlength="minlength" data-ng-model="search_text" placeholder="Hľadať...">
                         <button class="searchbar-button" type="submit">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </form>
+                {% endverbatim %}
                 <login-modal></login-modal>
             </div>
         </div>

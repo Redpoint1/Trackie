@@ -38,10 +38,10 @@
                     };
 
                     $delegate.removeAllByKey = function (regex) {
-                        var keysToDelete = _.filter($delegate.getKeys(), function(n){
+                        var keysToDelete = _.filter($delegate.getKeys(), function (n) {
                             return regex.test(n);
                         });
-                        _.forEach(keysToDelete, function(key){
+                        _.forEach(keysToDelete, function (key) {
                             $delegate.remove(key);
                         });
                     };
@@ -54,7 +54,7 @@
             // $interpolateProvider.startSymbol("{$");
             // $interpolateProvider.endSymbol("$}");
         }])
-        .config(["$resourceProvider", function($resourceProvider) {
+        .config(["$resourceProvider", function ($resourceProvider) {
             $resourceProvider.defaults.stripTrailingSlashes = false;
         }])
         .config(["$httpProvider", function ($httpProvider) {
@@ -108,6 +108,9 @@
             }).when("/sports/:id", {
                 templateUrl: "partials/sport_type/detail.html",
                 controller: "SportDetailController"
+            }).when("/search", {
+                templateUrl: "partials/search/all.html",
+                controller: "SearchAllController"
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -123,12 +126,20 @@
         .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
             djangoAuth.initialize();
             $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
-                var state = toState.redirectTo ? $route.routes[toState.redirectTo]: toState;
+                var state = toState.redirectTo ? $route.routes[toState.redirectTo] : toState;
                 djangoAuth.authenticationStatus().then(function () {
                     djangoAuth.checkPageAuth(state.throwAuthError);
                 });
             });
-       }]);
+        }]);
+
+    // Filters
+
+    trackie_module.filter('capitalize', function () {
+        return function (input) {
+            return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+        }
+    });
 
     // Services
 
@@ -332,10 +343,10 @@
                     }
                 } else {
                     // TODO refactor 25.02. 2017
-                    var from  = $route.current.params.from || "/";
+                    var from = $route.current.params.from || "/";
                     // not good for dynamic routes like /tracks/:id
                     var route = $route.routes[from] || {};
-                    if (route.throwAuthError){
+                    if (route.throwAuthError) {
                         if (this.authenticated) {
                             $location.url(from);
                         }
@@ -435,18 +446,22 @@
             return layer;
         };
 
-        OLMapFactory.prototype.addSidebar = function(options){
+        OLMapFactory.prototype.addSidebar = function (options) {
             this.sidebar = new ol.control.Sidebar(options);
             this.map.addControl(this.sidebar);
         };
 
-        OLMapFactory.prototype.openSidebar = function(tab_name){
-            if (!this.sidebar) {return;}
+        OLMapFactory.prototype.openSidebar = function (tab_name) {
+            if (!this.sidebar) {
+                return;
+            }
             this.sidebar.open(tab_name);
         };
 
-        OLMapFactory.prototype.closeSidebar = function(){
-            if (!this.sidebar) {return;}
+        OLMapFactory.prototype.closeSidebar = function () {
+            if (!this.sidebar) {
+                return;
+            }
             this.sidebar.close();
         };
 
@@ -462,7 +477,7 @@
             this.sources[options.name].addFeatures(options.features);
         };
 
-        OLMapFactory.prototype.selectFeature = function(feature){
+        OLMapFactory.prototype.selectFeature = function (feature) {
             this.selectedFeature = feature;
         };
 
@@ -473,7 +488,7 @@
             return features;
         };
 
-        OLMapFactory.prototype.readFeaturesFromGeoJSON = function(options){
+        OLMapFactory.prototype.readFeaturesFromGeoJSON = function (options) {
             var format = new ol.format.GeoJSON();
             var features = format.readFeatures(options.data, {featureProjection: options.projection});
 
@@ -497,7 +512,7 @@
         OLMapFactory.prototype.setCenter = function (source) {
             var self = this;
             this.sources[source].forEachFeature(function (feature) {
-                if (feature.getProperties().racer.id == self.focusOnRacer){
+                if (feature.getProperties().racer.id == self.focusOnRacer) {
                     self.map.getView().setCenter(feature.getGeometry().getExtent());
                 }
             });
@@ -533,11 +548,11 @@
                 .on("mousemove", function (e) {
                     e.preventDefault();
                     var step = Math.floor((e.offsetX) / (($(e.currentTarget).width()) / self.total_count));
-                    if (step > self.loaded_records()){
+                    if (step > self.loaded_records()) {
                         timestamp.hide();
                     } else {
                         timestamp.show();
-                            timestamp.offset({
+                        timestamp.offset({
                             top: top_position - timestamp.height() - 15,
                             left: e.clientX - timestamp.width() / 2
                         });
@@ -554,7 +569,7 @@
                 .on("click", function (e) {
                     e.preventDefault();
                     var step = Math.floor((e.offsetX) / (($(e.currentTarget).width()) / self.total_count));
-                    if (step > self.loaded_records()){
+                    if (step > self.loaded_records()) {
                         timestamp.hide();
                     } else {
                         self.setStep(step + 1);
@@ -565,7 +580,7 @@
         Player.prototype.setData = function (data, i) {
             var parsed_data = [];
             var self = this;
-            _.forEach(data, function(record){
+            _.forEach(data, function (record) {
                 parsed_data.push(self.parseRecord(record));
             });
             Array.prototype.push.apply(this.data, parsed_data);
@@ -578,15 +593,15 @@
             }
         };
 
-        Player.prototype.getDateFromRecord = function(record) {
+        Player.prototype.getDateFromRecord = function (record) {
             return new Date(record.features[0].properties.received);
         };
 
-        Player.prototype.loadData = function(race, from){
+        Player.prototype.loadData = function (race, from) {
             from = from || "";
-            if (!this.complete()){
+            if (!this.complete()) {
                 var self = this;
-                Restangular.one("races", race).getList("replay", {from: from}).then(function(response){
+                Restangular.one("races", race).getList("replay", {from: from}).then(function (response) {
                     self.setData(response.data.plain());
                     self.element.find(".player-progress-bar-done").width("calc(100% / " + self.total_count + " * " + self.loaded_records() + ")");
                     self.loadData(race, self.getLastRecordTimestamp());
@@ -598,9 +613,9 @@
             return this.end.getTime() == this.getLastRecordTimestamp();
         };
 
-        Player.prototype.getLastRecordTimestamp = function(){
+        Player.prototype.getLastRecordTimestamp = function () {
             var record = this.data[this.data.length - 1];
-            if (record){
+            if (record) {
                 return record.time.getTime();
             }
             return 0;
@@ -636,7 +651,7 @@
             this.element.find(".player-progress-bar-text").text(this.timestamp(this.step - 1));
             if (this.data.length)
                 this.scope.$parent.set_data(this.data[this.step - 1].data);
-            if (this.step >= (this.loaded_records())){
+            if (this.step >= (this.loaded_records())) {
                 this.stop();
             }
         };
@@ -649,15 +664,15 @@
             var result = this.data[step];
             result = result ? result.time : this.start;
 
-            if (this.scope.diff_time){
+            if (this.scope.diff_time) {
                 result = new Date(result - this.start);
             }
             return result.toISOString().match(/\d\d:\d\d:\d\d/)[0];
         };
 
-        Player.prototype.setStep = function(step){
+        Player.prototype.setStep = function (step) {
             this.step = step;
-            if (this.scope.play){
+            if (this.scope.play) {
                 this.stop();
                 this.resume(true);
             } else {
@@ -746,15 +761,15 @@
         function link(scope, element) {
             scope.play_speed = "1";
 
-            scope.$parent.$watch("race", function(newItem){
-                if (newItem && newItem.end && !scope.player){
+            scope.$parent.$watch("race", function (newItem) {
+                if (newItem && newItem.end && !scope.player) {
                     scope.player = new Player(element, scope);
                     scope.$parent.player = scope.player;
                 }
             });
 
             scope.$watch("play_speed", function (newValue) {
-                if (newValue && scope.player && scope.play){
+                if (newValue && scope.player && scope.play) {
                     scope.player.stop();
                     scope.player.resume();
                 }
@@ -787,14 +802,14 @@
         }
     }]);
 
-    trackie_module.controller("ProfileController", ["$scope", "djangoAuth", "Restangular" ,function($scope, djangoAuth, Restangular){
-        Restangular.all("auth").customGET("user/").then(function(user){
+    trackie_module.controller("ProfileController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
+        Restangular.all("auth").customGET("user/").then(function (user) {
             $scope.user = user;
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap){
-        $scope.highlight_racers = function(source) {
+    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap) {
+        $scope.highlight_racers = function (source) {
             if (!$scope.gridApi) return source;
             var selected_features = $scope.gridApi.selection.getSelectedRows();
             var all_selected = $scope.gridApi.selection.getSelectAllState();
@@ -839,7 +854,7 @@
             return source;
         };
 
-        $scope.set_data = function(data){
+        $scope.set_data = function (data) {
             $scope.race_data = data;
             $scope.gridOptions.data = data.features;
             $scope.map.clearSource("data");
@@ -858,7 +873,7 @@
             $scope.$applyAsync();
         };
 
-        $scope.get_race_data = function(promise) {
+        $scope.get_race_data = function (promise) {
             promise.get().then(function (race_data) {
                 if (race_data.status == 204) {
                     $interval.cancel($scope.data_interval);
@@ -866,11 +881,12 @@
                     if ($scope.race.end) return;
                     $scope.race_rest.get().then(function (response) {
                         $scope.race = response.data;
-                    }, function (error) {});
+                    }, function (error) {
+                    });
                     return;
                 }
                 $scope.set_data(race_data.data);
-            }, function(response) {
+            }, function (response) {
                 console.log(response);
             });
         };
@@ -893,16 +909,16 @@
                 var type = feature.getGeometry().getType();
                 if (feature.getProperties()["$hide"]) {
                     type += "_unselected";
-                } else if (feature.getProperties()["$selected"]){
+                } else if (feature.getProperties()["$selected"]) {
                     type += "_selected";
                 }
                 return $scope.map.style[type];
             }
         });
 
-        $scope.map.map.on("click", function(event){
-            $scope.map.map.forEachFeatureAtPixel(event.pixel, function(feature){
-                if (feature.getGeometry().getType() == "Point"){
+        $scope.map.map.on("click", function (event) {
+            $scope.map.map.forEachFeatureAtPixel(event.pixel, function (feature) {
+                if (feature.getGeometry().getType() == "Point") {
                     if ($scope.map.selectedFeature && $scope.map.selectedFeature.getProperties().racer.id == feature.getProperties().racer.id) {
                         $scope.map.selectedFeature = null;
                     } else {
@@ -929,7 +945,7 @@
             });
         });
 
-        $(".sidebar-close").on("click", function(){
+        $(".sidebar-close").on("click", function () {
             $scope.map.selectedFeature = null;
             $scope.highlight_racers("data");
         });
@@ -946,31 +962,31 @@
             rowIdentity: function (row) {
                 return row.properties.racer.number;
             },
-            onRegisterApi: function(gridApi){
+            onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
-                $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
+                $scope.gridApi.selection.on.rowSelectionChanged($scope, function () {
                     $scope.highlight_racers("data");
                 });
-                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
-                    $timeout(function(){
+                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function () {
+                    $timeout(function () {
                         $scope.highlight_racers("data");
                     });
                 });
             },
             columnDefs: [
-                {name:"Číslo", field: "properties.racer.number"},
-                {name:"Meno", field: "properties.racer.first_name"},
-                {name:"Priezvisko", field: "properties.racer.last_name"},
-                {name:"Čas", field: "properties.data.time"}
+                {name: "Číslo", field: "properties.racer.number"},
+                {name: "Meno", field: "properties.racer.first_name"},
+                {name: "Priezvisko", field: "properties.racer.last_name"},
+                {name: "Čas", field: "properties.data.time"}
             ]
         };
 
         $scope.race_rest = Restangular.one("races", $routeParams.id);
-        $scope.race_rest.get().then(function(response){
+        $scope.race_rest.get().then(function (response) {
             $scope.projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
             $scope.race = response.data;
 
-            Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function(json){
+            Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function (json) {
                 var promise = $scope.race_rest.one("data");
 
                 $scope.map.addFeaturesForSource({
@@ -989,37 +1005,37 @@
                         $scope.get_race_data(promise);
                     }, 1000);
 
-                    $scope.$on("$destroy", function(){
+                    $scope.$on("$destroy", function () {
                         $interval.cancel($scope.data_interval);
                     })
                 }
             });
-        }, function(error){
-            if (error.status.toString()[0] == 4){ //4xx
-                $location.url("/" + error.status + "?from="+$location.path());
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
     }]);
 
-    trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", "OLMap", function($scope, $location, Restangular, OLMap){
+    trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", "OLMap", function ($scope, $location, Restangular, OLMap) {
         $scope.trackForm = {};
 
         $scope.createTrack = function () {
             var data = angular.copy($scope.trackForm.data);
             data["file"] = data["file"] ? data["file"]["base64"] : null;
-            Restangular.all("tracks").post(data).then(function(response){
-                $location.path("/track/"+response.data.id);
-            }, function(error){
+            Restangular.all("tracks").post(data).then(function (response) {
+                $location.path("/track/" + response.data.id);
+            }, function (error) {
                 renderFormErrors($("#track-form"), error.data, "id_");
             });
         };
 
         $scope.trackPreview = function () {
-            if (!$scope.trackForm.data["file"]){
+            if (!$scope.trackForm.data["file"]) {
                 $scope.map = $scope.map.destroy();
             } else {
                 $scope.map = new OLMap("track-preview");
-                $scope.map.addVectorLayer({name:"track"});
+                $scope.map.addVectorLayer({name: "track"});
                 $scope.map.clearSource("track");
                 $scope.map.addFeaturesForSource({
                     name: "track",
@@ -1035,12 +1051,12 @@
     }]);
 
     trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", "OLMap", function ($scope, $location, $routeParams, Restangular, djangoAuth, OLMap) {
-        $scope.deleteTrack = function(){
+        $scope.deleteTrack = function () {
             $scope.track.remove().then(function (response) {
                 $location.path("/");
             }, function (error) {
-                if (error.status.toString()[0] == 4){ //4xx
-                    $location.url("/" + error.status + "?from="+$location.path());
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
                 }
             })
         };
@@ -1048,7 +1064,7 @@
         $scope.map = new OLMap("track-map");
         $scope.map.addVectorLayer({name: "track"});
 
-        djangoAuth.authenticationStatus().then(function(){
+        djangoAuth.authenticationStatus().then(function () {
             $scope.user = djangoAuth.user;
         });
 
@@ -1058,55 +1074,55 @@
             Restangular.oneUrl("tracks", response.data.file).get().then(function (file) {
                 $scope.map.addFeaturesForSource({
                     name: "track",
-                    features:  $scope.map.readFeaturesFromGPX(file.data)
+                    features: $scope.map.readFeaturesFromGPX(file.data)
                 });
                 $scope.map.fitBySource("track");
             })
         }, function (error) {
-            if (error.status.toString()[0] == 4){ //4xx
-                $location.url("/" + error.status + "?from="+$location.path());
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
     }]);
 
-    trackie_module.controller("TrackUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
-        $scope.updateTrack = function(){
+    trackie_module.controller("TrackUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.updateTrack = function () {
             $scope.track = angular.extend($scope.track, $scope.trackForm.data);
             $scope.track.put().then(function (response) {
                 $location.path("/track/" + response.data.id);
             }, function (error) {
-                if (error.status.toString()[0] == 4){ //4xx
-                    $location.url("/" + error.status + "?from="+$location.path());
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
                 }
             })
         };
 
-        Restangular.one("tracks", $routeParams.id).get().then(function(response){
+        Restangular.one("tracks", $routeParams.id).get().then(function (response) {
             $scope.track = response.data;
             $scope.trackForm.data = response.data.plain();
-        }, function(error){
-            if (error.status.toString()[0] == 4){ //4xx
-                $location.url("/" + error.status + "?from="+$location.path());
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
     }]);
 
-    trackie_module.controller("RacerCreateController", ["$scope", "$location", "Restangular", function($scope, $location, Restangular){
+    trackie_module.controller("RacerCreateController", ["$scope", "$location", "Restangular", function ($scope, $location, Restangular) {
         $scope.racerForm = {};
 
         $scope.createRacer = function () {
             var data = angular.copy($scope.racerForm.data);
             data["photo"] = data["photo"] ? data["photo"]["base64"] : null;
-            Restangular.all("racers").post(data).then(function(response){
-                $location.path("/racer/"+response.data.id);
-            }, function(error){
+            Restangular.all("racers").post(data).then(function (response) {
+                $location.path("/racer/" + response.data.id);
+            }, function (error) {
                 renderFormErrors($("#racer-form"), error.data, "id_");
             });
         }
     }]);
 
     trackie_module.controller("RacerController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
-        djangoAuth.authenticationStatus().then(function(){
+        djangoAuth.authenticationStatus().then(function () {
             $scope.auth = djangoAuth;
         });
 
@@ -1114,21 +1130,21 @@
         $scope.racer_source.get().then(function (response) {
             $scope.racer = response.data;
         }, function (error) {
-            if (error.status.toString()[0] == 4){ //4xx
-                $location.url("/" + error.status + "?from="+$location.path());
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
     }]);
 
-    trackie_module.controller("RacerUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
-        $scope.updateRacer = function(){
+    trackie_module.controller("RacerUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.updateRacer = function () {
             $scope.racer = angular.extend($scope.racer, $scope.racerForm.data);
-            if (!$scope.racerForm.data["photo"]["base64"]){
-                 delete $scope.racer["photo"];
+            if (!$scope.racerForm.data["photo"]["base64"]) {
+                delete $scope.racer["photo"];
                 $scope.racer.patch().then(function (response) {
                     $location.path("/racer/" + response.data.id);
                 }, function (error) {
-                   renderFormErrors($("#racer-form"), error.data, "id_");
+                    renderFormErrors($("#racer-form"), error.data, "id_");
                 });
             } else {
                 $scope.racer.photo = $scope.racer.photo["base64"];
@@ -1140,17 +1156,17 @@
             }
         };
 
-        Restangular.one("racers", $routeParams.id).get().then(function(response){
+        Restangular.one("racers", $routeParams.id).get().then(function (response) {
             $scope.racer = response.data;
             $scope.racerForm.data = response.data.plain();
-        }, function(error){
-            if (error.status.toString()[0] == 4){ //4xx
-                $location.url("/" + error.status + "?from="+$location.path());
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
     }]);
 
-    trackie_module.controller("SportDetailController", ["$scope", "Restangular", function($scope, Restangular){
+    trackie_module.controller("SportDetailController", ["$scope", "Restangular", function ($scope, Restangular) {
         // TODO
         $scope.gridOptions = {
             primaryKey: "properties.racer.number",
@@ -1162,23 +1178,91 @@
             rowIdentity: function (row) {
                 return row.properties.racer.number;
             },
-            onRegisterApi: function(gridApi){
+            onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
-                $scope.gridApi.selection.on.rowSelectionChanged($scope, function(){
+                $scope.gridApi.selection.on.rowSelectionChanged($scope, function () {
                     highlight_racers($scope, "data");
                 });
-                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function(){
-                    $timeout(function(){
+                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function () {
+                    $timeout(function () {
                         highlight_racers($scope, "data");
                     });
                 });
             },
             columnDefs: [
-                {name:"Číslo", field: "properties.racer.number"},
-                {name:"Meno", field: "properties.racer.first_name"},
-                {name:"Priezvisko", field: "properties.racer.last_name"},
-                {name:"Čas", field: "properties.data.time"}
+                {name: "Číslo", field: "properties.racer.number"},
+                {name: "Meno", field: "properties.racer.first_name"},
+                {name: "Priezvisko", field: "properties.racer.last_name"},
+                {name: "Čas", field: "properties.data.time"}
             ]
         };
+    }]);
+    
+    trackie_module.controller("SearchBarController", ["$scope", "$location", function ($scope, $location) {
+        $scope.minlength = 3;
+
+        $scope.searchIt = function () {
+            $location.url("/search?q=" + $scope.search_text);
+        }
+    }]);
+
+    trackie_module.controller("SearchAllController", ["$scope", "$location", "$routeParams", "$timeout", "Restangular", function ($scope, $location, $routeParams, $timeout, Restangular) {
+        $scope.q = $routeParams.q;
+        $scope.result = null;
+        $scope.resultCategory = [];
+
+        $scope.categoryTranslate = function(key){
+            var sk = {
+                "tournament": "Turnaj",
+                "track": "Trať",
+                "racer": "Pretekár",
+                "race": "Závod"
+            };
+
+            return sk.hasOwnProperty(key) ? sk[key] : key;
+        };
+
+        $scope.showSearchResult = function(key) {
+            $(".search-category").find("li").removeClass("active");
+            $("#" + key).addClass("active");
+            $scope.resultCategory = $scope.result[key];
+            $scope.category = key;
+        };
+
+        $scope.renderResult = function(type, obj) {
+            if (type === "racer") {
+                return obj.first_name + " " + obj.last_name;
+            }
+
+            return obj.name
+        };
+
+        $scope.renderUrl = function(type, obj) {
+            switch (type) {
+                case "tournament":
+                    return "#/tournament/" + obj.slug;
+                case "track":
+                    return "#/track/" + obj.id;
+                case "racer":
+                    return "#/racer/" + obj.id;
+                case "race":
+                    return "#/race/" + obj.id;
+            }
+        };
+
+        Restangular.one("search").get({q: $scope.q}).then(function (response) {
+            $scope.result = response.data.plain();
+            for (var key in $scope.result){
+                if ($scope.result.hasOwnProperty(key)){
+                    if ($scope.result[key].length){
+                        $timeout(function () {
+                            $scope.showSearchResult(key);
+                        });
+                        return;
+                    }
+                }
+            }
+            $scope.category = "Výsledky";
+        })
     }]);
 }());
