@@ -649,11 +649,11 @@
         Player.prototype.render = function (skip_inc) {
             if (this.scope.play && !skip_inc) this.step++;
             var step = Math.max(this.step - 1, 0);
-            this.element.find(".player-progress-bar-played").width("calc(100% / " + this.total_count + " * " + step + ")");
+            this.element.find(".player-progress-bar-played").width("calc(100% / " + this.total_count + " * " + this.step + ")");
             this.element.find(".player-progress-bar-text").text(this.timestamp(step));
             if (this.data.length)
                 this.scope.$parent.set_data(this.data[step].data);
-            if (step >= (this.loaded_records())) {
+            if (this.step >= this.loaded_records()) {
                 this.stop();
             }
         };
