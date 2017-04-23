@@ -11,6 +11,7 @@ from .models.tournament.views import TournamentViewSet
 from .models.racer.views import RacerViewSet
 from .models.projection.views import ProjectionViewSet
 from .models.search.views import SearchViewSet
+from .models.racer_in_race.views import RacerFinishedRace, RacerRacingRace, RacerUpcomingRace
 
 
 router = routers.SimpleRouter()
@@ -81,4 +82,21 @@ router.register(
     base_name="search",
 )
 
+router.register(
+    r'races/racer/(?P<racer_id>[\d]+)/finished',
+    RacerFinishedRace,
+    base_name="races-racer-finished",
+)
+
+router.register(
+    r'races/racer/(?P<racer_id>[\d]+)/active',
+    RacerRacingRace,
+    base_name="races-racer-active",
+)
+
+router.register(
+    r'races/racer/(?P<racer_id>[\d]+)/upcoming',
+    RacerUpcomingRace,
+    base_name="races-racer-upcoming",
+)
 urlpatterns = router.urls

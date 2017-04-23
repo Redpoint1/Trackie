@@ -134,6 +134,8 @@
     <script src="{% static 'third-party/angular-touch/angular-touch.min.js' %}"></script>
     <script src="{% static 'third-party/angular-animate/angular-animate.min.js' %}"></script>
     <script src="{% static 'third-party/angular-base64-upload/angular-base64-upload.js' %}"></script>
+    <script src="{% static 'third-party/moment/min/moment-with-locales.min.js' %}"></script>
+    <script src="{% static 'third-party/moment-timezone/moment-timezone-with-data.min.js' %}"></script>
     <script src="{% static 'third-party/lodash/lodash.min.js' %}"></script>
     <script src="{% static 'third-party/restangular/restangular.min.js' %}"></script>
     <script src="{% static 'third-party/angular-ui-grid/ui-grid.min.js' %}"></script>
@@ -143,6 +145,17 @@
 
     <script src="{% static 'assets/trackie/js/helpers.js' %}"></script>
     <script src="{% static 'assets/trackie/js/angular_modules/trackie.js' %}"></script>
+
+    <script>
+        window.timezone = moment.tz.guess();
+        var locales = moment.locales();
+        _.each(window.navigator.languages, function(lang){
+            if (_.indexOf(locales, lang) >= 0){
+                moment.locale(lang);
+                return false;
+            }
+        });
+    </script>
 
     {% block footer %}{% endblock %}
 </body>

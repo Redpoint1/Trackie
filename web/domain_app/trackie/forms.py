@@ -80,7 +80,7 @@ class TrackUpdateForm(TrackCreateForm):
 class RacerCreateForm(ModelForm):
     class Meta:
         model = Racer
-        fields = "__all__"
+        exclude = ("full_name",)
 
     def __init__(self, *args, **kwargs):
         super(RacerCreateForm, self).__init__(*args, **kwargs)
@@ -100,6 +100,10 @@ class RacerCreateForm(ModelForm):
             'data-base-sixty-four-input': '',
             'accept': 'image/jpeg, image/jpg, image/png',
             'data-maxsize': 512,
+        })
+        self.fields['about'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.about',
+            'class': 'form-control',
         })
 
 

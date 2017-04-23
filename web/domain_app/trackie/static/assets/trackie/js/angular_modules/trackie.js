@@ -1,6 +1,6 @@
 (function () {
     "use strict";
-    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid", "ui.grid.selection", "ui.grid.saveState", "ui.grid.pagination", "naif.base64"])
+    var trackie_module = angular.module("trackie", ["ngRoute", "ngResource", "ngSanitize", "ngCookies", "ngAnimate", "ngTouch", "restangular", "ui.grid", "ui.grid.selection", "ui.grid.saveState", "ui.grid.pagination", "ui.grid.autoResize", "naif.base64"])
         .constant("CONFIG", {
             "DEBUG": false
         })
@@ -525,8 +525,9 @@
         function Player(element, scope) {
             this.scope = scope;
             this.element = element;
-            this.start = new Date(scope.race.real_start);
-            this.end = new Date(scope.race.real_end);
+            this.timezone = moment.tz.guess();
+            this.start = moment(scope.race.real_start);
+            this.end = moment(scope.race.real_end);
             this.total_count = scope.race.records_count;
             this.scope.play = false;
             this.scope.diff_time = true;
@@ -594,14 +595,14 @@
         };
 
         Player.prototype.getDateFromRecord = function (record) {
-            return new Date(record.features[0].properties.received);
+            return moment(record.features[0].properties.received);
         };
 
         Player.prototype.loadData = function (race, from) {
-            from = from || "";
+            var from_timestamp = from ? from.utc().valueOf() : "";
             if (!this.complete()) {
                 var self = this;
-                Restangular.one("races", race).getList("replay", {from: from}).then(function (response) {
+                Restangular.one("races", race).getList("replay", {from: from_timestamp}).then(function (response) {
                     self.setData(response.data.plain());
                     self.element.find(".player-progress-bar-done").width("calc(100% / " + self.total_count + " * " + self.loaded_records() + ")");
                     self.loadData(race, self.getLastRecordTimestamp());
@@ -610,15 +611,15 @@
         };
 
         Player.prototype.complete = function () {
-            return this.end.getTime() == this.getLastRecordTimestamp();
+            return this.end.isSame(this.getLastRecordTimestamp());
         };
 
         Player.prototype.getLastRecordTimestamp = function () {
             var record = this.data[this.data.length - 1];
             if (record) {
-                return record.time.getTime();
+                return record.time;
             }
-            return 0;
+            return moment(0);
         };
 
         Player.prototype.resume = function (skip_inc) {
@@ -647,11 +648,12 @@
 
         Player.prototype.render = function (skip_inc) {
             if (this.scope.play && !skip_inc) this.step++;
-            this.element.find(".player-progress-bar-played").width("calc(100% / " + this.total_count + " * " + this.step + ")");
-            this.element.find(".player-progress-bar-text").text(this.timestamp(this.step - 1));
+            var step = Math.max(this.step - 1, 0);
+            this.element.find(".player-progress-bar-played").width("calc(100% / " + this.total_count + " * " + step + ")");
+            this.element.find(".player-progress-bar-text").text(this.timestamp(step));
             if (this.data.length)
-                this.scope.$parent.set_data(this.data[this.step - 1].data);
-            if (this.step >= (this.loaded_records())) {
+                this.scope.$parent.set_data(this.data[step].data);
+            if (step >= (this.loaded_records())) {
                 this.stop();
             }
         };
@@ -665,9 +667,9 @@
             result = result ? result.time : this.start;
 
             if (this.scope.diff_time) {
-                result = new Date(result - this.start);
+                return moment(result.diff(this.start)).utc().format("HH:mm:ss");
             }
-            return result.toISOString().match(/\d\d:\d\d:\d\d/)[0];
+            return result.tz(window.timezone).format("HH:mm:ss");
         };
 
         Player.prototype.setStep = function (step) {
@@ -1126,9 +1128,100 @@
             $scope.auth = djangoAuth;
         });
 
+        $scope.time = function(timestamp){
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            return moment(end.diff(start)).utc().format("HH:mm:ss");
+        };
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/";
+            switch (col.field) {
+                case "tournament.sport.name":
+                    url = "#/sport/" + row.entity.tournament.sport.slug;
+                    break;
+                case "tournament.name":
+                    url = "#/tournament/" + row.entity.tournament.slug;
+                    break;
+                case "type.name":
+                    url = "#/race-type/" + row.entity.type.slug;
+                    break;
+                case "name":
+                    url = "#/race/" + row.entity.id;
+                    break;
+            }
+
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>'
+        };
+
+        $scope.gridPast = {
+            paginationPageSizes: false,
+            paginationPageSize: 10,
+            onRegisterApi: function (gridApi) {
+                $scope.gridPastApi = gridApi;
+            },
+            columnDefs: [
+                {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
+                {name: "Trvanie", field: "", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.duration_time(row)}}</div>'}
+            ]
+        };
+
+        $scope.gridCurrent = {
+            paginationPageSizes: false,
+            paginationPageSize: 10,
+            onRegisterApi: function (gridApi) {
+                $scope.gridPastApi = gridApi;
+            },
+            columnDefs: [
+                {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
+                {name: "Trvanie", field: "estimated_duration", cellTemplate:'<div class="ui-grid-cell-contents">~{{grid.getCellValue(row, col)}} min.</div>'}
+            ]
+        };
+
+        $scope.gridFuture = {
+            paginationPageSizes: false,
+            paginationPageSize: 10,
+            onRegisterApi: function (gridApi) {
+                $scope.gridFutureApi = gridApi;
+            },
+            columnDefs: [
+                {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
+                {name: "Trvanie", field: "estimated_duration", cellTemplate:'<div class="ui-grid-cell-contents">~{{grid.getCellValue(row, col)}} min.</div>'}
+            ]
+        };
+
         $scope.racer_source = Restangular.one("racers", $routeParams.id);
         $scope.racer_source.get().then(function (response) {
             $scope.racer = response.data;
+
+            $scope.race_finished = Restangular.all("races").one("racer", $scope.racer.id).all("finished").getList().then(function (response) {
+                $scope.gridPast.data = response.data.plain();
+            });
+
+             $scope.race_finished = Restangular.all("races").one("racer", $scope.racer.id).all("active").getList().then(function (response) {
+                $scope.gridCurrent.data = response.data.plain();
+            });
+
+            $scope.race_upcoming = Restangular.all("races").one("racer", $scope.racer.id).all("upcoming").getList().then(function (response) {
+                $scope.gridFuture.data = response.data.plain();
+            });
         }, function (error) {
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());

@@ -12,7 +12,12 @@
 <div class="row" data-ng-show="racer">
     <div class="col-sm-2">
         {% verbatim %}
-        <img class="img-responsive" data-ng-src="{{ racer.photo.thumbnail }}"/>
+        <div class="col-xs-12">
+            <img class="img-responsive" style="margin: 0 auto;" data-ng-src="{{ racer.photo.thumbnail }}"/>
+        </div>
+        <div class="col-xs-12 text-center" style="margin-top: 10px">
+            <a target="_self" class="btn btn-primary" data-ng-if="auth.authenticated" data-ng-href="#/racer/{{ racer.id }}/update/">Upraviť</a>
+        </div>
         {% endverbatim %}
     </div>
     <div class="col-sm-10">
@@ -24,10 +29,24 @@
                     <dd class="text-pre-line">{{ racer.about || "Prázdné" }}</dd>
                 </dl>
             </div>
-            <div class="col-xs-12">
-                <a target="_self" class="btn btn-primary" data-ng-if="auth.authenticated" data-ng-href="#/racer/{{ racer.id }}/update/">Upraviť</a>
-            </div>
             {% endverbatim %}
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Ukončené preteky</h3>
+                <div data-ng-if="gridPast.data.length" ui-grid="gridPast" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+                <div data-ng-if="!gridPast.data.length">Žiadne záznamy</div>
+            </div>
+            <div class="col-xs-12">
+                <h3>Aktuálne preteky</h3>
+                <div data-ng-if="gridCurrent.data.length" ui-grid="gridCurrent" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+                <div data-ng-if="!gridCurrent.data.length">Žiadne záznamy</div>
+            </div>
+            <div class="col-xs-12">
+                <h3>Zúčastní sa</h3>
+                <div data-ng-if="gridFuture.data.length" ui-grid="gridFuture" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+                <div data-ng-if="!gridFuture.data.length">Žiadne záznamy</div>
+            </div>
         </div>
     </div>
 </div>

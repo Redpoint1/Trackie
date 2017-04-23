@@ -9,10 +9,17 @@ from ..projection.serializers import ProjectionSerializer
 from ......trackie.models import Race
 
 
-class RaceSerializer(HyperlinkedModelSerializer):
+class ShortRaceSerializer(HyperlinkedModelSerializer):
     type = RaceTypeSerializer()
-    track = TrackSerializer()
     tournament = TournamentSerializer()
+
+    class Meta:
+        model = Race
+        fields = ("id", "url", "name", "tournament", "type", "start", "real_start", "real_end", "estimated_duration")
+
+
+class RaceSerializer(ShortRaceSerializer):
+    track = TrackSerializer()
     data = SerializerMethodField("data_url")
     projection = ProjectionSerializer()
     records_count = SerializerMethodField("count")

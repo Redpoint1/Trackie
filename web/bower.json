@@ -40,6 +40,8 @@
     "angular-touch": "~1.5.0",
     "angular-ui-grid": "^4.0.2",
     "angular-base64-upload": "master",
-    "sidebar-v2": "master"
+    "sidebar-v2": "master",
+    "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13"
   }
 }
