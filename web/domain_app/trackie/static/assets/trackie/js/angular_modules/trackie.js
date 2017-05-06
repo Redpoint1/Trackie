@@ -1048,8 +1048,6 @@
                 $scope.map.fitBySource("track");
             }
         };
-
-        $scope.$watch("")
     }]);
 
     trackie_module.controller("TrackController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", "OLMap", function ($scope, $location, $routeParams, Restangular, djangoAuth, OLMap) {

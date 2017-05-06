@@ -58,7 +58,7 @@ class TrackCreateForm(ModelForm):
             'data-valid-file': '',
             'data-base-sixty-four-input': '',
             'data-ng-change': 'trackPreview()',
-            'accept': '.gpx',
+            'accept': '.gpx, .GPX',
             'required': '',
             'data-maxsize': 512,
             'data-do-not-parse-if-oversize': '',
