@@ -1,5 +1,29 @@
-name
-icon
-predosle
-aktualne
-nadchadzajuce
+<div class="row" data-ng-show="sport">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+            <h1 style="margin-top: 0;">{{ sport.name }}
+                <small>Šport</small>
+            </h1>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="sport">
+    <div class="col-sm-2">
+        {% verbatim %}
+        <div class="col-xs-12">
+            <img class="img-responsive" style="margin: 0 auto;" data-ng-src="{{ sport.icon }}"/>
+        </div>
+        {% endverbatim %}
+    </div>
+    <div class="col-sm-10">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Turnaje</h3>
+                <div data-ng-if="grid.data.length" ui-grid="grid" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+                <div data-ng-if="!grid.data.length">Žiadne turnaje</div>
+            </div>
+        </div>
+    </div>
+</div>

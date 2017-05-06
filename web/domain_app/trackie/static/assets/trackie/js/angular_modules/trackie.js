@@ -1158,8 +1158,7 @@
         };
 
         $scope.gridPast = {
-            paginationPageSizes: false,
-            paginationPageSize: 10,
+            paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridPastApi = gridApi;
             },
@@ -1174,8 +1173,7 @@
         };
 
         $scope.gridCurrent = {
-            paginationPageSizes: false,
-            paginationPageSize: 10,
+            paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridPastApi = gridApi;
             },
@@ -1190,8 +1188,7 @@
         };
 
         $scope.gridFuture = {
-            paginationPageSizes: false,
-            paginationPageSize: 10,
+            paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridFutureApi = gridApi;
             },
@@ -1220,10 +1217,6 @@
             $scope.race_upcoming = Restangular.all("races").one("racer", $scope.racer.id).all("upcoming").getList().then(function (response) {
                 $scope.gridFuture.data = response.data.plain();
             });
-        }, function (error) {
-            if (error.status.toString()[0] == 4) { //4xx
-                $location.url("/" + error.status + "?from=" + $location.path());
-            }
         });
     }]);
 
@@ -1257,36 +1250,31 @@
         });
     }]);
 
-    trackie_module.controller("SportDetailController", ["$scope", "Restangular", function ($scope, Restangular) {
-        // TODO
-        $scope.gridOptions = {
-            primaryKey: "properties.racer.number",
-            enableRowSelection: false,
-            multiSelect: false,
-            enableSelectAll: false,
-            paginationPageSizes: false,
-            paginationPageSize: 10,
-            rowIdentity: function (row) {
-                return row.properties.racer.number;
-            },
+    trackie_module.controller("SportDetailController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.render_link = function (grid, row, col) {
+            console.log(row);
+            console.log(col);
+            var url = "#/tournament/" + row.entity.slug;
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
-                $scope.gridApi.selection.on.rowSelectionChanged($scope, function () {
-                    highlight_racers($scope, "data");
-                });
-                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function () {
-                    $timeout(function () {
-                        highlight_racers($scope, "data");
-                    });
-                });
             },
             columnDefs: [
-                {name: "Číslo", field: "properties.racer.number"},
-                {name: "Meno", field: "properties.racer.first_name"},
-                {name: "Priezvisko", field: "properties.racer.last_name"},
-                {name: "Čas", field: "properties.data.time"}
+                {name: "Turnaj", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
             ]
         };
+        $scope.sport_source = Restangular.one("sport-types", $routeParams.id);
+        $scope.sport_source.get().then(function (response) {
+            $scope.sport = response.data;
+
+            $scope.tournaments = Restangular.one("sport-types", $routeParams.id).all("tournaments").getList().then(function (response) {
+                $scope.grid.data = response.data.plain();
+            });
+        });
     }]);
     
     trackie_module.controller("SearchBarController", ["$scope", "$location", function ($scope, $location) {

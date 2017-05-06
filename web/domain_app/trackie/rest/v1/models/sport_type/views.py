@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import SportTypeSerializer
-from ......trackie.models import SportType
+from ..tournament.serializers import ShortTournamentSerializer
+from ......trackie.models import SportType, Tournament
 
 
 class SportTypeViewSet(ModelViewSet):
@@ -14,3 +15,16 @@ class SportTypeViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         return super(SportTypeViewSet, self).retrieve(request, *args, **kwargs)
+
+
+class TournamentInSportType(ModelViewSet):
+    serializer_class = ShortTournamentSerializer
+
+    def get_queryset(self):
+        sport_slug = self.kwargs.get("sport_slug")
+        sport = SportType.objects.values("id").get(slug=sport_slug)
+        self.queryset = Tournament.objects.filter(sport_id=sport["id"])
+        return super(TournamentInSportType, self).get_queryset()
+
+    def list(self, request, *args, **kwargs):
+        return super(TournamentInSportType, self).list(request, *args, **kwargs)

@@ -5,7 +5,7 @@ from rest_framework import routers
 from .models.race_data.views import RaceDataViewSet, RaceDataReplayViewSet
 from .models.race.views import RaceViewSet, TournamentRacesViewSet
 from .models.race_type.views import RaceTypeViewSet
-from .models.sport_type.views import SportTypeViewSet
+from .models.sport_type.views import SportTypeViewSet, TournamentInSportType
 from .models.track.views import TrackViewSet
 from .models.tournament.views import TournamentViewSet
 from .models.racer.views import RacerViewSet
@@ -44,6 +44,12 @@ router.register(
     r'sport-types',
     SportTypeViewSet,
     base_name="sporttype",
+)
+
+router.register(
+    r'sport-types/(?P<sport_slug>[-_\w]+)/tournaments',
+    TournamentInSportType,
+    base_name="sport-tournaments",
 )
 
 router.register(
@@ -99,4 +105,5 @@ router.register(
     RacerUpcomingRace,
     base_name="races-racer-upcoming",
 )
+
 urlpatterns = router.urls

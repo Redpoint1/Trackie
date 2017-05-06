@@ -6,7 +6,18 @@ from ..user.serializers import UserSerializer
 from ......trackie.models import Tournament
 
 
-class TournamentSerializer(HyperlinkedModelSerializer):
+class ShortTournamentSerializer(HyperlinkedModelSerializer):
+    class Meta:
+        model = Tournament
+        fields = ("url", "name", "slug")
+        extra_kwargs = {
+            "url": {
+                "lookup_field": "slug",
+            }
+        }
+
+
+class TournamentSerializer(ShortTournamentSerializer):
     # override relation
     races = SerializerMethodField("races_url")
     sport = SportTypeSerializer()
@@ -22,11 +33,5 @@ class TournamentSerializer(HyperlinkedModelSerializer):
             request=self.context.get("request")
         )
 
-    class Meta:
-        model = Tournament
+    class Meta(ShortTournamentSerializer.Meta):
         fields = "__all__"
-        extra_kwargs = {
-            "url": {
-                "lookup_field": "slug",
-            }
-        }
