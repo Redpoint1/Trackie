@@ -30,3 +30,4 @@ requests-oauthlib==0.8.0
 six==1.10.0
 sqlparse==0.2.3
 uuid==1.30
+uWSGI==2.0.15

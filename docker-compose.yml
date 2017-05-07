@@ -5,11 +5,11 @@ web:
     - "8000"
   links:
     - postgres:postgres
-    - redis:redis
+#    - redis:redis
   volumes:
     - /usr/src/app/static
-  env_file: .env  
-  command: bash /usr/src/app/startup.sh
+  env_file: .env
+  command: ./wait-for-it.sh postgres:5432 -- /bin/bash /usr/src/app/startup.sh
 
 nginx:
   restart: always
@@ -17,7 +17,7 @@ nginx:
   ports:
     - "80:80"
   volumes:
-    - /www/static
+    - /usr/src/app/static
   volumes_from:
     - web
   links:
@@ -25,22 +25,22 @@ nginx:
 
 postgres:
   restart: always
-  image: postgres:latest
+  build: ./postgres/
   volumes_from:
     - data
   ports:
     - "5432:5432"
 
-redis:
-  restart: always
-  image: redis:latest
-  ports:
-    - "6379:6379"
+#redis:
+#  restart: always
+#  image: redis:latest
+#  ports:
+#    - "6379:6379"
 
 data:
   container_name: database
   restart: always
-  image: postgres:latest
+  image: postgres:9.6
   volumes:
     - /var/lib/postgresql
   command: "true"
