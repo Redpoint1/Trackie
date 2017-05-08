@@ -12,6 +12,7 @@ from .models.racer.views import RacerViewSet
 from .models.projection.views import ProjectionViewSet
 from .models.search.views import SearchViewSet
 from .models.racer_in_race.views import RacerFinishedRace, RacerRacingRace, RacerUpcomingRace
+from .models.field_type.views import FieldTypeViewSet
 
 
 router = routers.SimpleRouter()
@@ -104,6 +105,12 @@ router.register(
     r'races/racer/(?P<racer_id>[\d]+)/upcoming',
     RacerUpcomingRace,
     base_name="races-racer-upcoming",
+)
+
+router.register(
+    r'field-types',
+    FieldTypeViewSet,
+    base_name="field-types",
 )
 
 urlpatterns = router.urls

@@ -9,6 +9,23 @@ from django.utils.translation import ugettext_lazy as _
 from versatileimagefield.fields import VersatileImageField
 
 
+FIELDS = (
+    ("BigIntegerField", "BigIntegerField"),
+    ("BooleanField", "BooleanField"),
+    ("DateField", "DateField"),
+    ("DateTimeField", "DateTimeField"),
+    ("DurationField", "DurationField"),
+    ("FloatField", "FloatField"),
+    ("IntegerField", "IntegerField"),
+    ("PositiveIntegerField", "PositiveIntegerField"),
+    ("PositiveSmallIntegerField", "PositiveSmallIntegerField"),
+    ("SmallIntegerField", "SmallIntegerField"),
+    ("TextField", "TextField"),
+    ("TimeField", "TimeField"),
+    ("URLField", "URLField"),
+)
+
+
 class SportType(db_models.Model):
     """ Sport type """
 
@@ -93,6 +110,41 @@ class Tournament(db_models.Model):
         return self.name
 
 
+class FieldType(db_models.Model):
+    """ Field type """
+
+    class Meta:
+        verbose_name = _("Race field type")
+        verbose_name_plural = _("Race Field types")
+
+    name = db_models.CharField(
+        blank=False,
+        null=False,
+        unique=True,
+        max_length=255,
+        verbose_name=_("Name"),
+    )
+
+    display_name = db_models.CharField(
+        blank=False,
+        null=False,
+        max_length=255,
+        verbose_name=_("Display name"),
+    )
+
+    type = db_models.CharField(
+        blank=False,
+        null=False,
+        max_length=255,
+        verbose_name=_("Type"),
+        help_text=_("Django's field type"),
+        choices=FIELDS,
+    )
+
+    def __str__(self):
+        return self.display_name
+
+
 class RaceType(db_models.Model):
     """ Race type """
 
@@ -109,21 +161,26 @@ class RaceType(db_models.Model):
         help_text=_("Type of the race"),
     )
 
-    slug = db_models.SlugField(
-        blank=False,
+    public = db_models.BooleanField(
+        blank=True,
         null=False,
-        unique=True,
-        max_length=255,
-        verbose_name=_("Slug"),
-        help_text=_("Name for the API"),
+        default=False,
+        verbose_name=_("Public"),
+        help_text=_("Will be available for others?"),
     )
 
-    icon = db_models.ImageField(
-        upload_to="static/images/race/",
+    owner = db_models.ForeignKey(
+        auth_model.User,
         null=True,
-        blank=True,
-        verbose_name=_("Icon"),
-        help_text=_("Choose icon"),
+        blank=False,
+        on_delete=db_models.SET_NULL,
+        related_name="race_types",
+        verbose_name=_("Owner"),
+    )
+
+    fields = db_models.ManyToManyField(
+        FieldType,
+        blank=False,
     )
 
     def __str__(self):
@@ -271,7 +328,6 @@ class Race(db_models.Model):
         RaceType,
         null=True,
         blank=False,
-        on_delete=db_models.SET_NULL,
         related_name="races",
         verbose_name=_("Type"),
         help_text=_("Determine race type"),
@@ -310,11 +366,11 @@ class Race(db_models.Model):
         verbose_name=_("Last data received at")
     )
 
-    estimated_duration = db_models.IntegerField(
+    estimated_duration = db_models.DurationField(
         null=True,
         blank=False,
         verbose_name=_("Estimated duration"),
-        help_text=_("In minutes")
+        help_text=_("[DD] [HH:[MM:]]ss[.uuuuuu]")
     )
 
     projection = db_models.ForeignKey(
@@ -384,4 +440,7 @@ class RacerInRace(db_models.Model):
         related_name="racers",
     )
 
-    number = db_models.IntegerField()
+    number = db_models.PositiveIntegerField(
+        null=False,
+        blank=False,
+    )

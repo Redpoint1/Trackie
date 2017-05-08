@@ -41,6 +41,13 @@ class RacerAdmin(contrib_admin.ModelAdmin):
     """ Racer """
     model = trackie_models.Racer
 
+
 class ProjectionAdmin(contrib_admin.ModelAdmin):
     """ Projection """
     model = trackie_models.Projection
+
+
+class RaceFieldsAdmin(contrib_admin.ModelAdmin):
+    """ Projection """
+    model = trackie_models.FieldType
+
