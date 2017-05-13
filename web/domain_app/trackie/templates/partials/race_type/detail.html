@@ -1,0 +1,33 @@
+<div class="row" data-ng-show="type">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+            <h1 style="margin-top: 0;">{{ type.name }}
+                <small>Polia pre preteky</small>
+            </h1>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="type">
+    <div class="col-sm-6">
+        {% verbatim %}
+        <dl>
+            <dt>Verejný</dt>
+            <dd><code>{{ type.public }}</code></dd>
+            <dt>Vlastník</dt>
+            <dd>{{ type.owner.username }}</dd>
+            <dt>Ukážka</dt>
+            <dd>
+                <pre>{<div data-ng-repeat="field in type.fields">&nbsp;&nbsp;"{{ field.name }}": {{ renderValue(field.type) }}<span data-ng-if="!$last">,</span></div>}</pre>
+            </dd>
+        </dl>
+        <div class="row">
+            <div class="col-xs-12" data-ng-if="user.username && user.username == type.owner.username">
+                <a target="_self" class="btn btn-primary" data-ng-href="#/race-fields/{{ type.id }}/update" data-ng-disabled="type.used">Upraviť</a>
+                <button class="btn btn-danger" data-ng-click="deleteType()" data-ng-disabled="type.used">Odstrániť</button>
+            </div>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>

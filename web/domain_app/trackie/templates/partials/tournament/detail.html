@@ -23,7 +23,7 @@
                 </dl>
             </div>
             <div class="col-xs-12">
-                <a target="_self" class="btn btn-primary" data-ng-href="#/tournament/{{ tournament.id }}/update/" data-ng-if="user.username && user.username == tournament.owner.username">Upraviť</a>
+                <a target="_self" class="btn btn-primary" data-ng-href="#/tournament/{{ tournament.id }}/update" data-ng-if="user.username && user.username == tournament.owner.username">Upraviť</a>
                 <button class="btn btn-danger" data-ng-click="deleteTournament()" data-ng-if="user.username && user.username == tournament.owner.username" data-ng-disabled="races.length">Odstrániť</button>
             </div>
             {% endverbatim %}

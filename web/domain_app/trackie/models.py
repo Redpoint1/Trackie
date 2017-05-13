@@ -173,6 +173,8 @@ class RaceType(db_models.Model):
     fields = db_models.ManyToManyField(
         FieldType,
         blank=False,
+        related_name="races",
+        help_text=_("All field will be required")
     )
 
     def __str__(self):

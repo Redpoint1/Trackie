@@ -1,0 +1,21 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            <h1 style="margin-top: 0;">Upraviť polia pre preteky</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="well">
+            {% with form_name="typeForm" %}
+            <form name="{{ form_name }}" id="type-form" data-ng-submit="updateType()">
+                {% include "macro/form.html" %}
+                <div class="form-group">
+                   <button type="submit" data-ng-disabled="{{ form_name }}.$invalid" class="btn btn-primary">Upraviť</button>
+                </div>
+            </form>
+            {% endwith %}
+        </div>
+    </div>
+</div>

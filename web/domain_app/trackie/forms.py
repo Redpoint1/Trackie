@@ -1,7 +1,7 @@
 from django.forms.models import ModelForm
 from allauth.account.forms import SignupForm, UserForm
 import allauth.account.app_settings as app_settings
-from .models import Track, Racer, Tournament
+from .models import Track, Racer, Tournament, RaceType
 
 
 class RegisterForm(SignupForm):
@@ -140,3 +140,30 @@ class TournamentUpdateForm(TournamentCreateForm):
 
     def __init__(self, *args, **kwargs):
         super(TournamentUpdateForm, self).__init__(*args, **kwargs)
+
+
+class RaceTypeCreateForm(ModelForm):
+    class Meta:
+        model = RaceType
+        exclude = ("owner", "public")
+
+    def __init__(self, *args, **kwargs):
+        super(RaceTypeCreateForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({
+            'data-ng-model': 'typeForm.data.name',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['fields'].widget.attrs.update({
+            'data-ng-model': 'typeForm.data.fields',
+            'class': 'form-control',
+            'required': 'required',
+        })
+
+
+class RaceTypeUpdateForm(RaceTypeCreateForm):
+    class Meta(RaceTypeCreateForm.Meta):
+        pass
+
+    def __init__(self, *args, **kwargs):
+        super(RaceTypeUpdateForm, self).__init__(*args, **kwargs)

@@ -52,7 +52,7 @@ class PartialView(views.TemplateView):
 
     def get_context_data(self, **kwargs):
         module = import_module(".forms", "domain_app.trackie")
-        partial = kwargs["partial"].split(".")[0].title().replace("/", "")
+        partial = kwargs["partial"].split(".")[0].title().replace("/", "").replace("_", "")
         class_name = "{}Form".format(partial)
         form = getattr(module, class_name, None)
         if form:

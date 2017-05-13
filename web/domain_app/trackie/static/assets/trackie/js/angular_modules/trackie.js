@@ -76,10 +76,23 @@
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/race-fields/add", {
+                templateUrl: "partials/race_type/create.html",
+                controller: "TypeCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
+            }).when("/race-fields/:id", {
+                templateUrl: "partials/race_type/detail.html",
+                controller: "TypeController",
+                reloadAfterAuthChange: true
+            }).when("/race-fields/:id/update", {
+                templateUrl: "partials/race_type/update.html",
+                controller: "TypeUpdateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/race/:id", {
-                templateUrl: "partials/map.html",
-                controller: "MapController"
-                //reloadAfterAuthChange: true,
+                templateUrl: "partials/race/detail.html",
+                controller: "RaceController"
             }).when("/track/add", {
                 templateUrl: "partials/track/create.html",
                 controller: "TrackCreateController",
@@ -923,7 +936,7 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator) {
+    trackie_module.controller("RaceController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator) {
         $scope.highlight_racers = function (source) {
             if (!$scope.gridApi) return source;
             var selected_features = $scope.gridApi.selection.getSelectedRows();
@@ -1533,7 +1546,7 @@
         )
     }]);
 
-    trackie_module.controller("TournamentsController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function($scope, $location, $routeParams, Restangular, djangoAuth){
+    trackie_module.controller("TournamentsController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
         $scope.render_link = function (grid, row, col) {
             var column = col.field;
             var url = "";
@@ -1592,7 +1605,92 @@
             $scope.tournament = response.data;
             $scope.tournament.sport = ""+$scope.tournament.sport.id;
             $scope.tournamentForm.data = response.data.plain();
-            window.a = $scope.tournament;
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        });
+    }]);
+
+    trackie_module.controller("TypeCreateController", ["$scope", "$location", "Restangular", function ($scope, $location, Restangular) {
+        $scope.createType = function () {
+            Restangular.all("race-types").post($scope.typeForm.data).then(function (response) {
+                $location.path("/race-fields/" + response.data.id);
+            }, function (error) {
+                renderFormErrors($("#type-form"), error.data, "id_");
+            });
+        };
+    }]);
+
+    trackie_module.controller("TypeController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function ($scope, $location, $routeParams, Restangular, djangoAuth) {
+        $scope.renderValue = function(type){
+            switch (type) {
+                case "BigIntegerField":
+                    return '9223372036854775807';
+                case "BooleanField":
+                    return 'true';
+                case "DateField":
+                    return '"1970-01-01"';
+                case "DateTimeField":
+                    return '"1970-01-01T00:00:00"';
+                case "DurationField":
+                case "TimeField":
+                    return '"15:15:15"';
+                case "FloatField":
+                    return '645.1554';
+                case "IntegerField":
+                case "PositiveIntegerField":
+                    return '2147483647';
+                case "SmallIntegerField":
+                case "PositiveSmallIntegerField":
+                    return '32767';
+                case "TextField":
+                    return '"Lorem ipsum"';
+                case "URLField":
+                    return 'http://localhost/foo/bar.html';
+            }
+        };
+
+        $scope.deleteType = function(){
+            $scope.type.remove().then(function (response) {
+                $location.path("/");
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            });
+        };
+
+        djangoAuth.authenticationStatus().then(function () {
+            $scope.user = djangoAuth.user;
+        });
+
+        Restangular.one("race-types", $routeParams.id).get().then(function (response) {
+                $scope.type = response.data;
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            }
+        )
+    }]);
+
+    trackie_module.controller("TypeUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.updateType = function () {
+            $scope.type = angular.extend($scope.type, $scope.typeForm.data);
+            $scope.type.put().then(function (response) {
+                $location.path("/race-fields/" + response.data.id);
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            });
+        };
+
+        Restangular.one("race-types", $routeParams.id).get().then(function (response) {
+            $scope.type = response.data;
+            $scope.type.fields = _.map($scope.type.fields, function(item){return String(item.id)});
+            $scope.typeForm.data = response.data.plain();
         }, function (error) {
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());
