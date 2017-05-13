@@ -1,8 +1,8 @@
-from rest_framework.serializers import HyperlinkedModelSerializer
+from ....serializers import OwnHyperlinkedModelSerializer
 from ......trackie.models import Projection
 
 
-class ProjectionSerializer(HyperlinkedModelSerializer):
+class ProjectionSerializer(OwnHyperlinkedModelSerializer):
     class Meta:
         model = Projection
         fields = "__all__"

@@ -111,6 +111,20 @@
             }).when("/search", {
                 templateUrl: "partials/search/all.html",
                 controller: "SearchAllController"
+            }).when("/tournaments/add", {
+                templateUrl: "partials/tournament/create.html",
+                controller: "TournamentCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
+            }).when("/tournament/:id", {
+                templateUrl: "partials/tournament/detail.html",
+                controller: "TournamentController",
+                reloadAfterAuthChange: true
+            }).when("/tournament/:id/update", {
+                templateUrl: "partials/tournament/update.html",
+                controller: "TournamentUpdateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -1176,6 +1190,7 @@
         Restangular.one("tracks", $routeParams.id).get().then(function (response) {
             $scope.track = response.data;
             $scope.trackForm.data = response.data.plain();
+            console.log($scope.track);
         }, function (error) {
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());
@@ -1220,7 +1235,7 @@
                     url = "#/sport/" + row.entity.tournament.sport.slug;
                     break;
                 case "tournament.name":
-                    url = "#/tournament/" + row.entity.tournament.slug;
+                    url = "#/tournament/" + row.entity.tournament.id;
                     break;
                 case "type.name":
                     url = "#/race-type/" + row.entity.type.slug;
@@ -1328,7 +1343,7 @@
 
     trackie_module.controller("SportDetailController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
         $scope.render_link = function (grid, row, col) {
-            var url = "#/tournament/" + row.entity.slug;
+            var url = "#/tournament/" + row.entity.id;
             return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
         };
 
@@ -1348,6 +1363,10 @@
             $scope.tournaments = Restangular.one("sport-types", $routeParams.id).all("tournaments").getList().then(function (response) {
                 $scope.grid.data = response.data.plain();
             });
+        }, function(error){
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
         });
     }]);
     
@@ -1418,4 +1437,121 @@
             $scope.category = "Výsledky";
         })
     }]);
+
+    trackie_module.controller("TournamentCreateController", ["$scope", "$location", "Restangular", function($scope, $location, Restangular){
+        $scope.tournamentForm = {};
+
+        $scope.createTournament = function(){
+            var data = $scope.tournamentForm.data;
+            Restangular.all("tournaments").post(data).then(function (response) {
+                $location.path("/tournament/" + response.data.id);
+            }, function (error) {
+                renderFormErrors($("#tournament-form"), error.data, "id_");
+            });
+        };
+    }]);
+
+    trackie_module.controller("TournamentController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function($scope, $location, $routeParams, Restangular, djangoAuth){
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/race/" + row.entity.id;
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.time = function(grid, row, col){
+            var timestamp = row.entity[col.field];
+            if (!timestamp) return;
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (_, row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            var duration = moment(moment.duration(row.entity.estimated_duration)._data);
+            if (start.isValid() && end.isValid()){
+                duration = moment(end.diff(start)).utc()
+            }
+            return duration.format("HH:mm:ss");
+        };
+
+        $scope.deleteTournament = function () {
+            $scope.tournament.remove().then(function (response) {
+                $location.path("/");
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            })
+        };
+
+        djangoAuth.authenticationStatus().then(function () {
+            $scope.user = djangoAuth.user;
+        });
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Závod",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Začiatok",
+                    field: "start",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Koniec",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Dĺžka",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.duration_time(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("tournaments").one($routeParams.id).get().then(function (response) {
+                $scope.tournament = response.data;
+                Restangular.allUrl("races", $scope.tournament.races).getList().then(function (response) {
+                    $scope.races = response.data;
+                    $scope.grid.data = $scope.races.plain();
+                })
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            }
+        )
+    }]);
+
+    trackie_module.controller("TournamentUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.updateTournament = function () {
+            $scope.tournament = angular.extend($scope.tournament, $scope.tournamentForm.data);
+            $scope.tournament.put().then(function (response) {
+                $location.path("/tournament/" + response.data.id);
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            });
+        };
+
+        Restangular.one("tournaments", $routeParams.id).get().then(function (response) {
+            $scope.tournament = response.data;
+            $scope.tournament.sport = ""+$scope.tournament.sport.id;
+            $scope.tournamentForm.data = response.data.plain();
+            window.a = $scope.tournament;
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        });
+    }]);
+
 }());

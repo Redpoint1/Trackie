@@ -1,11 +1,11 @@
-from rest_framework.serializers import (HyperlinkedModelSerializer,
-                                        SerializerMethodField)
+from rest_framework.serializers import SerializerMethodField
 from ....fields import ImageLimitField
+from ....serializers import OwnHyperlinkedModelSerializer
 from .....validators import FileSizeMaxValidator
 from ......trackie.models import RacerInRace, Racer
 
 
-class RacerSerializer(HyperlinkedModelSerializer):
+class RacerSerializer(OwnHyperlinkedModelSerializer):
     photo = ImageLimitField(
         sizes=[
             ('normal', 'url'),

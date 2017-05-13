@@ -1,8 +1,8 @@
-from rest_framework.serializers import HyperlinkedModelSerializer
+from ....serializers import OwnHyperlinkedModelSerializer
 from ......trackie.models import SportType
 
 
-class SportTypeSerializer(HyperlinkedModelSerializer):
+class SportTypeSerializer(OwnHyperlinkedModelSerializer):
     class Meta:
         model = SportType
         fields = "__all__"

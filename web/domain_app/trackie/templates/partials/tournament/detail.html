@@ -1,0 +1,41 @@
+{% load static %}
+<div class="row" data-ng-show="tournament">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+        <h1 style="margin-top: 0;">{{ tournament.name }}
+            <small>Turnaj</small>
+        </h1>
+        {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="tournament">
+    <div class="col-sm-6">
+        <div class="row">
+            {% verbatim %}
+            <div class="col-xs-12">
+                <dl>
+                    <dt>Šport</dt>
+                    <dd>{{ tournament.sport.name }}</dd>
+                    <dt>Vlastník</dt>
+                    <dd>{{ tournament.owner.username }}</dd>
+                </dl>
+            </div>
+            <div class="col-xs-12">
+                <a target="_self" class="btn btn-primary" data-ng-href="#/tournament/{{ tournament.id }}/update/" data-ng-if="user.username && user.username == tournament.owner.username">Upraviť</a>
+                <button class="btn btn-danger" data-ng-click="deleteTournament()" data-ng-if="user.username && user.username == tournament.owner.username" data-ng-disabled="races.length">Odstrániť</button>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-xs-12">
+                <h3>Preteky</h3>
+                <div data-ng-if="grid.data.length" ui-grid="grid" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+                <div data-ng-if="!grid.data.length">Žiadne preteky</div>
+            </div>
+        </div>
+    </div>
+</div>

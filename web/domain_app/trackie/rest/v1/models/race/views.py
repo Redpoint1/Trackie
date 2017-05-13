@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import RaceSerializer
+from .serializers import RaceSerializer, ShortRaceSerializer
 from ......trackie.models import Race, Tournament
 
 
@@ -8,6 +8,7 @@ class RaceViewSet(ModelViewSet):
     queryset = Race.objects.all()
 
     def list(self, request, *args, **kwargs):
+        self.serializer_class = ShortRaceSerializer
         return super(RaceViewSet, self).list(request, *args, **kwargs)
 
     def retrieve(self, request, *args, **kwargs):
@@ -18,6 +19,7 @@ class TournamentRacesViewSet(ModelViewSet):
     serializer_class = RaceSerializer
 
     def list(self, request, *args, **kwargs):
+        self.serializer_class = ShortRaceSerializer
         return super(TournamentRacesViewSet, self).list(
             request,
             *args,

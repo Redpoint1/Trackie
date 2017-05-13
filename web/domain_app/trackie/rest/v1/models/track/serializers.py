@@ -1,9 +1,9 @@
-from rest_framework.serializers import (HyperlinkedModelSerializer,
-                                        CurrentUserDefault,
+from rest_framework.serializers import (CurrentUserDefault,
                                         SerializerMethodField)
 from drf_extra_fields.fields import Base64FileField
 from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 from ..user.serializers import UserSerializer
+from ....serializers import OwnHyperlinkedModelSerializer
 from .....validators import FileSizeMaxValidator
 from ......trackie.models import Track
 import xml.etree.ElementTree as ET
@@ -19,7 +19,7 @@ class GPXFieldBase(Base64FileField):
         return None
 
 
-class TrackSerializer(HyperlinkedModelSerializer):
+class TrackSerializer(OwnHyperlinkedModelSerializer):
     owner = PresentablePrimaryKeyRelatedField(
         presentation_serializer=UserSerializer,
         read_only=True,

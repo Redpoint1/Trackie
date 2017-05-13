@@ -1,31 +1,36 @@
-from rest_framework.serializers import (HyperlinkedModelSerializer,
-                                        SerializerMethodField)
+from rest_framework.serializers import (SerializerMethodField,
+                                        CurrentUserDefault)
+from drf_extra_fields.relations import PresentablePrimaryKeyRelatedField
 import rest_framework.reverse as reverse
 from ..sport_type.serializers import SportTypeSerializer
 from ..user.serializers import UserSerializer
-from ......trackie.models import Tournament
+from ....serializers import OwnHyperlinkedModelSerializer
+from ......trackie.models import Tournament, SportType
 
 
-class ShortTournamentSerializer(HyperlinkedModelSerializer):
+class ShortTournamentSerializer(OwnHyperlinkedModelSerializer):
     class Meta:
         model = Tournament
-        fields = ("url", "name", "slug")
-        extra_kwargs = {
-            "url": {
-                "lookup_field": "slug",
-            }
-        }
+        fields = ("url", "name")
 
 
 class TournamentSerializer(ShortTournamentSerializer):
     # override relation
     races = SerializerMethodField("races_url")
-    sport = SportTypeSerializer()
-    owner = UserSerializer()
+    sport = PresentablePrimaryKeyRelatedField(
+        queryset=SportType.objects.all(),
+        presentation_serializer=SportTypeSerializer,
+    )
+
+    owner = PresentablePrimaryKeyRelatedField(
+        presentation_serializer=UserSerializer,
+        read_only=True,
+        default=CurrentUserDefault()
+    )
 
     def races_url(self, obj):
         kwargs = {
-            "slug": obj.slug,
+            "id": obj.id,
         }
         return reverse.reverse(
             "tournament-races-list",

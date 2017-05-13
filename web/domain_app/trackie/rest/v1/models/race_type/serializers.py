@@ -1,9 +1,9 @@
-from rest_framework.serializers import HyperlinkedModelSerializer
+from ....serializers import OwnHyperlinkedModelSerializer
 from ..field_type.serializers import FieldTypeSerializer
 from ......trackie.models import RaceType
 
 
-class RaceTypeSerializer(HyperlinkedModelSerializer):
+class RaceTypeSerializer(OwnHyperlinkedModelSerializer):
 
     fields = FieldTypeSerializer(many=True)
 

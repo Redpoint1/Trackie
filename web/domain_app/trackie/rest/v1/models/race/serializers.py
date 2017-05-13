@@ -1,24 +1,24 @@
-from django.db.models import Count
-from rest_framework.serializers import (HyperlinkedModelSerializer,
-                                        SerializerMethodField)
+from rest_framework.serializers import SerializerMethodField
 import rest_framework.reverse as reverse
 from ..race_type.serializers import RaceTypeSerializer
 from ..track.serializers import TrackSerializer
 from ..tournament.serializers import TournamentSerializer
 from ..projection.serializers import ProjectionSerializer
+from ....serializers import OwnHyperlinkedModelSerializer
 from ......trackie.models import Race
 
 
-class ShortRaceSerializer(HyperlinkedModelSerializer):
-    type = RaceTypeSerializer()
+class ShortRaceSerializer(OwnHyperlinkedModelSerializer):
+
     tournament = TournamentSerializer()
 
     class Meta:
         model = Race
-        fields = ("id", "url", "name", "tournament", "type", "start", "real_start", "real_end", "estimated_duration")
+        fields = ("id", "url", "name", "tournament", "start", "end", "real_start", "real_end", "estimated_duration")
 
 
 class RaceSerializer(ShortRaceSerializer):
+    type = RaceTypeSerializer()
     track = TrackSerializer()
     data = SerializerMethodField("data_url")
     projection = ProjectionSerializer()

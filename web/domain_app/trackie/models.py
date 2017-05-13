@@ -78,14 +78,6 @@ class Tournament(db_models.Model):
         help_text=_("Name of the Tournament"),
     )
 
-    slug = db_models.SlugField(
-        null=False,
-        blank=False,
-        max_length=255,
-        verbose_name=_("Slug"),
-        help_text=_("Name for the API"),
-    )
-
     owner = db_models.ForeignKey(
         auth_model.User,
         null=False,

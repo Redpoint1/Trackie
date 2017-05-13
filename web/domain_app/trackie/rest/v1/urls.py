@@ -78,7 +78,7 @@ router.register(
 )
 
 router.register(
-    r'tournaments/(?P<slug>[-_\w]+)/races',
+    r'tournaments/(?P<id>[\d]+)/races',
     TournamentRacesViewSet,
     base_name="tournament-races",
 )

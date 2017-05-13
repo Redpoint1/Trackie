@@ -24,7 +24,7 @@ class TournamentInSportType(ModelViewSet):
     def get_queryset(self):
         sport_slug = self.kwargs.get("sport_slug")
         sport = get_object_or_404(SportType, slug=sport_slug)
-        self.queryset = Tournament.objects.filter(sport_id=sport["id"])
+        self.queryset = Tournament.objects.filter(sport=sport)
         return super(TournamentInSportType, self).get_queryset()
 
     def list(self, request, *args, **kwargs):
