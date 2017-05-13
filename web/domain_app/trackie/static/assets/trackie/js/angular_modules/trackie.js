@@ -111,6 +111,9 @@
             }).when("/search", {
                 templateUrl: "partials/search/all.html",
                 controller: "SearchAllController"
+            }).when("/tournaments", {
+                templateUrl: "partials/tournament/list.html",
+                controller: "TournamentsController"
             }).when("/tournaments/add", {
                 templateUrl: "partials/tournament/create.html",
                 controller: "TournamentCreateController",
@@ -1522,6 +1525,49 @@
                     $scope.races = response.data;
                     $scope.grid.data = $scope.races.plain();
                 })
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            }
+        )
+    }]);
+
+    trackie_module.controller("TournamentsController", ["$scope", "$location", "$routeParams", "Restangular", "djangoAuth", function($scope, $location, $routeParams, Restangular, djangoAuth){
+        $scope.render_link = function (grid, row, col) {
+            var column = col.field;
+            var url = "";
+            switch (column){
+                case "name":
+                    url = url = "#/tournament/" + row.entity.id;
+                    break;
+                case "sport.name":
+                     url = "#/sports/" + row.entity.sport.slug;
+                    break;
+            }
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Šport",
+                    field: "sport.name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Turnaj",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("tournaments").getList().then(function (response) {
+                $scope.tournaments = response.data;
+                $scope.grid.data = $scope.tournaments.plain();
             }, function (error) {
                 if (error.status.toString()[0] == 4) { //4xx
                     $location.url("/" + error.status + "?from=" + $location.path());
