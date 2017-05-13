@@ -160,11 +160,20 @@ html {
 /* End ui-grid */
 
 /* ol-sidebar2 */
-.sidebar.sidebar-left {
-    margin-left: 15px;
+.map {
+     height: 75vh;
+}
+
+.sidebar {
     z-index: 10;
     box-sizing: content-box;
+    margin-left: 6px;
 }
+
+.sidebar.sidebar-left {
+    margin-left: 15px;
+}
+
 
 .map-with-sidebar .ol-zoom {
     margin-left: 55px;

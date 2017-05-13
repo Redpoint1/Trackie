@@ -16,7 +16,6 @@ class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
         exclude = []
 
     def validate_data(self, value):
-        # TODO to_representation?
         fields = self.context["view"].queryset[0].type.fields.all()
         errors = dict()
         raise_500 = False

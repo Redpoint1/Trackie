@@ -366,8 +366,9 @@
     // Factories
 
     trackie_module.factory("OLMap", [function () {
-        function OLMapFactory(target) {
+        function OLMapFactory(target, scope) {
             this.target = target;
+            this.fit = null;
             this.sources = {};
             this.sidebar = null;
             this.layers = {
@@ -417,7 +418,6 @@
                 })
             };
             this.map = new ol.Map({
-                target: this.target,
                 layers: [
                     this.layers.tile
                 ],
@@ -425,6 +425,17 @@
                     center: [0, 0],
                     zoom: 1
                 })
+            });
+            var self=this;
+            scope.$watch("$viewContentLoaded", function () {
+                var interval = setInterval(function () {
+                    var element = $(".map").filter("#" + self.target);
+                    if (element.length == 1) {
+                        self.map.setTarget(element[0]);
+                        if (self.fit) self.fitBySource(self.fit);
+                        clearInterval(interval);
+                    }
+                }, 500);
             });
         }
 
@@ -441,14 +452,19 @@
             this.sources[name] = source;
             this.layers[name] = layer;
             this.map.addLayer(layer);
-            window.map = this.map;
 
             return layer;
         };
 
         OLMapFactory.prototype.addSidebar = function (options) {
-            this.sidebar = new ol.control.Sidebar(options);
-            this.map.addControl(this.sidebar);
+            var self = this;
+            var interval = setInterval(function(){
+                if (self.map.getTarget()){
+                    self.sidebar = new ol.control.Sidebar(options);
+                    self.map.addControl(self.sidebar);
+                    clearInterval(interval);
+                }
+            }, 100);
         };
 
         OLMapFactory.prototype.openSidebar = function (tab_name) {
@@ -466,6 +482,7 @@
         };
 
         OLMapFactory.prototype.fitBySource = function (name) {
+            this.fit = name;
             this.map.getView().fit(this.sources[name].getExtent());
         };
 
@@ -516,6 +533,11 @@
                     self.map.getView().setCenter(feature.getGeometry().getExtent());
                 }
             });
+        };
+
+        OLMapFactory.prototype.destroy = function(){
+            this.map.setTarget(null);
+            this.map = null;
         };
 
         return OLMapFactory;
@@ -682,7 +704,81 @@
             }
         };
 
+        Player.prototype.destroy = function () {
+            clearInterval(this.interval);
+        };
+
         return Player;
+    }]);
+
+    trackie_module.factory("GridOptionsGenerator", [function () {
+        function GridOptionsGenerator() {
+            // ui-grid field types
+            // 'string'
+            // 'boolean'
+            // 'number'
+            // 'date'
+            // 'object'
+            // 'numberStr
+            this.fields = {
+                "BigIntegerField": "number",
+                "BooleanField": "boolean",
+                "DateField": "date",
+                "DateTimeField": "date",
+                "DurationField": "date",
+                "FloatField": "number",
+                "IntegerField": "number",
+                "PositiveIntegerField": "number",
+                "PositiveSmallIntegerField": "number",
+                "SmallIntegerField": "number",
+                "TextField": "string",
+                "TimeField": "date",
+                "URLField": "string"
+            }
+        }
+
+        GridOptionsGenerator.prototype.generate = function (scope) {
+            var options = {
+                primaryKey: "properties.racer.number",
+                enableRowSelection: true,
+                multiSelect: true,
+                enableSelectAll: true,
+                paginationPageSizes: false,
+                paginationPageSize: 10,
+                rowIdentity: function (row) {
+                    return row.properties.racer.number;
+                },
+                onRegisterApi: function (gridApi) {
+                    scope.gridApi = gridApi;
+                    scope.gridApi.selection.on.rowSelectionChanged(scope, function () {
+                        scope.highlight_racers("data");
+                    });
+                    scope.gridApi.selection.on.rowSelectionChangedBatch(scope, function () {
+                        $timeout(function () {
+                            scope.highlight_racers("data");
+                        });
+                    });
+                },
+                columnDefs: [
+                    {name: "Číslo", field: "properties.racer.number"},
+                    {name: "Meno", field: "properties.racer.first_name"},
+                    {name: "Priezvisko", field: "properties.racer.last_name"}
+                ]
+            };
+
+            for (var i = 0; i < scope.race.type.fields.length; i++) {
+                var new_field = scope.race.type.fields[i];
+                options.columnDefs.push({
+                    name: new_field.display_name,
+                    field: "properties.data." + new_field.name,
+                    type: this.fields[new_field.type]
+                })
+            }
+
+            return options;
+        };
+
+        return GridOptionsGenerator;
     }]);
 
     // Directives
@@ -810,7 +906,7 @@
         });
     }]);
 
-    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap) {
+    trackie_module.controller("MapController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator) {
         $scope.highlight_racers = function (source) {
             if (!$scope.gridApi) return source;
             var selected_features = $scope.gridApi.selection.getSelectedRows();
@@ -903,7 +999,7 @@
         $scope.showPlayer = false;
         $scope.player = null;
 
-        $scope.map = new OLMap("map");
+        $scope.map = new OLMap("map", $scope);
         $scope.map.addVectorLayer({name: "track"});
         $scope.map.addVectorLayer({
             name: "data",
@@ -954,39 +1050,12 @@
 
         $scope.map.addSidebar({element: "sidebar", position: "left"});
 
-        $scope.gridOptions = {
-            primaryKey: "properties.racer.number",
-            enableRowSelection: true,
-            multiSelect: true,
-            enableSelectAll: true,
-            paginationPageSizes: false,
-            paginationPageSize: 10,
-            rowIdentity: function (row) {
-                return row.properties.racer.number;
-            },
-            onRegisterApi: function (gridApi) {
-                $scope.gridApi = gridApi;
-                $scope.gridApi.selection.on.rowSelectionChanged($scope, function () {
-                    $scope.highlight_racers("data");
-                });
-                $scope.gridApi.selection.on.rowSelectionChangedBatch($scope, function () {
-                    $timeout(function () {
-                        $scope.highlight_racers("data");
-                    });
-                });
-            },
-            columnDefs: [
-                {name: "Číslo", field: "properties.racer.number"},
-                {name: "Meno", field: "properties.racer.first_name"},
-                {name: "Priezvisko", field: "properties.racer.last_name"},
-                {name: "Čas", field: "properties.data.time"}
-            ]
-        };
-
         $scope.race_rest = Restangular.one("races", $routeParams.id);
         $scope.race_rest.get().then(function (response) {
             $scope.projection = response.data.projection ? response.data.projection.code : "EPSG:3857";
             $scope.race = response.data;
+
+            $scope.gridOptions = new GridOptionsGenerator().generate($scope);
 
             Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function (json) {
                 var promise = $scope.race_rest.one("data");
@@ -1017,6 +1086,13 @@
                 $location.url("/" + error.status + "?from=" + $location.path());
             }
         });
+
+        $scope.$on("$destroy", function(e){
+            if (e.targetScope == e.currentScope){
+                $scope.map.destroy();
+                $scope.player.destroy();
+            }
+        });
     }]);
 
     trackie_module.controller("TrackCreateController", ["$scope", "$location", "Restangular", "OLMap", function ($scope, $location, Restangular, OLMap) {
@@ -1036,7 +1112,7 @@
             if (!$scope.trackForm.data["file"]) {
                 $scope.map = $scope.map.destroy();
             } else {
-                $scope.map = new OLMap("track-preview");
+                $scope.map = new OLMap("track-preview", $scope);
                 $scope.map.addVectorLayer({name: "track"});
                 $scope.map.clearSource("track");
                 $scope.map.addFeaturesForSource({
@@ -1061,7 +1137,7 @@
             })
         };
 
-        $scope.map = new OLMap("track-map");
+        $scope.map = new OLMap("track-map", $scope);
         $scope.map.addVectorLayer({name: "track"});
 
         djangoAuth.authenticationStatus().then(function () {
@@ -1252,8 +1328,6 @@
 
     trackie_module.controller("SportDetailController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
         $scope.render_link = function (grid, row, col) {
-            console.log(row);
-            console.log(col);
             var url = "#/tournament/" + row.entity.slug;
             return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
         };
