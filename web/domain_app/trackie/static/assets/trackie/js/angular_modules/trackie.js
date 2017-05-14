@@ -80,7 +80,8 @@
                 templateUrl: "partials/race_type/create.html",
                 controller: "TypeCreateController",
                 reloadAfterAuthChange: true,
-                throwAuthError: true
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/race-fields/:id", {
                 templateUrl: "partials/race_type/detail.html",
                 controller: "TypeController",
@@ -89,10 +90,23 @@
                 templateUrl: "partials/race_type/update.html",
                 controller: "TypeUpdateController",
                 reloadAfterAuthChange: true,
-                throwAuthError: true
+                throwAuthError: true,
+                noCacheTemplate: true
+            }).when("/races/add", {
+                templateUrl: "partials/race/create.html",
+                controller: "RaceCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/race/:id", {
                 templateUrl: "partials/race/detail.html",
                 controller: "RaceController"
+            }).when("/race/:id/update", {
+                templateUrl: "partials/race/update.html",
+                controller: "RaceUpdateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/track/add", {
                 templateUrl: "partials/track/create.html",
                 controller: "TrackCreateController",
@@ -131,7 +145,8 @@
                 templateUrl: "partials/tournament/create.html",
                 controller: "TournamentCreateController",
                 reloadAfterAuthChange: true,
-                throwAuthError: true
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/tournament/:id", {
                 templateUrl: "partials/tournament/detail.html",
                 controller: "TournamentController",
@@ -140,7 +155,8 @@
                 templateUrl: "partials/tournament/update.html",
                 controller: "TournamentUpdateController",
                 reloadAfterAuthChange: true,
-                throwAuthError: true
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -153,13 +169,19 @@
 
             //$locationProvider.html5Mode(true);
         }])
-        .run(["$rootScope", "$location", "$route", "djangoAuth", function ($rootScope, $location, $route, djangoAuth) {
+        .run(["$rootScope", "$location", "$route", "$templateCache", "djangoAuth", function ($rootScope, $location, $route, $templateCache, djangoAuth) {
             djangoAuth.initialize();
             $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
                 var state = toState.redirectTo ? $route.routes[toState.redirectTo] : toState;
                 djangoAuth.authenticationStatus().then(function () {
                     djangoAuth.checkPageAuth(state.throwAuthError);
                 });
+
+                var template = $templateCache.get(state.$$route.templateUrl);
+                if (state.$$route.noCacheTemplate && template){
+                    $templateCache.remove(state.$$route.templateUrl);
+                    $route.reload();
+                }
             });
         }]);
 
@@ -936,6 +958,48 @@
         });
     }]);
 
+    trackie_module.controller("RaceCreateController", ["$scope", "$location", "Restangular", function ($scope, $location, Restangular) {
+        $scope.createRace = function () {
+            Restangular.all("races").post($scope.raceForm.data).then(function (response) {
+                $location.path("/race/" + response.data.id + "/add/racers");
+            }, function (error) {
+                renderFormErrors($("#race-form"), error.data, "id_");
+            });
+        };
+    }]);
+
+    trackie_module.controller("RaceUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.updateRace = function () {
+            $scope.race = angular.extend($scope.race, $scope.raceForm.data);
+            $scope.race.put().then(function (response) {
+                $location.path("/race/" + response.data.id);
+            }, function (error) {
+                renderFormErrors($("#race-form"), error.data, "id_");
+            });
+        };
+
+        function getItFrom(model){
+            if (model){
+                return "" + model.id;
+            }
+            return null;
+        }
+
+        Restangular.one("races", $routeParams.id).get().then(function (response) {
+            $scope.race = response.data;
+            $scope.race.tournament = getItFrom($scope.race.tournament);
+            $scope.race.type = getItFrom($scope.race.type);
+            $scope.race.track = getItFrom($scope.race.track);
+            $scope.race.projection = getItFrom($scope.race.projection);
+            $scope.raceForm.data = response.data.plain();
+            console.log($scope.race);
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        })
+    }]);
+
     trackie_module.controller("RaceController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator) {
         $scope.highlight_racers = function (source) {
             if (!$scope.gridApi) return source;
@@ -1206,7 +1270,6 @@
         Restangular.one("tracks", $routeParams.id).get().then(function (response) {
             $scope.track = response.data;
             $scope.trackForm.data = response.data.plain();
-            console.log($scope.track);
         }, function (error) {
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());

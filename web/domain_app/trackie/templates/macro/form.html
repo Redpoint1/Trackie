@@ -6,6 +6,94 @@
         {% if field.field|field_type == "BooleanField" %}
             <div class="checkbox" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
             <label>{{ field }}{{ field.label }}</label>
+        {% elif field.field|field_type == "DateTimeField" %}
+            <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
+                <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+                    <div class='input-group date' id='{{ field.id_for_label }}_pick'>
+                        {{ field }}
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#{{ field.id_for_label }}_pick').datetimepicker({
+                                    format: 'YYYY-MM-DDTHH:mm:ssZ',
+                                    sideBySide: true,
+                                    icons: {
+                                        time: 'fa fa-clock-o',
+                                        date: 'fa fa-calendar',
+                                        up: 'fa fa-chevron-up',
+                                        down: 'fa fa-chevron-down',
+                                        previous: 'fa fa-chevron-left',
+                                        next: 'fa fa-chevron-right',
+                                        today: 'fa fa-crosshairs',
+                                        clear: 'fa fa-trash-o',
+                                        close: 'fa fa-remove'
+                                    }
+                                }).on("dp.change", function(e){
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));
+                                });
+                            });
+                        </script>
+                    </div>
+        {% elif field.field|field_type == "DateField" %}
+            <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
+                <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+                    <div class='input-group date' id='{{ field.id_for_label }}_pick'>
+                        {{ field }}
+                        <span class="input-group-addon" data-ng-c>
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#{{ field.id_for_label }}_pick').datetimepicker({
+                                    format: 'YYYY-MM-DD',
+                                    icons: {
+                                        time: 'fa fa-clock-o',
+                                        date: 'fa fa-calendar',
+                                        up: 'fa fa-chevron-up',
+                                        down: 'fa fa-chevron-down',
+                                        previous: 'fa fa-chevron-left',
+                                        next: 'fa fa-chevron-right',
+                                        today: 'fa fa-crosshairs',
+                                        clear: 'fa fa-trash-o',
+                                        close: 'fa fa-remove'
+                                    }
+                                }).on("dp.change", function(e){
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));;
+                                });
+                            });
+                        </script>
+                    </div>
+        {% elif field.field|field_type == "TimeField" or field.field|field_type == "DurationField"%}
+            <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
+                <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+                    <div class='input-group date' id='{{ field.id_for_label }}_pick'>
+                        {{ field }}
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#{{ field.id_for_label }}_pick').datetimepicker({
+                                    format: 'HH:mm:ss',
+                                    icons: {
+                                        time: 'fa fa-clock-o',
+                                        date: 'fa fa-calendar',
+                                        up: 'fa fa-chevron-up',
+                                        down: 'fa fa-chevron-down',
+                                        previous: 'fa fa-chevron-left',
+                                        next: 'fa fa-chevron-right',
+                                        today: 'fa fa-crosshairs',
+                                        clear: 'fa fa-trash-o',
+                                        close: 'fa fa-remove'
+                                    }
+                                }).on("dp.change", function(e){
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));
+                                });
+                            });
+                        </script>
+                    </div>
         {% else %}
             <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}.$invalid && !{{ form_name }}.{{ field.name }}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}.$valid && !{{ form_name }}.{{ field.name }}.$pristine }">
             <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>

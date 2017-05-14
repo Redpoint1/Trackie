@@ -1,7 +1,7 @@
 from django.forms.models import ModelForm
 from allauth.account.forms import SignupForm, UserForm
 import allauth.account.app_settings as app_settings
-from .models import Track, Racer, Tournament, RaceType
+from .models import Track, Racer, Tournament, RaceType, Race
 
 
 class RegisterForm(SignupForm):
@@ -167,3 +167,54 @@ class RaceTypeUpdateForm(RaceTypeCreateForm):
 
     def __init__(self, *args, **kwargs):
         super(RaceTypeUpdateForm, self).__init__(*args, **kwargs)
+
+
+class RaceCreateForm(ModelForm):
+    class Meta:
+        model = Race
+        exclude = ("end", "real_end", "real_start", "participants",)
+
+    def __init__(self, *args, **kwargs):
+        super(RaceCreateForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.name',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['tournament'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.tournament',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['track'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.track',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['projection'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.projection',
+            'class': 'form-control',
+        })
+        self.fields['type'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.type',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['start'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.start',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['estimated_duration'].widget.attrs.update({
+            'data-ng-model': 'raceForm.data.estimated_duration',
+            'pattern': '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}',
+            'class': 'form-control',
+        })
+
+
+class RaceUpdateForm(RaceCreateForm):
+    class Meta(RaceCreateForm.Meta):
+        pass
+
+    def __init__(self, *args, **kwargs):
+        super(RaceUpdateForm, self).__init__(*args, **kwargs)

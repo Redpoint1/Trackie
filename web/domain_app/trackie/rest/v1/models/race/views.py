@@ -11,6 +11,9 @@ class RaceViewSet(ModelViewSet):
         self.serializer_class = ShortRaceSerializer
         return super(RaceViewSet, self).list(request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        return super(RaceViewSet, self).create(request, *args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
         return super(RaceViewSet, self).retrieve(request, *args, **kwargs)
 
