@@ -364,7 +364,7 @@ class Race(db_models.Model):
         null=True,
         blank=False,
         verbose_name=_("Estimated duration"),
-        help_text=_("[DD] [HH:[MM:]]ss[.uuuuuu]")
+        help_text=_("[DD] [HH:[MM:]]ss")
     )
 
     projection = db_models.ForeignKey(

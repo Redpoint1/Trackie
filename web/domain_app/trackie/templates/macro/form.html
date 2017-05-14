@@ -31,7 +31,7 @@
                                         close: 'fa fa-remove'
                                     }
                                 }).on("dp.change", function(e){
-                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format("YYYY-MM-DDTHH:mm:ssZ"));
                                 });
                             });
                         </script>
@@ -60,7 +60,7 @@
                                         close: 'fa fa-remove'
                                     }
                                 }).on("dp.change", function(e){
-                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));;
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format("YYYY-MM-DD"));
                                 });
                             });
                         </script>
@@ -89,7 +89,7 @@
                                         close: 'fa fa-remove'
                                     }
                                 }).on("dp.change", function(e){
-                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format(e.date._f));
+                                    $("#{{ field.id_for_label }}").scope().{{ form_name }}.{{ field.name }}.$setViewValue(e.date.format("HH:mm:ss"));
                                 });
                             });
                         </script>

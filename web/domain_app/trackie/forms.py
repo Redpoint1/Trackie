@@ -207,7 +207,7 @@ class RaceCreateForm(ModelForm):
         })
         self.fields['estimated_duration'].widget.attrs.update({
             'data-ng-model': 'raceForm.data.estimated_duration',
-            'pattern': '(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}',
+            'pattern': '((0[0-9]|1[0-9]|2[0-9]|3[0-1])\s)?(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}',
             'class': 'form-control',
         })
 
