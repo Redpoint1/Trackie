@@ -5,7 +5,18 @@ from .....validators import FileSizeMaxValidator
 from ......trackie.models import RacerInRace, Racer
 
 
-class RacerSerializer(OwnHyperlinkedModelSerializer):
+class ShortRacerSerialiter(OwnHyperlinkedModelSerializer):
+    class Meta:
+        model = Racer
+        fields = (
+            "id",
+            "url",
+            "first_name",
+            "last_name"
+        )
+
+
+class RacerSerializer(ShortRacerSerialiter):
     photo = ImageLimitField(
         sizes=[
             ('normal', 'url'),
@@ -13,10 +24,10 @@ class RacerSerializer(OwnHyperlinkedModelSerializer):
         ],
         validators=[FileSizeMaxValidator(512*1024)],
         required=False,
+        allow_null=True,
     )
 
-    class Meta:
-        model = Racer
+    class Meta(ShortRacerSerialiter.Meta):
         fields = (
             "id",
             "url",

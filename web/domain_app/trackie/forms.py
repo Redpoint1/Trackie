@@ -1,7 +1,7 @@
-from django.forms.models import ModelForm
+from django.forms.models import ModelForm, HiddenInput
 from allauth.account.forms import SignupForm, UserForm
 import allauth.account.app_settings as app_settings
-from .models import Track, Racer, Tournament, RaceType, Race
+from .models import Track, Racer, Tournament, RaceType, Race, RacerInRace
 
 
 class RegisterForm(SignupForm):
@@ -218,3 +218,26 @@ class RaceUpdateForm(RaceCreateForm):
 
     def __init__(self, *args, **kwargs):
         super(RaceUpdateForm, self).__init__(*args, **kwargs)
+
+
+class RacerInRaceCreateForm(ModelForm):
+    class Meta:
+        model = RacerInRace
+        exclude = ("race",)
+
+    def __init__(self, *args, **kwargs):
+        super(RacerInRaceCreateForm, self).__init__(*args, **kwargs)
+        self.fields['racer'].widget.attrs.update({
+            'name': "racerInRaceForm.racer[$index]",
+            'data-ng-model': 'racerInRaceForm.data[$index].racer',
+            'data-ng-attr-name': '{{ "racer" + $index}}',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['number'].widget.attrs.update({
+            'name': "racerInRaceForm.number[$index]",
+            'data-ng-model': 'racerInRaceForm.data[$index].number',
+            'data-ng-attr-name': '{{ "number" + $index}}',
+            'class': 'form-control',
+            'required': 'required',
+        })

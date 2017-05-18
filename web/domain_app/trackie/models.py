@@ -387,34 +387,6 @@ class Race(db_models.Model):
         return self.name
 
 
-class RaceData(db_models.Model):
-    """ Race Data """
-
-    race = db_models.ForeignKey(
-        Race,
-        null=True,
-        blank=False,
-        on_delete=db_models.CASCADE,
-        related_name="data",
-    )
-
-    received = db_models.DateTimeField(
-        null=False,
-        blank=False,
-    )
-
-    racer = db_models.ForeignKey(
-        Racer,
-        null=False,
-        blank=False,
-        on_delete=db_models.DO_NOTHING,
-    )
-
-    position = db_models.PointField()
-
-    data = postgres_fields.JSONField()
-
-
 class RacerInRace(db_models.Model):
     """ Racer in a race """
 
@@ -438,3 +410,34 @@ class RacerInRace(db_models.Model):
         null=False,
         blank=False,
     )
+
+    class Meta:
+        unique_together = (("race", "number", "racer",),)
+
+
+class RaceData(db_models.Model):
+    """ Race Data """
+
+    race = db_models.ForeignKey(
+        Race,
+        null=True,
+        blank=False,
+        on_delete=db_models.CASCADE,
+        related_name="data",
+    )
+
+    received = db_models.DateTimeField(
+        null=False,
+        blank=False,
+    )
+
+    racer = db_models.ForeignKey(
+        RacerInRace,
+        null=False,
+        blank=False,
+        on_delete=db_models.PROTECT,
+    )
+
+    position = db_models.PointField()
+
+    data = postgres_fields.JSONField()

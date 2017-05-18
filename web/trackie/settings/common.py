@@ -140,6 +140,8 @@ REST_AUTH_SERIALIZERS = {
     'TOKEN_SERIALIZER': 'app.api.rest.serializers.ExtendedTokenSerializer'
 }
 
+APPEND_SLASH = True
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = '[Trackie] '
 ACCOUNT_SESSION_REMEMBER = True

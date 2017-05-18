@@ -107,6 +107,12 @@
                 reloadAfterAuthChange: true,
                 throwAuthError: true,
                 noCacheTemplate: true
+            }).when("/race/:id/participants", {
+                templateUrl: "partials/racer_in_race/create.html",
+                controller: "RacerInRaceCreateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true,
+                noCacheTemplate: true
             }).when("/track/add", {
                 templateUrl: "partials/track/create.html",
                 controller: "TrackCreateController",
@@ -961,11 +967,62 @@
     trackie_module.controller("RaceCreateController", ["$scope", "$location", "Restangular", function ($scope, $location, Restangular) {
         $scope.createRace = function () {
             Restangular.all("races").post($scope.raceForm.data).then(function (response) {
-                $location.path("/race/" + response.data.id + "/add/racers");
+                $location.path("/race/" + response.data.id + "/participants");
             }, function (error) {
                 renderFormErrors($("#race-form"), error.data, "id_");
             });
         };
+    }]);
+
+    trackie_module.controller("RacerInRaceCreateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {
+        $scope.increase = function () {
+            $scope.racerInRaceForm.data.push({});
+            $scope.$applyAsync();
+        };
+
+        $scope.reduce = function(){
+            if ($scope.racerInRaceForm.data.length > $scope.participants.length) $scope.racerInRaceForm.data.pop();
+            $scope.$applyAsync();
+        };
+
+        $scope.range = function(n) {
+            n = n || 0;
+            return new Array(n);
+        };
+
+        $scope.addParticipants = function () {
+            var data = [];
+            $.each($scope.racerInRaceForm.data, function(i,n) {
+                if(!n.remove){
+                    delete n["remove"];
+                    delete n["race"];
+                    delete n["id"];
+                    data.push(n);
+                }
+            });
+            Restangular.one("races", $routeParams.id).all("participants").post(data).then(function (response) {
+                $location.path("/race/" + $routeParams.id);
+            }, function (error) {
+                renderFormErrors($("#participant-form"), error.data, "id_");
+            });
+        };
+
+        Restangular.one("races", $routeParams.id).all("participants").getList().then(function (response) {
+            _.each(response.data, function(temp, i){
+                response.data[i].racer = String(response.data[i].racer.id);
+            });
+
+            $scope.participants = response.data;
+            $scope.racerInRaceForm.data = response.data.plain();
+
+            if (!$scope.racerInRaceForm.data.length){
+                $scope.increase();
+            }
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        });
     }]);
 
     trackie_module.controller("RaceUpdateController", ["$scope", "$location", "$routeParams", "Restangular", function ($scope, $location, $routeParams, Restangular) {

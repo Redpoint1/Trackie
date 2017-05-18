@@ -7,7 +7,8 @@ function renderFormErrors(element, error, keyPrefix) {
         for (var i=0; i < error[key].length; i++){
             list.append("<li>" + error[key][i] + "</li>");
         }
-        var where = element.find("#" + keyPrefix + key);
+
+        var where = (key === "id_non_field_errors") ? element.find("#" + key) : element.find("#" + keyPrefix + key);
         if (where.is("input")) {
             where.after(list);
         } else {

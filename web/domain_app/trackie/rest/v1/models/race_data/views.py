@@ -40,14 +40,14 @@ class RaceDataViewSet(viewsets.ModelViewSet):
         bulk = isinstance(request.data, list)
         self.serializer_class = RaceDataGeoJSONPostSerializer
         race = Race.objects.get(pk=kwargs["race_pk"])
-        if not race.data.count():
+        if not race.real_start:
             race.real_start = timezone.now()
             race.save()
         if race.end:
             raise RaceFinishedException
-        racers = race.racers.all().values("number", "racer")
+        racers = race.racers.all().values("number", "id")
         # dict(racer.number: racer.id)
-        racers = dict([(racer["number"], racer["racer"]) for racer in racers])
+        racers = dict([(racer["number"], racer["id"]) for racer in racers])
         url = RaceSerializer(race, context={'request': request}).data["url"]
         now = timezone.now()
 

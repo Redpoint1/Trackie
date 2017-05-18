@@ -1,0 +1,52 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            <h1 style="margin-top: 0;">Pridať účastníkov</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div class="well">
+            {% with form_name="racerInRaceForm" %}
+                <form name="{{ form_name }}" id="participant-form" data-ng-submit="addParticipants()">
+                    {% csrf_token %}
+                    <div class="form-group" id="id_non_field_errors"></div>
+                    <table class="table" style="margin-bottom: 0;">
+                        <thead>
+                            <th>Pretekár</th>
+                            <th>Číslo</th>
+                            <th>Odstrániť</th>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="a in range(racerInRaceForm.data.length) track by $index">
+                                {% for field in form %}
+                                    {% with model_name=field.field.widget.attrs|get_item:'data-ng-model' %}
+                                        <td>
+                                            <div class="form-group" data-ng-class="{ 'has-error' : {{ form_name }}.{{ field.name }}{% verbatim %}{{ $index }}{% endverbatim %}.$invalid && !{{ form_name }}.{{ field.name }}{% verbatim %}{{ $index }}{% endverbatim %}.$pristine, 'has-success' : {{ form_name }}.{{ field.name }}{% verbatim %}{{ $index }}{% endverbatim %}.$valid && !{{ form_name }}.{{ field.name }}{% verbatim %}{{ $index }}{% endverbatim %}.$pristine }">
+                                                {{ field }}
+                                            </div>
+                                        </td>
+                                    {% endwith %}
+                                {% endfor %}
+                                <td>
+                                    {% verbatim %}
+                                    <div class="checkbox" data-ng-if="participants.length > $index">
+                                        <label><input type="checkbox" data-ng-attr-name="remove{{ $index }}" data-ng-model="racerInRaceForm.data[$index].remove"/>&nbsp;Odstrániť</label>
+                                    </div>
+                                    {% endverbatim %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="form-group">
+                        <button type="submit" data-ng-disabled="{{ form_name }}.$invalid" class="btn btn-primary">Pridať</button>
+                        <span style="float: right;">
+                             <i class="fa fa-plus" style="color: forestgreen;" data-ng-click="increase()"></i>&nbsp;<i style="color: darkred;" data-ng-if="racerInRaceForm.data.length > participants.length" data-ng-click="reduce()" class="fa fa-minus"></i>
+                        </span>
+                    </div>
+                </form>
+            {% endwith %}
+        </div>
+    </div>
+</div>

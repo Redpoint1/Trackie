@@ -59,4 +59,4 @@ class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
 
 class RaceDataGeoJSONSerializer(RaceDataGeoJSONPostSerializer):
     race = HyperlinkedRelatedField("race-detail", read_only=True)
-    racer = RaceRacerSerializer()
+    racer = RaceRacerSerializer(source="racer.racer")

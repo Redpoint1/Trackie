@@ -56,3 +56,4 @@ class RaceSerializer(ShortRaceSerializer):
     class Meta:
         model = Race
         fields = "__all__"
+        read_only_fields = ("participants",)
