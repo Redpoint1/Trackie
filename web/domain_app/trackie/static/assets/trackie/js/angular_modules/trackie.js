@@ -72,7 +72,7 @@
                 controller: "MainController",
                 reloadAfterAuthChange: true
             }).when("/profile", {
-                templateUrl: "partials/profile.html",
+                templateUrl: "partials/profile/update.html",
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
@@ -959,8 +959,47 @@
     }]);
 
     trackie_module.controller("ProfileController", ["$scope", "djangoAuth", "Restangular", function ($scope, djangoAuth, Restangular) {
-        Restangular.all("auth").customGET("user/").then(function (user) {
-            $scope.user = user;
+        $scope.password_partial = "/partials/profile/password.html";
+
+        $scope.updateProfile = function () {
+            $scope.user = angular.extend($scope.user, $scope.profileForm.data);
+            Restangular.oneUrl("user", "/api/v1/auth/user/").patch($scope.user).then(function (response) {
+                $scope.user = response.data;
+                $scope.profileForm.data = response.data.plain();
+                $scope.profileForm.$setPristine();
+            }, function (error) {
+                renderFormErrors($("#profile-form"), error.data, "id_");
+            });
+        };
+
+        $scope.updatePassword = function(form){
+            Restangular.oneUrl("user", "/api/v1/auth/password/change/").customPOST(form.data).then(function (response) {
+                form.data = {};
+                form.$setPristine();
+            }, function (error) {
+                renderFormErrors($("#profile-password-form"), error.data, "id_");
+            });
+        };
+
+        $scope.changeApiToken = function(){
+            $scope.api_token.post().then(function(response){
+                $scope.api_token = response.data;
+            });
+        };
+
+        Restangular.oneUrl("user", "/api/v1/auth/user/").get().then(function (response) {
+            $scope.user = response.data;
+            $scope.profileForm.data = response.data.plain();
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        });
+
+        Restangular.all("api-key").customGET().then(function (response) {
+            $scope.api_token = response.data;
+        }, function (error) {
+
         });
     }]);
 

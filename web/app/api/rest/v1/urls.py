@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 
 from . import views as rest_v1_views
 
+
 urlpatterns = [  # pylint: disable=invalid-name
     # url(r'^auth/',
     #    include('rest_framework.urls', namespace='rest_framework')),

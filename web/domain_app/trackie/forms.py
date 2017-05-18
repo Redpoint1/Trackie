@@ -1,7 +1,8 @@
-from django.forms.models import ModelForm, HiddenInput
-from allauth.account.forms import SignupForm, UserForm
+from django.forms.models import ModelForm
+from allauth.account.forms import SignupForm, ChangePasswordForm
 import allauth.account.app_settings as app_settings
 from .models import Track, Racer, Tournament, RaceType, Race, RacerInRace
+from django.contrib.auth.models import User
 
 
 class RegisterForm(SignupForm):
@@ -35,10 +36,42 @@ class RegisterForm(SignupForm):
         })
 
 
-class ProfileForm(UserForm):
+class ProfileUpdateForm(ModelForm):
+
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name",)
 
     def __init__(self, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].widget.attrs.update({
+            'data-ng-model': 'profileForm.data.first_name',
+            'class': 'form-control',
+        })
+        self.fields['last_name'].widget.attrs.update({
+            'data-ng-model': 'profileForm.data.last_name',
+            'class': 'form-control',
+        })
+
+
+class ProfilePasswordForm(ChangePasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(ProfilePasswordForm, self).__init__(*args, **kwargs)
+        self.fields['oldpassword'].widget.attrs.update({
+            'data-ng-model': 'profilePasswordForm.data.oldpassword',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['password1'].widget.attrs.update({
+            'data-ng-model': 'profilePasswordForm.data.new_password1',
+            'class': 'form-control',
+            'required': 'required',
+        })
+        self.fields['password2'].widget.attrs.update({
+            'data-ng-model': 'profilePasswordForm.data.new_password2',
+            'class': 'form-control',
+            'required': 'required',
+        })
 
 
 class TrackCreateForm(ModelForm):

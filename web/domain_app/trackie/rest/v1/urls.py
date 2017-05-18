@@ -14,6 +14,7 @@ from .models.projection.views import ProjectionViewSet
 from .models.search.views import SearchViewSet
 from .models.racer_in_race.views import RacerFinishedRace, RacerRacingRace, RacerUpcomingRace, ParticipantsRaceView
 from .models.field_type.views import FieldTypeViewSet
+from .models.token.views import AuthTokenView
 
 
 router = routers.SimpleRouter()
@@ -116,7 +117,13 @@ router.register(
 
 urlpatterns = router.urls
 
-urlpatterns += [url(r'^races/(?P<pk>\d+)/participants/$',
-    view=ParticipantsRaceView.as_view(),
-    name=ParticipantsRaceView.name
-)]
+urlpatterns += [
+    url(r'^races/(?P<pk>\d+)/participants/$',
+        view=ParticipantsRaceView.as_view(),
+        name=ParticipantsRaceView.name
+        ),
+    url(r'^api-key/$',
+        view=AuthTokenView.as_view(),
+        name=AuthTokenView.name
+        )
+]

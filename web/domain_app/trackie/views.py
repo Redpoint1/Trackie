@@ -32,19 +32,6 @@ class MainPageView(views.TemplateView):
         return super(MainPageView, self).get(request, *args, **kwargs)
 
 
-class ProfilePageView(views.TemplateView):
-
-    name = 'trackie.profile'
-    template_name = 'partials/profile/profile.html'
-    form = None
-
-    def get(self, request, *args, **kwargs):
-        self.form = forms.UserForm()
-        kwargs['form'] = self.form
-
-        return super(ProfilePageView, self).get(request, *args, **kwargs)
-
-
 class PartialView(views.TemplateView):
     http_method_names = ('get',)
 

@@ -9,11 +9,6 @@ urlpatterns = [  # pylint: disable=invalid-name
         name=trackie_views.MainPageView.name
     ),
     url(
-        r'^partials/profile.html$',
-        view=trackie_views.ProfilePageView.as_view(),
-        name=trackie_views.ProfilePageView.name
-    ),
-    url(
         r'^partials/(?P<partial>[\w/.]+)',
         view=trackie_views.PartialView.as_view(),
         name=trackie_views.PartialView.name,
