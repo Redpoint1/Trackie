@@ -16,23 +16,22 @@ if __name__ == "__main__":
     i = 0
 
     while racer_2 < len(coords):
-        print("racer_1: {} {}".format(coords[racer_1][0],
-                                      coords[racer_1][1]))
-        print("racer_2: {} {}".format(coords[racer_2][0],
-                                      coords[racer_2][1]))
-
         json = [
             {
                 "position": "POINT ({} {})".format(coords[racer_1][0],
                                                    coords[racer_1][1]),
-                "data": {"time": "+0:00:00"},
+                # "data": {"time": "0:00:00"},
+                "data": {
+                    "time": "{}".format(datetime.timedelta(seconds=racer_1 * 5)),
+                },
                 "racer": 1
             },
             {
                 "position": "POINT ({} {})".format(coords[racer_2][0],
                                                    coords[racer_2][1]),
                 "data": {
-                    "time": "-{}".format(datetime.timedelta(seconds=i * 5))},
+                    "time": "{}".format(datetime.timedelta(seconds=i * 5))
+                },
                 "racer": 2
             }
         ]
@@ -43,6 +42,10 @@ if __name__ == "__main__":
             json=json,
             auth=("admin", "root")
         )
+
+        print(r.status_code, r.request.url)
+
+        r.raise_for_status()
 
         racer_1 += 2 if racer_1 < (len(coords) - 1) else (len(
             coords) - 1) - racer_1
