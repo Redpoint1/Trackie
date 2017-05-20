@@ -10,8 +10,10 @@ class IsOwnerOrReadOnly(BasePermission):
             return True
 
         if hasattr(view, "trackie_owner"):
-            field = view.trackie_owner
-            owner = getattr(obj, field)
+            fields = view.trackie_owner.split(".")
+            owner = obj
+            for field in fields:
+                owner = getattr(owner, field)
         else:
             owner = getattr(obj, "owner")
 
@@ -36,14 +38,26 @@ class IsNotPublicOrReadOnly(BasePermission):
 class NotProtectedOrReadOnly(BasePermission):
 
     def has_object_permission(self, request, view, obj):
-        if request.method != "DELETE":
+
+        check_methods = getattr(view, "trackie_protect_methods", ["DELETE"])
+
+        if request.method not in check_methods:
             return True
 
         assert hasattr(view, "trackie_protect"), _(
-            "Tarckie_protect is not set"
+            "trackie_protect attribute is not set"
         )
 
         field = view.trackie_protect
         protected = getattr(obj, field)
 
         return not protected.count()
+
+
+class ReadOnly(BasePermission):
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return False

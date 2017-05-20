@@ -18,14 +18,17 @@
     </div>
 </div>
 <div class="row" style="margin-top: 10px;" data-ng-show="racer">
+    {% verbatim %}
     <div class="col-sm-12">
-        {% verbatim %}
         <dl>
             <dt>O pretekárovi</dt>
             <dd class="text-pre-line">{{ racer.about || "Prázdné" }}</dd>
         </dl>
-        {% endverbatim %}
     </div>
+    <div class="col-xs-12">
+        <button class="btn btn-primary" data-ng-click="$parent.showProfile(racer.id)">Pozrieť profil</button>
+    </div>
+    {% endverbatim %}
 </div>
 
 <div class="row" data-ng-hide="racer">

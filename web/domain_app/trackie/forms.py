@@ -3,6 +3,14 @@ from allauth.account.forms import SignupForm, ChangePasswordForm
 import allauth.account.app_settings as app_settings
 from .models import Track, Racer, Tournament, RaceType, Race, RacerInRace
 from django.contrib.auth.models import User
+from django.db.models import Q
+
+
+class BaseModelForm(ModelForm):
+
+    def __init__(self, user, *args, **kwargs):
+        self._user = user
+        super(BaseModelForm, self).__init__(*args, **kwargs)
 
 
 class RegisterForm(SignupForm):
@@ -36,7 +44,7 @@ class RegisterForm(SignupForm):
         })
 
 
-class ProfileUpdateForm(ModelForm):
+class ProfileUpdateForm(BaseModelForm):
 
     class Meta:
         model = User
@@ -74,7 +82,7 @@ class ProfilePasswordForm(ChangePasswordForm):
         })
 
 
-class TrackCreateForm(ModelForm):
+class TrackCreateForm(BaseModelForm):
     class Meta:
         model = Track
         exclude = ["owner"]
@@ -110,7 +118,7 @@ class TrackUpdateForm(TrackCreateForm):
         self.fields.pop('file')
 
 
-class RacerCreateForm(ModelForm):
+class RacerCreateForm(BaseModelForm):
     class Meta:
         model = Racer
         exclude = ("full_name",)
@@ -148,7 +156,7 @@ class RacerUpdateForm(RacerCreateForm):
         super(RacerUpdateForm, self).__init__(*args, **kwargs)
 
 
-class TournamentCreateForm(ModelForm):
+class TournamentCreateForm(BaseModelForm):
     class Meta:
         model = Tournament
         exclude = ("owner",)
@@ -175,7 +183,7 @@ class TournamentUpdateForm(TournamentCreateForm):
         super(TournamentUpdateForm, self).__init__(*args, **kwargs)
 
 
-class RaceTypeCreateForm(ModelForm):
+class RaceTypeCreateForm(BaseModelForm):
     class Meta:
         model = RaceType
         exclude = ("owner", "public")
@@ -202,7 +210,7 @@ class RaceTypeUpdateForm(RaceTypeCreateForm):
         super(RaceTypeUpdateForm, self).__init__(*args, **kwargs)
 
 
-class RaceCreateForm(ModelForm):
+class RaceCreateForm(BaseModelForm):
     class Meta:
         model = Race
         exclude = ("end", "real_end", "real_start", "participants",)
@@ -214,11 +222,13 @@ class RaceCreateForm(ModelForm):
             'class': 'form-control',
             'required': 'required',
         })
+        self.fields['tournament'].queryset = Tournament.objects.filter(owner=self._user.pk)
         self.fields['tournament'].widget.attrs.update({
             'data-ng-model': 'raceForm.data.tournament',
             'class': 'form-control',
             'required': 'required',
         })
+        self.fields['track'].queryset = Track.objects.filter(Q(owner=self._user.pk) | Q(public=True))
         self.fields['track'].widget.attrs.update({
             'data-ng-model': 'raceForm.data.track',
             'class': 'form-control',
@@ -228,6 +238,7 @@ class RaceCreateForm(ModelForm):
             'data-ng-model': 'raceForm.data.projection',
             'class': 'form-control',
         })
+        self.fields['type'].queryset = RaceType.objects.filter(Q(owner=self._user.pk) | Q(public=True))
         self.fields['type'].widget.attrs.update({
             'data-ng-model': 'raceForm.data.type',
             'class': 'form-control',
@@ -253,7 +264,7 @@ class RaceUpdateForm(RaceCreateForm):
         super(RaceUpdateForm, self).__init__(*args, **kwargs)
 
 
-class RacerInRaceCreateForm(ModelForm):
+class RacerInRaceCreateForm(BaseModelForm):
     class Meta:
         model = RacerInRace
         exclude = ("race",)

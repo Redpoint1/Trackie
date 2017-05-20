@@ -225,26 +225,26 @@
                     params: params,
                     headers: {"X-Requested-With": "XMLHttpRequest"},
                     data: data
-                }).success(angular.bind(this, function (data, status) {
-                    deferred.resolve(data, status);
-                })).error(angular.bind(this, function (data, status, headers, config) {
-                    if (data) {
-                        data.status = status;
-                    }
-                    if (status === 0) {
-                        if (data === "") {
-                            data = {};
-                            data.status = 0;
-                            data.non_field_errors = ["Could not connect. Please try again."];
+                }).then(function (data, status) {
+                        deferred.resolve(data, status)
+                    }, function (data, status, headers, config) {
+                        if (data) {
+                            data.status = status;
                         }
-                        if (data === null) {
-                            data = {};
-                            data.status = 0;
-                            data.non_field_errors = ["Server timed out. Please try again."];
+                        if (status === 0) {
+                            if (data === "") {
+                                data = {};
+                                data.status = 0;
+                                data.non_field_errors = ["Could not connect. Please try again."];
+                            }
+                            if (data === null) {
+                                data = {};
+                                data.status = 0;
+                                data.non_field_errors = ["Server timed out. Please try again."];
+                            }
                         }
-                    }
-                    deferred.reject(data, status, headers, config);
-                }));
+                        deferred.reject(data, status, headers, config);
+                });
                 return deferred.promise;
             },
             "register": function (username, password1, password2, email, more) {
@@ -493,7 +493,7 @@
                         if (self.fit) self.fitBySource(self.fit);
                         clearInterval(interval);
                     }
-                }, 500);
+                }, 1000);
             });
         }
 
@@ -517,6 +517,10 @@
         OLMapFactory.prototype.addSidebar = function (options) {
             var self = this;
             var interval = setInterval(function(){
+                if (!self.map){
+                    clearInterval(interval);
+                    return;
+                }
                 if (self.map.getTarget()){
                     self.sidebar = new ol.control.Sidebar(options);
                     self.map.addControl(self.sidebar);
@@ -1096,7 +1100,7 @@
         })
     }]);
 
-    trackie_module.controller("RaceController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator) {
+    trackie_module.controller("RaceController", ["$scope", "$location", "$routeParams", "$timeout", "$interval", "Restangular", "OLMap", "GridOptionsGenerator", "djangoAuth", function ($scope, $location, $routeParams, $timeout, $interval, Restangular, OLMap, GridOptionsGenerator, djangoAuth) {
         $scope.highlight_racers = function (source) {
             if (!$scope.gridApi) return source;
             var selected_features = $scope.gridApi.selection.getSelectedRows();
@@ -1184,6 +1188,14 @@
             $scope.showPlayer = true;
             $scope.player.loadData($routeParams.id);
         };
+
+        $scope.showProfile = function(racerId){
+            location.href="#/racer/"+racerId;
+        };
+
+        djangoAuth.authenticationStatus().then(function () {
+            $scope.user = djangoAuth.user.data;
+        });
 
         $scope.endOfRace = false;
         $scope.showPlayer = false;
@@ -1279,8 +1291,8 @@
 
         $scope.$on("$destroy", function(e){
             if (e.targetScope == e.currentScope){
-                $scope.map.destroy();
-                $scope.player.destroy();
+                if ($scope.map) $scope.map.destroy();
+                if ($scope.player) $scope.player.destroy();
             }
         });
     }]);
@@ -1331,7 +1343,7 @@
         $scope.map.addVectorLayer({name: "track"});
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user;
+            $scope.user = djangoAuth.user.data;
         });
 
         $scope.track_source = Restangular.one("tracks", $routeParams.id);
@@ -1407,7 +1419,7 @@
             var url = "#/";
             switch (col.field) {
                 case "tournament.sport.name":
-                    url = "#/sport/" + row.entity.tournament.sport.slug;
+                    url = "#/sports/" + row.entity.tournament.sport.slug;
                     break;
                 case "tournament.name":
                     url = "#/tournament/" + row.entity.tournament.id;
@@ -1430,7 +1442,6 @@
             },
             columnDefs: [
                 {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
-                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
@@ -1445,7 +1456,6 @@
             },
             columnDefs: [
                 {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
-                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
@@ -1460,7 +1470,6 @@
             },
             columnDefs: [
                 {name: "Šport", field: "tournament.sport.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
-                {name: "Typ", field: "type.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Turnaj", field: "tournament.name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Preteky", field: "name", cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {name: "Štart", field: "start", cellTemplate:'<div class="ui-grid-cell-contents">{{grid.appScope.time(grid.getCellValue(row, col))}}</div>'},
@@ -1660,7 +1669,7 @@
         };
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user;
+            $scope.user = djangoAuth.user.data;
         });
 
         $scope.grid = {
@@ -1821,7 +1830,7 @@
         };
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user;
+            $scope.user = djangoAuth.user.data;
         });
 
         Restangular.one("race-types", $routeParams.id).get().then(function (response) {

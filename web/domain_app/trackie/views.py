@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 import domain_app.trackie.forms as forms
 
 
-
 class BasePageView(views.TemplateView):
 
     name = 'trackie.base'
@@ -43,7 +42,7 @@ class PartialView(views.TemplateView):
         class_name = "{}Form".format(partial)
         form = getattr(module, class_name, None)
         if form:
-            kwargs["form"] = form()
+            kwargs["form"] = form(self.request.user)
         return super(PartialView, self).get_context_data(**kwargs)
 
     def get_template_names(self):
