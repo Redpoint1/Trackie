@@ -11,7 +11,7 @@ from ......trackie.models import Tournament, SportType
 class ShortTournamentSerializer(OwnHyperlinkedModelSerializer):
     class Meta:
         model = Tournament
-        fields = ("url", "name")
+        fields = ("id", "url", "name")
 
 
 class TournamentSerializer(ShortTournamentSerializer):

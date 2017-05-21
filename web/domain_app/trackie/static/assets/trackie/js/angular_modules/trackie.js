@@ -204,13 +204,13 @@
     trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$location", "$routeParams", "$route", "VARS", function ($q, $http, $cookies, $rootScope, $templateCache, $location, $routeParams, $route, VARS) {
         return {
             "API_URL": "api/v1/auth",
-            "use_session": true,
+            "use_session": false,
             "authenticated": null,
             "authPromise": null,
             "user": null,
             "request": function (args) {
-                if ($cookies.token) {
-                    $http.defaults.headers.common.Authorization = "Token " + $cookies.token;
+                if ($cookies.get("token")) {
+                    $http.defaults.headers.common.Authorization = "Token " + $cookies.get("token");
                 }
                 args = args || {};
                 var deferred = $q.defer();
@@ -270,15 +270,15 @@
                         "username": username,
                         "password": password
                     }
-                }).then(function (data) {
+                }).then(function (response) {
                     if (!djangoAuth.use_session) {
-                        $http.defaults.headers.common.Authorization = "Token " + data.key;
-                        $cookies.token = data.key;
+                        $http.defaults.headers.common.Authorization = "Token " + response.data.key;
+                        $cookies.put("token", response.data.key);
                     }
                     djangoAuth.authenticated = true;
-                    djangoAuth.user = data.user;
+                    djangoAuth.user = response.data.user;
                     djangoAuth.changedAuth();
-                    $rootScope.$broadcast("djangoAuth.logged_in", data);
+                    $rootScope.$broadcast("djangoAuth.logged_in", response.data);
                 });
             },
             "logout": function () {
@@ -288,8 +288,8 @@
                     "url": "/logout/"
                 }).then(function () {
                     delete $http.defaults.headers.common.Authorization;
-                    delete $cookies.token;
-                    // delete $cookies.sessionid;
+                    $cookies.remove("token");
+                    $cookies.remove("sessionid");
                     djangoAuth.authenticated = false;
                     djangoAuth.user = null;
                     djangoAuth.changedAuth();
@@ -350,11 +350,28 @@
             "authenticationStatus": function (restrict, force) {
                 restrict = restrict || false;
                 force = force || false;
+                var self = this;
+                var defer = $q.defer();
+
+                if (this.use_session){
+                    if ((this.authenticated && !$cookies.get("sessionid")) || (!this.authenticated && $cookies.get("sessionid"))) {
+                        force = true;
+                    }
+                } else {
+                    if ((this.authenticated && !$cookies.get("token")) || (!this.authenticated && $cookies.get("token"))) {
+                        force = true;
+                        if($cookies.get("token")){
+                            $http.defaults.headers.common.Authorization = "Token " + $cookies.get("token");
+                        } else {
+                            delete $http.defaults.headers.common.Authorization;
+                        }
+                    }
+                }
+
                 if (this.authPromise === null || force) {
                     this.authPromise = this.profile();
                 }
-                var self = this;
-                var defer = $q.defer();
+
                 if (this.authenticated !== null && !force) {
                     if (this.authenticated === false && restrict) {
                         defer.reject("User is not logged in.");
@@ -362,12 +379,13 @@
                         defer.resolve();
                     }
                 } else {
-                    this.authPromise.then(function (data) {
+                    this.authPromise.then(function (response) {
                         if (!self.authenticated) {
                             $templateCache.removeAllByKey(VARS.PARTIALS_REGEX);
                         }
+                        $http.defaults.headers.common.Authorization = "Token " + $cookies.get("token");
                         self.authenticated = true;
-                        self.user = data;
+                        self.user = response.data;
                         defer.resolve();
                     }, function () {
                         if (self.authenticated) {
@@ -375,6 +393,9 @@
                         }
                         self.authenticated = false;
                         self.user = null;
+                        $cookies.remove("token");
+                        $cookies.remove("sessionid");
+                        delete $http.defaults.headers.common.Authorization;
                         if (restrict) {
                             defer.reject("User is not logged in.");
                         } else {
@@ -1194,7 +1215,7 @@
         };
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user.data;
+            $scope.user = djangoAuth.user || {};
         });
 
         $scope.endOfRace = false;
@@ -1343,7 +1364,7 @@
         $scope.map.addVectorLayer({name: "track"});
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user.data;
+            $scope.user = djangoAuth.user || {};
         });
 
         $scope.track_source = Restangular.one("tracks", $routeParams.id);
@@ -1669,7 +1690,7 @@
         };
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user.data;
+            $scope.user = djangoAuth.user || {};
         });
 
         $scope.grid = {
@@ -1830,7 +1851,7 @@
         };
 
         djangoAuth.authenticationStatus().then(function () {
-            $scope.user = djangoAuth.user.data;
+            $scope.user = djangoAuth.user || {};
         });
 
         Restangular.one("race-types", $routeParams.id).get().then(function (response) {
