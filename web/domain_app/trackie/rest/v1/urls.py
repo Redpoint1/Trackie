@@ -4,7 +4,8 @@ from django.conf.urls import url
 from rest_framework import routers
 
 from .models.race_data.views import RaceDataViewSet, RaceDataReplayViewSet
-from .models.race.views import RaceViewSet, TournamentRacesViewSet
+from .models.race.views import (RaceViewSet, TournamentRacesViewSet, RaceOnlineViewSet, RaceDoneViewSet,
+                                RaceUpcomingViewSet)
 from .models.race_type.views import RaceTypeViewSet
 from .models.sport_type.views import SportTypeViewSet, TournamentInSportType
 from .models.track.views import TrackViewSet
@@ -35,6 +36,24 @@ router.register(
     r'races',
     RaceViewSet,
     base_name="race",
+)
+
+router.register(
+    r'races/online',
+    RaceOnlineViewSet,
+    base_name="online-race",
+)
+
+router.register(
+    r'races/finished',
+    RaceDoneViewSet,
+    base_name="finished-race",
+)
+
+router.register(
+    r'races/upcoming',
+    RaceUpcomingViewSet,
+    base_name="upcoming-race",
 )
 
 router.register(

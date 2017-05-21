@@ -76,6 +76,15 @@
                 controller: "ProfileController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/races/online", {
+                templateUrl: "partials/race/list.html",
+                controller: "RaceOnlineController"
+            }).when("/races/upcoming", {
+                templateUrl: "partials/race/list.html",
+                controller: "RaceUpcomingController"
+            }).when("/races/finsihed", {
+                templateUrl: "partials/race/list.html",
+                controller: "RaceFinsihedController"
             }).when("/race-fields/add", {
                 templateUrl: "partials/race_type/create.html",
                 controller: "TypeCreateController",
@@ -1884,6 +1893,183 @@
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());
             }
+        });
+    }]);
+
+    trackie_module.controller("RaceOnlineController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "online";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/race/" + row.entity.id;
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.time = function(grid, row, col){
+            var timestamp = row.entity[col.field];
+            if (!timestamp) return;
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (_, row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            var duration = moment(moment.duration(row.entity.estimated_duration)._data);
+            if (start.isValid() && end.isValid()){
+                duration = moment(end.diff(start)).utc()
+            }
+            return duration.format("HH:mm:ss");
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Závod",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Začiatok",
+                    field: "start",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Koniec",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Dĺžka",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.duration_time(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("races").all("online").getList().then(function (response) {
+            $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("RaceFinsihedController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "ukončené";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/race/" + row.entity.id;
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.time = function(grid, row, col){
+            var timestamp = row.entity[col.field];
+            if (!timestamp) return;
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (_, row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            var duration = moment(moment.duration(row.entity.estimated_duration)._data);
+            if (start.isValid() && end.isValid()){
+                duration = moment(end.diff(start)).utc()
+            }
+            return duration.format("HH:mm:ss");
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Závod",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Začiatok",
+                    field: "start",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Koniec",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Dĺžka",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.duration_time(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("races").all("finished").getList().then(function (response) {
+            $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("RaceUpcomingController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "nadchádzajúce";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/race/" + row.entity.id;
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.time = function(grid, row, col){
+            var timestamp = row.entity[col.field];
+            if (!timestamp) return;
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (_, row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            var duration = moment(moment.duration(row.entity.estimated_duration)._data);
+            if (start.isValid() && end.isValid()){
+                duration = moment(end.diff(start)).utc()
+            }
+            return duration.format("HH:mm:ss");
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Závod",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Začiatok",
+                    field: "start",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Koniec",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Dĺžka",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.duration_time(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("races").all("upcoming").getList().then(function (response) {
+            $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
         });
     }]);
 
