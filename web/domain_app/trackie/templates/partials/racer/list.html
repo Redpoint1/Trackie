@@ -1,0 +1,15 @@
+{% verbatim %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            <h1 style="margin-top: 0;">Pretekári</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div data-ng-if="grid.data.length" ui-grid="grid" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+        <div data-ng-if="!grid.data.length">Žiadny pretekáriy</div>
+    </div>
+</div>
+{% endverbatim %}

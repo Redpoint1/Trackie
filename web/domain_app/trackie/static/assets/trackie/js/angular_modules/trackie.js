@@ -141,6 +141,9 @@
                 controller: "RacerCreateController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/racers", {
+                templateUrl: "partials/racer/list.html",
+                controller: "RacersController"
             }).when("/racer/:id", {
                 templateUrl: "partials/racer/detail.html",
                 controller: "RacerController"
@@ -2068,6 +2071,41 @@
         };
 
         Restangular.all("races").all("upcoming").getList().then(function (response) {
+            $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("RacersController", ["$scope", "Restangular", function ($scope, Restangular) {
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/racer/" + row.entity.id;
+            return '<a href="' + url + '">Pozrieť profil</a>';
+        };
+
+        $scope.grid = {
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Meno",
+                    field: "first_name"
+                },
+                {
+                    name: "Priezvisko",
+                    field: "last_name"
+                },
+                {
+                    name: "Profil",
+                    field: "url",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'
+                }
+            ]
+        };
+
+        Restangular.all("racers").getList().then(function (response) {
             $scope.races = response.data;
             $scope.grid.data = response.data.plain();
         });
