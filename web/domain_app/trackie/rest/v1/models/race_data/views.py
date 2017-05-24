@@ -2,17 +2,13 @@ import django.utils.timezone as timezone
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, status, exceptions
 from rest_framework.exceptions import ValidationError
-# from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from .serializers import (RaceDataGeoJSONPostSerializer,
                           RaceDataGeoJSONSerializer)
 from ..race.serializers import RaceSerializer
 from ......trackie.models import Race, RaceData
 
-
-# class RaceDataPaginator(LimitOffsetPagination):
-#     default_limit = 50
-#     max_limit = 100
+from django.core.cache import caches
 
 
 class RaceFinishedException(exceptions.APIException):
@@ -26,15 +22,25 @@ class RaceDataViewSet(viewsets.ModelViewSet):
     queryset = Race.objects.all()
 
     def list(self, request, *args, **kwargs):
-        self.serializer_class = RaceDataGeoJSONSerializer
-        race = Race.objects.get(pk=kwargs["race_pk"])
-        if race.end:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        last = race.data.last()
-        self.queryset = Race.objects.get(pk=kwargs["race_pk"]).data
-        if last:
-            self.queryset = self.queryset.filter(received=last.received)
-        return super(RaceDataViewSet, self).list(request, *args, **kwargs)
+        cache = caches["race"]
+        cached = cache.get(kwargs["race_pk"], None)
+        if cached is None:
+            self.serializer_class = RaceDataGeoJSONSerializer
+            race = Race.objects.get(pk=kwargs["race_pk"])
+            if race.end:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            last = race.data.last()
+            self.queryset = Race.objects.get(pk=kwargs["race_pk"]).data
+            if last:
+                self.queryset = self.queryset.filter(received=last.received)
+            queryset = self.filter_queryset(self.get_queryset())
+
+            serializer = self.get_serializer(queryset, many=True)
+            data = serializer.data
+            cache.set(kwargs["race_pk"], data)
+            return Response(data)
+        else:
+            return Response(cached)
 
     def create(self, request, *args, **kwargs):
         bulk = isinstance(request.data, list)
@@ -72,6 +78,7 @@ class RaceDataViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED,
                             headers=headers)
         else:
@@ -94,7 +101,6 @@ class RaceDataViewSet(viewsets.ModelViewSet):
 
 
 class RaceDataReplayViewSet(viewsets.ModelViewSet):
-    # pagination_class = RaceDataPaginator
     queryset = Race.objects.all()
 
     def list(self, request, *args, **kwargs):
@@ -103,7 +109,8 @@ class RaceDataReplayViewSet(viewsets.ModelViewSet):
         from_miliseconds = int(request.query_params.get("from") or 0)
         count = int(request.query_params.get("count") or 10)
 
-        from_time = timezone.datetime.utcfromtimestamp(from_miliseconds // 1000) + timezone.timedelta(microseconds=timezone.timedelta.max.microseconds)
+        from_time = timezone.datetime.utcfromtimestamp(from_miliseconds // 1000) \
+            + timezone.timedelta(microseconds=timezone.timedelta.max.microseconds)
 
         time_ranges = RaceData.objects.filter(
             received__gt=from_time,

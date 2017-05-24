@@ -146,6 +146,18 @@ class RacerCreateForm(BaseModelForm):
             'data-ng-model': 'racerForm.data.about',
             'class': 'form-control',
         })
+        # self.fields['country'].widget.attrs.update({
+        #     'data-ng-model': 'racerForm.data.country',
+        #     'class': 'form-control',
+        # })
+        self.fields['birth_date'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.birth_date',
+            'class': 'form-control',
+        })
+        self.fields['death_date'].widget.attrs.update({
+            'data-ng-model': 'racerForm.data.death_date',
+            'class': 'form-control',
+        })
 
 
 class RacerUpdateForm(RacerCreateForm):

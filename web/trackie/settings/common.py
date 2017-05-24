@@ -25,7 +25,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'secret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]']
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     # 'allauth.socialaccount.providers.facebook',
     'versatileimagefield',
     # 'django_unused_media',
+    # 'django_countries',
 
     # apps
     'app.api',
@@ -158,3 +159,22 @@ DATABASES = {
 }
 
 SITE_ID = 1
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache/default',
+        'TIMEOUT': 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    },
+    'race': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache/race',
+        'TIMEOUT': 3,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}

@@ -4,16 +4,15 @@ from ....serializers import OwnHyperlinkedModelSerializer
 from .....validators import FileSizeMaxValidator
 from ......trackie.models import RacerInRace, Racer
 
+# from django_countries.serializer_fields import CountryField
+
 
 class ShortRacerSerialiter(OwnHyperlinkedModelSerializer):
+    # country = CountryField()
+
     class Meta:
         model = Racer
-        fields = (
-            "id",
-            "url",
-            "first_name",
-            "last_name"
-        )
+        exclude = ("about", "photo")
 
 
 class RacerSerializer(ShortRacerSerialiter):
@@ -28,14 +27,7 @@ class RacerSerializer(ShortRacerSerialiter):
     )
 
     class Meta(ShortRacerSerialiter.Meta):
-        fields = (
-            "id",
-            "url",
-            "first_name",
-            "last_name",
-            "photo",
-            "about",
-        )
+        exclude = ()
 
 
 class RaceRacerSerializer(RacerSerializer):

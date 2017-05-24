@@ -7,6 +7,7 @@ import django.contrib.postgres.fields as postgres_fields
 from django.utils.translation import ugettext_lazy as _
 
 from versatileimagefield.fields import VersatileImageField
+# from django_countries.fields import CountryField
 
 
 FIELDS = (
@@ -172,7 +173,7 @@ class RaceType(db_models.Model):
 
     fields = db_models.ManyToManyField(
         FieldType,
-        blank=False,
+        blank=True,
         related_name="races",
         help_text=_("All field will be required")
     )
@@ -246,6 +247,24 @@ class Racer(db_models.Model):
         max_length=255,
         verbose_name=_("Full name"),
         help_text=_("Only for search purpose (automatically filled)")
+    )
+
+    # country = CountryField(
+    #     null=True,
+    #     blank=True,
+    #     verbose_name=_("Nationality")
+    # )
+
+    birth_date = db_models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_("Date of birth")
+    )
+
+    death_date = db_models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_("Date of death")
     )
 
     about = db_models.TextField(
@@ -440,4 +459,6 @@ class RaceData(db_models.Model):
 
     position = db_models.PointField()
 
-    data = postgres_fields.JSONField()
+    data = postgres_fields.JSONField(
+        null=True
+    )

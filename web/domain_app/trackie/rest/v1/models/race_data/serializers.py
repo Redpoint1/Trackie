@@ -15,13 +15,26 @@ class RaceDataGeoJSONPostSerializer(GeoFeatureModelSerializer):
         geo_field = "position"
         exclude = []
 
+    def __init__(self, *args, **kwargs):
+        self._trackie_fields = None
+        super(RaceDataGeoJSONPostSerializer, self).__init__(*args, **kwargs)
+
+    @property
+    def trackie_fields(self):
+        if self._trackie_fields is None:
+            view = self.context["view"]
+            self._trackie_fields = \
+                view.queryset.get(**{view.lookup_field: view.kwargs.get("race_pk")}).type.fields.all()
+        return self._trackie_fields
+
     def validate_data(self, value):
-        fields = self.context["view"].queryset[0].type.fields.all()
+        if value is None:
+            value = dict()
         errors = dict()
         raise_500 = False
         checked_fields = set()
 
-        for field in fields:
+        for field in self.trackie_fields:
             checked_fields.add(field.name)
             errors[field.name] = list()
             json_value = value.get(field.name)
