@@ -26,8 +26,8 @@ nginx:
 postgres:
   restart: always
   build: ./postgres/
-  volumes_from:
-    - data
+#  volumes_from:
+#    - data
   ports:
     - "5432:5432"
 
@@ -37,10 +37,11 @@ postgres:
 #  ports:
 #    - "6379:6379"
 
-data:
-  container_name: database
-  restart: always
-  image: postgres:9.6
-  volumes:
-    - /var/lib/postgresql
-  command: "true"
+#data:
+#  container_name: database
+#  restart: always
+#  image: postgres:9.6
+#  volumes:
+#    - /var/lib/postgresql
+#  command: "true"
+
