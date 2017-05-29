@@ -77,6 +77,7 @@
                             $(function () {
                                 $('#{{ field.id_for_label }}_pick').datetimepicker({
                                     format: 'HH:mm:ss',
+                                    defaultDate: moment.utc(0),
                                     icons: {
                                         time: 'fa fa-clock-o',
                                         date: 'fa fa-calendar',

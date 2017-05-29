@@ -189,6 +189,7 @@
         }])
         .run(["$rootScope", "$location", "$route", "$templateCache", "djangoAuth", function ($rootScope, $location, $route, $templateCache, djangoAuth) {
             djangoAuth.initialize();
+            //$routeChangeError
             $rootScope.$on("$routeChangeStart", function (event, toState, toParams) {
                 var state = toState.redirectTo ? $route.routes[toState.redirectTo] : toState;
                 djangoAuth.authenticationStatus().then(function () {
@@ -216,7 +217,7 @@
     trackie_module.service("djangoAuth", ["$q", "$http", "$cookies", "$rootScope", "$templateCache", "$location", "$routeParams", "$route", "VARS", function ($q, $http, $cookies, $rootScope, $templateCache, $location, $routeParams, $route, VARS) {
         return {
             "API_URL": "api/v1/auth",
-            "use_session": false,
+            "use_session": true,
             "authenticated": null,
             "authPromise": null,
             "user": null,
@@ -395,7 +396,9 @@
                         if (!self.authenticated) {
                             $templateCache.removeAllByKey(VARS.PARTIALS_REGEX);
                         }
-                        $http.defaults.headers.common.Authorization = "Token " + $cookies.get("token");
+                        if (!self.use_session && $cookies.get("token")){
+                            $http.defaults.headers.common.Authorization = "Token " +  response.data.key;
+                        }
                         self.authenticated = true;
                         self.user = response.data;
                         defer.resolve();
@@ -1125,7 +1128,6 @@
             $scope.race.track = getItFrom($scope.race.track);
             $scope.race.projection = getItFrom($scope.race.projection);
             $scope.raceForm.data = response.data.plain();
-            console.log($scope.race);
         }, function (error) {
             if (error.status.toString()[0] == 4) { //4xx
                 $location.url("/" + error.status + "?from=" + $location.path());
