@@ -1,3 +1,3 @@
 """ Config bootstrap """
 
-from .dev import *
+from .prod import *
