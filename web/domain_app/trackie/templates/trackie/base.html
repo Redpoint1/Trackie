@@ -23,7 +23,7 @@
                     <img class="header-logo" alt="Trackie logo" src="{% static "assets/trackie/img/trackie_logo.svg" %}">
                 </a>
             </div>
-            <div class="collapse navbar-collapse">
+            <div class="collapse navbar-collapse" id="header">
                 <ul class="nav navbar-nav">
                     <li>
                         <a target="_self" href="#/">
@@ -41,7 +41,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a target="_self" href="#/races/online">Online</a></li>
+                            <li><a target="_self" href="#/races/online">Priebehajúce</a></li>
                             <li><a target="_self" href="#/races/upcoming">Nadchádzajúce</a></li>
                             <li><a target="_self" href="#/races/finsihed">Ukončené</a></li>
                         </ul>
@@ -74,25 +74,11 @@
     <footer>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-2">
-                    <span class="bold-text">Developer</span>
-                    <ul class="footer-menu">
-                        <li>
-                            <a target="_self" href="#" title="#">API</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="#" title="#">Dokumentácia</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="#" title="#">Status</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-xs-2">
+                <div class="col-md-2">
                    <span class="bold-text">Preteky</span>
                     <ul class="footer-menu">
                         <li>
-                            <a target="_self" href=#/races/online">Online</a>
+                            <a target="_self" href="#/races/online">Priebehajúce</a>
                         </li>
                         <li>
                             <a target="_self" href="#/races/upcoming">Nadchádzajúce</a>
@@ -102,17 +88,14 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-xs-2">
-                    <span class="bold-text">Trackie</span>
+                <div class="col-md-2">
+                    <span class="bold-text">Ostatné</span>
                     <ul class="footer-menu">
                         <li>
-                            <a target="_self" href="#" title="#">O projekte</a>
+                            <a target="_self" href="#/tournaments">Turnaje</a>
                         </li>
                         <li>
-                            <a target="_self" href="#" title="#">O autorovi</a>
-                        </li>
-                        <li>
-                            <a target="_self" href="#" title="#">Novinky</a>
+                            <a target="_self" href="#/racers" title="#">Pretekári</a>
                         </li>
                     </ul>
                 </div>
@@ -144,7 +127,7 @@
     <script src="{% static 'third-party/angular-cookies/angular-cookies.min.js' %}"></script>
     <script src="{% static 'third-party/angular-touch/angular-touch.min.js' %}"></script>
     <script src="{% static 'third-party/angular-animate/angular-animate.min.js' %}"></script>
-    <script src="{% static 'third-party/angular-base64-upload/angular-base64-upload.js' %}"></script>
+    <script src="{% static 'third-party/angular-base64-upload/angular-base64-upload.min.js' %}"></script>
     <script src="{% static 'third-party/moment/min/moment-with-locales.min.js' %}"></script>
     <script src="{% static 'third-party/moment-timezone/moment-timezone-with-data.min.js' %}"></script>
     <script src="{% static 'third-party/moment-duration/moment-duration-format.js' %}"></script>

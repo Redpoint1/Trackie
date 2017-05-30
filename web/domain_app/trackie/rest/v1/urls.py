@@ -5,11 +5,11 @@ from rest_framework import routers
 
 from .models.race_data.views import RaceDataViewSet, RaceDataReplayViewSet
 from .models.race.views import (RaceViewSet, TournamentRacesViewSet, RaceOnlineViewSet, RaceDoneViewSet,
-                                RaceUpcomingViewSet)
-from .models.race_type.views import RaceTypeViewSet
+                                RaceUpcomingViewSet, OwnRaceViewSet)
+from .models.race_type.views import RaceTypeViewSet, OwnRaceTypeViewSet
 from .models.sport_type.views import SportTypeViewSet, TournamentInSportType
-from .models.track.views import TrackViewSet
-from .models.tournament.views import TournamentViewSet
+from .models.track.views import TrackViewSet, OwnTrackViewSet
+from .models.tournament.views import TournamentViewSet, OwnTournamentViewSet
 from .models.racer.views import RacerViewSet
 from .models.projection.views import ProjectionViewSet
 from .models.search.views import SearchViewSet
@@ -57,9 +57,21 @@ router.register(
 )
 
 router.register(
+    r'own/races',
+    OwnRaceViewSet,
+    base_name="own-race",
+)
+
+router.register(
     r'race-types',
     RaceTypeViewSet,
     base_name="racetype",
+)
+
+router.register(
+    r'own/race-types',
+    OwnRaceTypeViewSet,
+    base_name="own-racetype",
 )
 
 router.register(
@@ -81,9 +93,21 @@ router.register(
 )
 
 router.register(
+    r'own/tracks',
+    OwnTrackViewSet,
+    base_name="own-track",
+)
+
+router.register(
     r'tournaments',
     TournamentViewSet,
     base_name="tournament",
+)
+
+router.register(
+    r'own/tournaments',
+    OwnTournamentViewSet,
+    base_name="own-tournament",
 )
 
 router.register(

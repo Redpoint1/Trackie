@@ -175,6 +175,26 @@
                 reloadAfterAuthChange: true,
                 throwAuthError: true,
                 noCacheTemplate: true
+            }).when("/own/tournaments", {
+                templateUrl: "partials/tournament/list.html",
+                controller: "OwnTournamentsController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
+            }).when("/own/races", {
+                templateUrl: "partials/race/list.html",
+                controller: "OwnRacesController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
+            }).when("/own/tracks", {
+                templateUrl: "partials/track/list.html",
+                controller: "OwnTracksController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
+            }).when("/own/race-types", {
+                templateUrl: "partials/race_type/list.html",
+                controller: "OwnRaceTypesController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
@@ -641,7 +661,7 @@
         return OLMapFactory;
     }]);
 
-    trackie_module.factory("Player", ["Restangular", function (Restangular) {
+    trackie_module.factory("Player", ["Restangular", "$timeout", function (Restangular, $timeout) {
         function Player(element, scope) {
             this.scope = scope;
             this.element = element;
@@ -811,13 +831,6 @@
 
     trackie_module.factory("GridOptionsGenerator", [function () {
         function GridOptionsGenerator() {
-            // ui-grid field types
-            // 'string'
-            // 'boolean'
-            // 'number'
-            // 'date'
-            // 'object'
-            // 'numberStr
             this.fields = {
                 "BigIntegerField": "number",
                 "BooleanField": "boolean",
@@ -889,7 +902,7 @@
                     element.find("#login-modal").removeClass("in").hide();
                     element.find("#login-modal-backdrop").fadeOut().removeClass("in");
                 }, function (error) {
-                    renderFormErrors(element.find("form"), error);
+                    renderFormErrors(element.find("form"), error.data);
                 });
             };
             scope.logout = function () {
@@ -993,7 +1006,7 @@
                     djangoAuth.changedAuth();
                 });
             }, function (error) {
-                renderFormErrors($("#registration-form"), error, "id_");
+                renderFormErrors($("#registration-form"), error.data, "id_");
             });
         }
     }]);
@@ -1293,6 +1306,7 @@
             $scope.race = response.data;
 
             $scope.gridOptions = new GridOptionsGenerator().generate($scope);
+            $scope.gridOptions.enableFiltering = true;
 
             Restangular.oneUrl("tracks", $scope.race.track.file).get().then(function (json) {
                 var promise = $scope.race_rest.one("data");
@@ -1902,10 +1916,18 @@
     }]);
 
     trackie_module.controller("RaceOnlineController", ["$scope", "Restangular", function ($scope, Restangular) {
-        $scope.type = "online";
+        $scope.type = "prebiehajúce";
 
         $scope.render_link = function (grid, row, col) {
-            var url = "#/race/" + row.entity.id;
+            var url = "#";
+            switch(col.field) {
+                case "name":
+                    url += "race/" + row.entity.id;
+                    break;
+                case "tournament.name":
+                    url += "tournament/" + row.entity.tournament.id;
+                    break   ;
+            }
             return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
         };
 
@@ -1927,6 +1949,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -1937,13 +1960,12 @@
                     field: "name",
                     cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
                 {
+                    name: "Turnaj",
+                    field: "tournament.name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
                     name: "Začiatok",
                     field: "start",
-                    type: "date",
-                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
-                {
-                    name: "Koniec",
-                    field: "end",
                     type: "date",
                     cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
                 {
@@ -2086,6 +2108,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -2102,6 +2125,7 @@
                 {
                     name: "Profil",
                     field: "url",
+                    enableFiltering: false,
                     cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'
                 }
             ]
@@ -2109,6 +2133,198 @@
 
         Restangular.all("racers").getList().then(function (response) {
             $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("OwnTournamentsController", ["$scope", "$location", "$routeParams", "Restangular", function($scope, $location, $routeParams, Restangular){
+        $scope.type = "vlastnené";
+
+        $scope.render_link = function (grid, row, col) {
+            var column = col.field;
+            var url = "";
+            switch (column){
+                case "name":
+                    url = url = "#/tournament/" + row.entity.id;
+                    break;
+                case "sport.name":
+                     url = "#/sports/" + row.entity.sport.slug;
+                    break;
+            }
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.grid = {
+            enableFiltering: true,
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Šport",
+                    field: "sport.name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Turnaj",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("own").all("tournaments").getList().then(function (response) {
+                $scope.tournaments = response.data;
+                $scope.grid.data = $scope.tournaments.plain();
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
+            }
+        )
+    }]);
+
+    trackie_module.controller("OwnRacesController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "vlastnené";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#";
+            switch(col.field) {
+                case "name":
+                    url += "race/" + row.entity.id;
+                    break;
+                case "tournament.name":
+                    url += "tournament/" + row.entity.tournament.id;
+                    break   ;
+            }
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.time = function(grid, row, col){
+            var timestamp = row.entity[col.field];
+            if (!timestamp) return;
+            var time = moment(timestamp).tz(window.timezone);
+            return time.format("L LTS");
+        };
+
+        $scope.duration_time = function (_, row) {
+            var start = moment(row.entity.real_start);
+            var end = moment(row.entity.real_end);
+            var duration = moment(moment.duration(row.entity.estimated_duration)._data);
+            if (start.isValid() && end.isValid()){
+                duration = moment(end.diff(start)).utc()
+            }
+            return duration.format("HH:mm:ss");
+        };
+
+        $scope.grid = {
+            enableFiltering: true,
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Závod",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Turnaj",
+                    field: "tournament.name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Začiatok",
+                    field: "start",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.time(grid, row, col)"><div>'},
+                {
+                    name: "Dĺžka",
+                    field: "end",
+                    type: "date",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.duration_time(grid, row, col)"><div>'}
+            ]
+        };
+
+        Restangular.all("own").all("races").getList().then(function (response) {
+            $scope.races = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("OwnTracksController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "vlastnené";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/";
+            switch(col.field) {
+                case "name":
+                    url += "track/" + row.entity.id;
+                    break;
+            }
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.grid = {
+            enableFiltering: true,
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Názov",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Verejný",
+                    field: "public"},
+                {
+                    name: "Použité",
+                    field: "used",
+                    type: "number"}
+            ]
+        };
+
+        Restangular.all("own").all("tracks").getList().then(function (response) {
+            $scope.tracks = response.data;
+            $scope.grid.data = response.data.plain();
+        });
+    }]);
+
+    trackie_module.controller("OwnRaceTypesController", ["$scope", "Restangular", function ($scope, Restangular) {
+        $scope.type = "vlastnené";
+
+        $scope.render_link = function (grid, row, col) {
+            var url = "#/";
+            switch(col.field) {
+                case "name":
+                    url += "race-fields/" + row.entity.id;
+                    break;
+            }
+            return '<a href="' + url + '">' + grid.getCellValue(row, col) + '</a>';
+        };
+
+        $scope.grid = {
+            enableFiltering: true,
+            paginationPageSizes: [10, 20, 50],
+            onRegisterApi: function (gridApi) {
+                $scope.gridApi = gridApi;
+            },
+            columnDefs: [
+                {
+                    name: "Názov",
+                    field: "name",
+                    cellTemplate:'<div class="ui-grid-cell-contents" data-ng-bind-html="grid.appScope.render_link(grid, row, col)"><div>'},
+                {
+                    name: "Verejný",
+                    field: "public"},
+                {
+                    name: "Použité",
+                    field: "used"}
+            ]
+        };
+
+        Restangular.all("own").all("race-types").getList().then(function (response) {
+            $scope.raceTypes = response.data;
             $scope.grid.data = response.data.plain();
         });
     }]);

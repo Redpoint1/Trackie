@@ -1,0 +1,16 @@
+<div class="row" data-ng-show="tracks">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            {% verbatim %}
+            <h1 data-ng-if="type" style="margin-top: 0;">{{ type | capitalize }} trate</h1>
+            <h1 data-ng-if="!type" style="margin-top: 0;">Trate</h1>
+            {% endverbatim %}
+        </div>
+    </div>
+</div>
+<div class="row" data-ng-show="tracks">
+    <div class="col-sm-12">
+        <div data-ng-if="grid.data.length" ui-grid="grid" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
+        <div data-ng-if="!grid.data.length">Žiadne turnaje</div>
+    </div>
+</div>

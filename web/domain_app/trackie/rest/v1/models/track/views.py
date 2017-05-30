@@ -1,5 +1,6 @@
 from django.db.models import Q
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from .serializers import TrackSerializer, UpdateTrackSerializer
 from ....permissions import IsOwnerOrReadOnly, NotProtectedOrReadOnly
 from ......trackie.models import Track
@@ -40,3 +41,11 @@ class TrackViewSet(ModelViewSet):
             return UpdateTrackSerializer
         else:
             return super(TrackViewSet, self).get_serializer_class()
+
+
+class OwnTrackViewSet(ReadOnlyModelViewSet):
+    serializer_class = TrackSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Track.objects.filter(owner=self.request.user)

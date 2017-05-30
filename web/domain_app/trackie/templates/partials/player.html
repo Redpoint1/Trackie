@@ -13,10 +13,10 @@
         </div>
         {% verbatim %}
         <div class="flex-item" style="width: 18px;">
-            <i class="fa fa-lg fa-retweet" data-ng-click="diff_time = !diff_time"></i>
+            <i class="fa fa-lg fa-retweet" style="color: #FFF; cursor: pointer;" data-ng-click="diff_time = !diff_time"></i>
         </div>
         <div class="flex-item" style="width: 18px;">
-            <i class="fa fa-lg fa-inverse" data-ng-class="{'fa-pause': play, 'fa-play': !play}" data-ng-click="player.togglePlay()"></i>
+            <i class="fa fa-lg fa-inverse" style="cursor: pointer;" data-ng-class="{'fa-pause': play, 'fa-play': !play}" data-ng-click="player.togglePlay()"></i>
         </div>
         {% endverbatim %}
         <div class="flex-item player-progress">

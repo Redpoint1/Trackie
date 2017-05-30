@@ -2,7 +2,10 @@
 <div class="row" data-ng-show="tournaments">
     <div class="col-xs-12">
         <div class="page-header" style="margin-top: 0;">
-            <h1 style="margin-top: 0;">Turnaje</h1>
+            {% verbatim %}
+            <h1 data-ng-if="type" style="margin-top: 0;">{{ type | capitalize }} turnaje</h1>
+            <h1 data-ng-if="!type" style="margin-top: 0;">Turnaje</h1>
+            {% endverbatim %}
         </div>
     </div>
 </div>

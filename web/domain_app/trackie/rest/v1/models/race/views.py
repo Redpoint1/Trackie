@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from .serializers import RaceSerializer, ShortRaceSerializer
 from ......trackie.models import Race, Tournament
 from ....permissions import IsOwnerOrReadOnly, NotProtectedOrReadOnly
@@ -31,6 +32,14 @@ class RaceDoneViewSet(ReadOnlyModelViewSet):
 class RaceUpcomingViewSet(ReadOnlyModelViewSet):
     serializer_class = ShortRaceSerializer
     queryset = Race.objects.filter(real_start__isnull=True, real_end__isnull=True)
+
+
+class OwnRaceViewSet(ReadOnlyModelViewSet):
+    serializer_class = ShortRaceSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Race.objects.filter(tournament__owner=self.request.user.pk)
 
 
 class TournamentRacesViewSet(ModelViewSet):

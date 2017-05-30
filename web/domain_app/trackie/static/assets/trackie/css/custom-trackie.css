@@ -43,7 +43,12 @@
 
 .searchbar-text {
     padding-right: 35px;
-    width: 150px;
+}
+
+@media screen and (min-width: 768px) {
+    .searchbar-text {
+        width: 150px;
+    }
 }
 
 .searchbar-button {
