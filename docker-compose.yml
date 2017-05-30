@@ -8,6 +8,7 @@ web:
 #    - redis:redis
   volumes:
     - /usr/src/app/static
+    - /usr/src/app/media
   env_file: .env
   command: ./wait-for-it.sh postgres:5432 -- /bin/bash /usr/src/app/startup.sh
 
@@ -18,6 +19,7 @@ nginx:
     - "80:80"
   volumes:
     - /usr/src/app/static
+    - /usr/src/app/media
   volumes_from:
     - web
   links:
