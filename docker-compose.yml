@@ -6,8 +6,8 @@ web:
   links:
     - postgres:postgres
 #    - redis:redis
-#  volumes:
-#    - /usr/src/app/static
+  volumes:
+    - /usr/src/app/static
   env_file: .env
   command: ./wait-for-it.sh postgres:5432 -- /bin/bash /usr/src/app/startup.sh
 

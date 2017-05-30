@@ -8,7 +8,7 @@ Bakalárska práca 2017
 Postup bez inštalácie
 =====================
 
-WEBOVÁ APLIKÁCIA BUDE DOSTUPN8 NA rozar.eu DOMÉNE OD 31.5. 2017 DO 30.6. 2017
+WEBOVÁ APLIKÁCIA BUDE DOSTUPNÁ NA rozar.eu DOMÉNE OD 31.5. 2017 DO 30.6. 2017
 
 Prihlasovacie údaje:
 admin
@@ -32,7 +32,7 @@ Počas toho môžete navštíviť rozar.eu/race/2 , kde uvidíte posielané dát
 V prípade ak chcete skript simulate.py použiť aj na iný vami vytvorený závod potrebujete k tomu mať:
 Presne 2 účastníkov v závode s číslami 1 a 2
 Trať, ktorú nájdete na rozar.eu (Veľké Úľany)
-Typ závodu, ktorý obsahuje jedine Tím a Čas (na rozar.eu pod admin užívateľom ako "Tajné")
+Typ závodu, ktorý obsahuje jedine Tím a Čas (na rozar.eu pod admin účtom ako "Tajné")
 Projekciu nastavenú na EPSG:3857
 Musí ho vytvoriť účet admin a nesmie mať iné heslo ako "admin"
 
@@ -53,6 +53,8 @@ Popísaná na <domena>/api resp. rozar.eu/api
 
 Spustenie aplikácie na lokálnom počítači
 ========================================
+Pozrite si aj hore uvedenú sekciu Postup bez inštalácie. (prihlasovacie údaje totožné ako na rozar.eu)
+
 Na spustenie aplikácie potrebujete docker a docker-compose (treba stiahnuť z https://www.docker.com/). V prípade ak
 docker inštalujete na windows, tak zahŕňa v sebe aj docker-compose. Po nainštalovaní dockera potrebujete overiť:
 
@@ -72,9 +74,16 @@ cca. 15 minút.
 Potom následne treba zavolať príkaz:
 docker-compose up
 
-Po to ako príkaz skončí môžete prejsť do webového prehliadača a pristúpiť k webovej aplikácii cez domény:
+Potom ako uvidíte riadky:
+web_1      | spawned uWSGI master process (pid: 48)
+web_1      | spawned uWSGI worker 1 (pid: 52, cores: 1)
+web_1      | spawned uWSGI worker 2 (pid: 53, cores: 1)
+
+môžete prejsť do webového prehliadača a pristúpiť k webovej aplikácii cez domény:
 localhost
 127.0.0.1
 
 Výsledok bude totožný s obsahom na rozar.eu. V prípade, ak chcete posielať údaje stačí zmeniť druhý parameter simulate.py
 python simulate 2 "localhost:80"
+
+Aplikáciu ukončíte stlačením kláves CTRL+C v konzole
