@@ -47,7 +47,7 @@ pridať popr. zmeniť na rozar.eu/admin (prihlasovacie údaje sú admin/admin)
 
 Ako posielať dáta manuálne?
 ===========================
-Popísaná na <domena>/api resp. rozar.eu/api
+Popísaná na <domena>/#/api resp. rozar.eu/#/api
 
 
 
