@@ -2329,7 +2329,7 @@
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
-            },  
+            },
             columnDefs: [
                 {
                     name: "Názov",
