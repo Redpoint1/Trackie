@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="page-header" style="margin-top: 0;">
+            <h1 style="margin-top: 0;">Dokumentácia API</h1>
+        </div>
+        <p>V prípade potreby autorizácie potrebujete posielať HTTP požiadavky na REST API s <code>Authorization: Token &lt;token_id&gt;</code>. API token môžete získať po prihlásení z <a href="#/profile">profilu</a>.</p>
+        <h2>Dôležité REST API koncové body</h2>
+        <h3>POST /api/v1/trackie/races/&lt;id_pretekov&gt;/data/</h3>
+        <p>Obsah posielaných dát závisí od nastavenia pretekov. Obsah poľa <code>data</code> závisí od toho, ktorý typ pretekov vybral. Príklad obsahu <code>data</code> nájdete v detailných informáciach daného typu pretekov. Preteky sa nastavia na priebiehajúce, ak vlastník projektu pošle prvé údaje na tento koncový bod.</p>
+        <p>Príklad obsahu HTTP požiadavky na aktualizovanie informácií o prebiehajúcom preteku, ktorý:</p>
+        <ul>
+            <li>Má 3 účastníkov</li>
+            <li>Vlastník zadal typ preteku, ktorý obsahuje len pole Tím</li>
+            <li>Projekciu vybral <code>EPSG:3857</code> (predvolený)</li>
+        </ul>
+        <pre>[{
+    "position": "POINT (17.5750017 48.170478900000006)",
+    "racer": 1,
+    "data": {
+    	"team": "Czechia"
+    }
+},{
+    "position": "POINT (17.5750017 48.170478900000006)",
+    "racer": 2,
+    "data": {
+    	"team": "Slovakia"
+    }
+},{
+    "position": "POINT (17.5750017 48.170478900000006)",
+    "racer": 3,
+    "data": {
+    	"team": "Slovakia"
+    }
+}]</pre>
+        <h3>DELETE /api/v1/trackie/races/&lt;id_pretekov&gt;/data/</h3>
+        <p>Pri zavolaní tohto koncového bodu sa ukončia preteky. Netreba posielať v tele žiadny obsah.</p>
+    </div>
+</div>

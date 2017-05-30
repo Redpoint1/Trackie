@@ -121,6 +121,7 @@ class FieldType(db_models.Model):
     display_name = db_models.CharField(
         blank=False,
         null=False,
+        unique=True,
         max_length=255,
         verbose_name=_("Display name"),
     )
@@ -148,7 +149,6 @@ class RaceType(db_models.Model):
     name = db_models.CharField(
         blank=False,
         null=False,
-        unique=True,
         max_length=255,
         verbose_name=_("Race type"),
         help_text=_("Type of the race"),
@@ -192,7 +192,6 @@ class Track(db_models.Model):
     name = db_models.CharField(
         blank=False,
         null=False,
-        unique=False,
         max_length=255,
         verbose_name=_("Track name"),
     )
@@ -380,7 +379,7 @@ class Race(db_models.Model):
     )
 
     estimated_duration = db_models.DurationField(
-        null=True,
+        null=False,
         blank=False,
         verbose_name=_("Estimated duration"),
         help_text=_("[DD] [HH:[MM:]]ss")
@@ -459,6 +458,4 @@ class RaceData(db_models.Model):
 
     position = db_models.PointField()
 
-    data = postgres_fields.JSONField(
-        null=True
-    )
+    data = postgres_fields.JSONField()

@@ -109,7 +109,8 @@
                 noCacheTemplate: true
             }).when("/race/:id", {
                 templateUrl: "partials/race/detail.html",
-                controller: "RaceController"
+                controller: "RaceController",
+                reloadAfterAuthChange: true
             }).when("/race/:id/update", {
                 templateUrl: "partials/race/update.html",
                 controller: "RaceUpdateController",
@@ -146,10 +147,13 @@
                 controller: "RacersController"
             }).when("/racer/:id", {
                 templateUrl: "partials/racer/detail.html",
-                controller: "RacerController"
+                controller: "RacerController",
+                reloadAfterAuthChange: true
             }).when("/racer/:id/update", {
                 templateUrl: "partials/racer/update.html",
-                controller: "RacerUpdateController"
+                controller: "RacerUpdateController",
+                reloadAfterAuthChange: true,
+                throwAuthError: true
             }).when("/sports/:id", {
                 templateUrl: "partials/sport_type/detail.html",
                 controller: "SportDetailController"
@@ -195,6 +199,8 @@
                 controller: "OwnRaceTypesController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
+            }).when("/api", {
+                templateUrl: "partials/api.html"
             }).when("/403", {
                 templateUrl: "partials/status/403.html"
             }).when("/404", {
