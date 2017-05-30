@@ -341,8 +341,8 @@ class Race(db_models.Model):
         null=True,
         blank=False,
         related_name="races",
-        verbose_name=_("Type"),
-        help_text=_("Determine race type"),
+        verbose_name=_("Fields"),
+        help_text=_("Determine fields for the race"),
     )
 
     track = db_models.ForeignKey(

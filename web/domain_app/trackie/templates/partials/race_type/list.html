@@ -3,8 +3,8 @@
     <div class="col-xs-12">
         <div class="page-header" style="margin-top: 0;">
             {% verbatim %}
-            <h1 data-ng-if="type" style="margin-top: 0;">{{ type | capitalize }} typy pretekov</h1>
-            <h1 data-ng-if="!type" style="margin-top: 0;">Typy pretekov</h1>
+            <h1 data-ng-if="type" style="margin-top: 0;">{{ type | capitalize }} polia pre preteky</h1>
+            <h1 data-ng-if="!type" style="margin-top: 0;">Polia pre preteky</h1>
             {% endverbatim %}
         </div>
     </div>
@@ -12,6 +12,6 @@
 <div class="row" data-ng-show="raceTypes">
     <div class="col-sm-12">
         <div data-ng-if="grid.data.length" ui-grid="grid" data-ui-grid-pagination data-ui-grid-auto-resize class="grid"></div>
-        <div data-ng-if="!grid.data.length">Žiadne turnaje</div>
+        <div data-ng-if="!grid.data.length">Žiadne polia pre preteky</div>
     </div>
 </div>

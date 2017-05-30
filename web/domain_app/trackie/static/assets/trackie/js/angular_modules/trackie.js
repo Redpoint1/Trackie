@@ -194,7 +194,7 @@
                 controller: "OwnTracksController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
-            }).when("/own/race-types", {
+            }).when("/own/race-fields", {
                 templateUrl: "partials/race_type/list.html",
                 controller: "OwnRaceTypesController",
                 reloadAfterAuthChange: true,
@@ -1232,8 +1232,10 @@
                     return;
                 }
                 $scope.set_data(race_data.data);
-            }, function (response) {
-                console.log(response);
+            }, function (error) {
+                if (error.status.toString()[0] == 4) { //4xx
+                    $location.url("/" + error.status + "?from=" + $location.path());
+                }
             });
         };
 
@@ -1424,9 +1426,7 @@
             $scope.track.put().then(function (response) {
                 $location.path("/track/" + response.data.id);
             }, function (error) {
-                if (error.status.toString()[0] == 4) { //4xx
-                    $location.url("/" + error.status + "?from=" + $location.path());
-                }
+                renderFormErrors($("#track-form"), error.data, "id_");
             })
         };
 
@@ -1485,9 +1485,6 @@
                     break;
                 case "tournament.name":
                     url = "#/tournament/" + row.entity.tournament.id;
-                    break;
-                case "type.name":
-                    url = "#/race-type/" + row.entity.type.slug;
                     break;
                 case "name":
                     url = "#/race/" + row.entity.id;
@@ -1557,6 +1554,10 @@
             $scope.race_upcoming = Restangular.all("races").one("racer", $scope.racer.id).all("upcoming").getList().then(function (response) {
                 $scope.gridFuture.data = response.data.plain();
             });
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
         });
     }]);
 
@@ -1662,7 +1663,7 @@
         $scope.renderUrl = function(type, obj) {
             switch (type) {
                 case "tournament":
-                    return "#/tournament/" + obj.slug;
+                    return "#/tournament/" + obj.id;
                 case "track":
                     return "#/track/" + obj.id;
                 case "racer":
@@ -1685,6 +1686,10 @@
                 }
             }
             $scope.category = "Výsledky";
+        }, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
         })
     }]);
 
@@ -1831,9 +1836,7 @@
             $scope.tournament.put().then(function (response) {
                 $location.path("/tournament/" + response.data.id);
             }, function (error) {
-                if (error.status.toString()[0] == 4) { //4xx
-                    $location.url("/" + error.status + "?from=" + $location.path());
-                }
+                renderFormErrors($("#tournament-form"), error.data, "id_");
             });
         };
 
@@ -1917,9 +1920,7 @@
             $scope.type.put().then(function (response) {
                 $location.path("/race-fields/" + response.data.id);
             }, function (error) {
-                if (error.status.toString()[0] == 4) { //4xx
-                    $location.url("/" + error.status + "?from=" + $location.path());
-                }
+                renderFormErrors($("#type-form"), error.data, "id_");
             });
         };
 

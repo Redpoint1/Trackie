@@ -32,7 +32,7 @@ Počas toho môžete navštíviť rozar.eu/race/2 , kde uvidíte posielané dát
 V prípade ak chcete skript simulate.py použiť aj na iný vami vytvorený závod potrebujete k tomu mať:
 Presne 2 účastníkov v závode s číslami 1 a 2
 Trať, ktorú nájdete na rozar.eu (Veľké Úľany)
-Typ závodu, ktorý obsahuje jedine Tím a Čas (na rozar.eu pod admin účtom ako "Tajné")
+Polia závodu, ktorý obsahuje jedine Tím a Čas (na rozar.eu pod admin účtom ako "Tajné")
 Projekciu nastavenú na EPSG:3857
 Musí ho vytvoriť účet admin a nesmie mať iné heslo ako "admin"
 
@@ -40,7 +40,7 @@ Zvyšné údaje závisia od vás. Skript potom zavoláte ako:
 python simulate.py <id_pretekov> rozar.eu
 Id pretekov viete získať z adresy aplikácie, rozar.eu/#/race/<id_pretekov>
 
-V prípade ak vám chýba možnosť nejakého športu, typu závodu, alebo typu polí pre typ závodu, projekcie, tak ich môžete
+V prípade ak vám chýba možnosť nejakého športu, polí do závodu, projekcie, tak ich môžete
 pridať popr. zmeniť na rozar.eu/admin (prihlasovacie údaje sú admin/admin)
 
 
@@ -87,3 +87,13 @@ Výsledok bude totožný s obsahom na rozar.eu. V prípade, ak chcete posielať 
 python simulate 2 "localhost:80"
 
 Aplikáciu ukončíte stlačením kláves CTRL+C v konzole
+
+, function (error) {
+            if (error.status.toString()[0] == 4) { //4xx
+                $location.url("/" + error.status + "?from=" + $location.path());
+            }
+        }
+
+, function (error) {
+                renderFormErrors($("#race-form"), error.data, "id_");
+            }
