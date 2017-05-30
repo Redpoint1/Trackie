@@ -154,7 +154,7 @@
                 controller: "RacerUpdateController",
                 reloadAfterAuthChange: true,
                 throwAuthError: true
-            }).when("/sports/:id", {
+                }).when("/sports/:id", {
                 templateUrl: "partials/sport_type/detail.html",
                 controller: "SportDetailController"
             }).when("/search", {
@@ -1459,6 +1459,13 @@
             $scope.auth = djangoAuth;
         });
 
+        $scope.age = function(racer){
+            if (!racer || !racer.birth_date) return null;
+            var birth = moment.utc(racer.birth_date);
+            var death = (racer.death_date) ? moment.utc(racer.death_date) : moment.utc();
+            return death.diff(birth, "years");
+        };
+
         $scope.time = function(timestamp){
             var time = moment(timestamp).tz(window.timezone);
             return time.format("L LTS");
@@ -1491,6 +1498,7 @@
         };
 
         $scope.gridPast = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridPastApi = gridApi;
@@ -1505,6 +1513,7 @@
         };
 
         $scope.gridCurrent = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridPastApi = gridApi;
@@ -1519,6 +1528,7 @@
         };
 
         $scope.gridFuture = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridFutureApi = gridApi;
@@ -1587,6 +1597,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -1728,6 +1739,7 @@
         });
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -1785,6 +1797,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -2014,6 +2027,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -2073,6 +2087,7 @@
         };
 
         $scope.grid = {
+            enableFiltering: true,
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
@@ -2314,7 +2329,7 @@
             paginationPageSizes: [10, 20, 50],
             onRegisterApi: function (gridApi) {
                 $scope.gridApi = gridApi;
-            },
+            },  
             columnDefs: [
                 {
                     name: "Názov",

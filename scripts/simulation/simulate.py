@@ -20,9 +20,9 @@ if __name__ == "__main__":
             {
                 "position": "POINT ({} {})".format(coords[racer_1][0],
                                                    coords[racer_1][1]),
-                # "data": {"time": "0:00:00"},
                 "data": {
-                    "time": "{}".format(datetime.timedelta(seconds=racer_1 * 5)),
+                    "time": "{}".format(datetime.timedelta(seconds=racer_1)),
+                    "team": "Lazy",
                 },
                 "racer": 1
             },
@@ -30,7 +30,8 @@ if __name__ == "__main__":
                 "position": "POINT ({} {})".format(coords[racer_2][0],
                                                    coords[racer_2][1]),
                 "data": {
-                    "time": "{}".format(datetime.timedelta(seconds=i * 5))
+                    "time": "{}".format(datetime.timedelta(seconds=i * 2)),
+                    "team": "Barracuda",
                 },
                 "racer": 2
             }
@@ -40,7 +41,7 @@ if __name__ == "__main__":
             url="http://localhost:8000/api/v1/trackie/races/{}/data/".format(
                 sys.argv[1]),
             json=json,
-            auth=("admin", "root")
+            auth=("admin", "admin")
         )
 
         print(r.status_code, r.request.url)
@@ -55,9 +56,9 @@ if __name__ == "__main__":
         time.sleep(1)
 
     requests.delete(
-        url="http://localhost:8000/api/v1/trackie/races/{}/data/".format(
-            sys.argv[1]),
-        auth=("admin", "root")
+        url="http://{}/api/v1/trackie/races/{}/data/".format(
+            sys.argv[2], sys.argv[1]),
+        auth=("admin", "admin")
     )
 
 sys.exit(0)

@@ -27,6 +27,10 @@
                 <dl>
                     <dt>O pretekárovi</dt>
                     <dd class="text-pre-line">{{ racer.about || "Prázdné" }}</dd>
+                    <dt>Dátum narodenia</dt>
+                    <dd class="text-pre-line">{{ racer.birth_date || "Prázdné" }}&nbsp; <span data-ng-if="racer.birth_date">(Vek {{ age(racer) }})</span></dd>
+                    <dt>Úmrtie</dt>
+                    <dd class="text-pre-line">{{ racer.death_date || "Prázdné" }}</dd>
                 </dl>
             </div>
             {% endverbatim %}

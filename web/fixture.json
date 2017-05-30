@@ -1,0 +1,2100 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$36000$UVzXxOezYKfM$kt20CcXYVRcP0+aL/NVI+E/LFNQu8vLMMM8ZV64FbCM=",
+        "last_login": "2017-05-30T19:37:01.637Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin@localhost",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2017-05-30T18:29:48.475Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "9ra2pe3wh33dc6yob8ee2u8noar7p14p",
+    "fields": {
+        "session_data": "OWY0NDIyMDNjZGNmNTk1ODViN2UxZDA1ZDVmNjczZjBlM2E1ZTI5Yzp7Il9hdXRoX3VzZXJfaWQiOiIxIiwiX2F1dGhfdXNlcl9oYXNoIjoiZTA5MWFhMTAxNzY5YTFhZWQzMzZkMGYyMDNhYjI2ZGFjMTIxMjhlMyIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX21lc3NhZ2VzIjoiW1tcIl9fanNvbl9tZXNzYWdlXCIsMSwyNSxcIlRoZSBSYWNlIGZpZWxkIHR5cGUgXFxcIjxhIGhyZWY9XFxcIi9hZG1pbi90cmFja2llL2ZpZWxkdHlwZS8zL2NoYW5nZS9cXFwiPlxcdTAxMGNhczwvYT5cXFwiIHdhcyBjaGFuZ2VkIHN1Y2Nlc3NmdWxseS5cIl0sW1wiX19qc29uX21lc3NhZ2VcIiwxLDI1LFwiVGhlIFJhY2UgZmllbGQgdHlwZSBcXFwiPGEgaHJlZj1cXFwiL2FkbWluL3RyYWNraWUvZmllbGR0eXBlLzIvY2hhbmdlL1xcXCI+VFxcdTAwZWRtPC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXSxbXCJfX2pzb25fbWVzc2FnZVwiLDEsMjUsXCJUaGUgUmFjZSB0eXBlIFxcXCI8YSBocmVmPVxcXCIvYWRtaW4vdHJhY2tpZS9yYWNldHlwZS8xL2NoYW5nZS9cXFwiPkJleiBpbmZvcm1cXHUwMGUxY2llPC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXSxbXCJfX2pzb25fbWVzc2FnZVwiLDEsMjUsXCJUaGUgUmFjZSB0eXBlIFxcXCI8YSBocmVmPVxcXCIvYWRtaW4vdHJhY2tpZS9yYWNldHlwZS8yL2NoYW5nZS9cXFwiPlRham5cXHUwMGU5PC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXSxbXCJfX2pzb25fbWVzc2FnZVwiLDEsMjUsXCJUaGUgUmFjZXIgXFxcIjxhIGhyZWY9XFxcIi9hZG1pbi90cmFja2llL3JhY2VyLzMvY2hhbmdlL1xcXCI+SmFua28gSHJhXFx1MDE2MWtvPC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXSxbXCJfX2pzb25fbWVzc2FnZVwiLDEsMjUsXCJUaGUgUmFjZSBcXFwiPGEgaHJlZj1cXFwiL2FkbWluL3RyYWNraWUvcmFjZS8xL2NoYW5nZS9cXFwiPk1hcmF0b24gVmVcXHUwMTNla1xcdTAwZTkgXFx1MDBkYVxcdTAxM2Vhbnk8L2E+XFxcIiB3YXMgY2hhbmdlZCBzdWNjZXNzZnVsbHkuXCJdLFtcIl9fanNvbl9tZXNzYWdlXCIsMSwyNSxcIlRoZSBTcG9ydCB0eXBlIFxcXCI8YSBocmVmPVxcXCIvYWRtaW4vdHJhY2tpZS9zcG9ydHR5cGUvMS9jaGFuZ2UvXFxcIj5Pc3RhdG5cXHUwMGU5PC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXSxbXCJfX2pzb25fbWVzc2FnZVwiLDEsMjUsXCJUaGUgVG91cm5hbWVudCBcXFwiPGEgaHJlZj1cXFwiL2FkbWluL3RyYWNraWUvdG91cm5hbWVudC8xL2NoYW5nZS9cXFwiPk1hcmF0XFx1MDBmM24gU2xvdmFraWEgMjAxNzwvYT5cXFwiIHdhcyBjaGFuZ2VkIHN1Y2Nlc3NmdWxseS5cIl0sW1wiX19qc29uX21lc3NhZ2VcIiwxLDI1LFwiVGhlIFRyYWNrIFxcXCI8YSBocmVmPVxcXCIvYWRtaW4vdHJhY2tpZS90cmFjay8xL2NoYW5nZS9cXFwiPlZlXFx1MDEzZWtcXHUwMGU5IFxcdTAwZGFcXHUwMTNlYW55PC9hPlxcXCIgd2FzIGNoYW5nZWQgc3VjY2Vzc2Z1bGx5LlwiXV0ifQ==",
+        "expire_date": "2017-06-13T19:40:52.690Z"
+    }
+},
+{
+    "model": "sites.site",
+    "pk": 1,
+    "fields": {
+        "domain": "example.com",
+        "name": "example.com"
+    }
+},
+{
+    "model": "authtoken.token",
+    "pk": "7f76ca791e0228bad8026257765e5ff64c64ec69",
+    "fields": {
+        "user": 1,
+        "created": "2017-05-30T18:30:39.073Z"
+    }
+},
+{
+    "model": "trackie.sporttype",
+    "pk": 1,
+    "fields": {
+        "name": "Ostatn\u00e9",
+        "slug": "other",
+        "icon": "static/images/sport/1496187823_FAQ_2.png"
+    }
+},
+{
+    "model": "trackie.sporttype",
+    "pk": 2,
+    "fields": {
+        "name": "Behanie",
+        "slug": "running",
+        "icon": "static/images/sport/running-man-md.png"
+    }
+},
+{
+    "model": "trackie.tournament",
+    "pk": 1,
+    "fields": {
+        "name": "Marat\u00f3n Slovakia 2017",
+        "owner": 1,
+        "sport": 2
+    }
+},
+{
+    "model": "trackie.fieldtype",
+    "pk": 1,
+    "fields": {
+        "name": "place",
+        "display_name": "Miesto",
+        "type": "PositiveIntegerField"
+    }
+},
+{
+    "model": "trackie.fieldtype",
+    "pk": 2,
+    "fields": {
+        "name": "team",
+        "display_name": "T\u00edm",
+        "type": "TextField"
+    }
+},
+{
+    "model": "trackie.fieldtype",
+    "pk": 3,
+    "fields": {
+        "name": "time",
+        "display_name": "\u010cas",
+        "type": "DurationField"
+    }
+},
+{
+    "model": "trackie.fieldtype",
+    "pk": 4,
+    "fields": {
+        "name": "round",
+        "display_name": "Kolo",
+        "type": "PositiveIntegerField"
+    }
+},
+{
+    "model": "trackie.racetype",
+    "pk": 1,
+    "fields": {
+        "name": "Bez inform\u00e1cie",
+        "public": true,
+        "owner": 1,
+        "fields": []
+    }
+},
+{
+    "model": "trackie.racetype",
+    "pk": 2,
+    "fields": {
+        "name": "Tajn\u00e9",
+        "public": false,
+        "owner": 1,
+        "fields": [
+            2,
+            3
+        ]
+    }
+},
+{
+    "model": "trackie.track",
+    "pk": 1,
+    "fields": {
+        "name": "Ve\u013ek\u00e9 \u00da\u013eany",
+        "owner": 1,
+        "file": "maps/c0c13fd0-18c.gpx",
+        "public": true
+    }
+},
+{
+    "model": "trackie.racer",
+    "pk": 1,
+    "fields": {
+        "first_name": "Paula",
+        "last_name": "Radcliffe",
+        "full_name": "Paula Radcliffe",
+        "birth_date": "1973-12-17",
+        "death_date": null,
+        "about": "She is a three-time winner of the London Marathon (2002, 2003, 2005), three-time New York Marathon champion (2004, 2007, 2008), and won the 2002 Chicago Marathon.\n\nShe has been the women marathon world record holder for 15 years (2002-present).\n\nRadcliffe is a former world champion in the marathon, half marathon and cross country. She has also been European champion over 10,000 metres and in cross country. On the track, Radcliffe won the 10,000 metres silver medal at the 1999 World Championships and was the 2002 Commonwealth champion at 5000 metres. She represented Great Britain at the Olympics four times consecutively (1996 to 2008), although she did not win a podium position in these events.",
+        "photo": "racers/86a93d03-136.jpg"
+    }
+},
+{
+    "model": "trackie.racer",
+    "pk": 2,
+    "fields": {
+        "first_name": "Kitei",
+        "last_name": "Son",
+        "full_name": "Kitei Son",
+        "birth_date": "1912-08-29",
+        "death_date": "2002-10-15",
+        "about": "",
+        "photo": "racers/fec04681-4ac.jpg"
+    }
+},
+{
+    "model": "trackie.racer",
+    "pk": 3,
+    "fields": {
+        "first_name": "Janko",
+        "last_name": "Hra\u0161ko",
+        "full_name": "Janko Hra\u0161ko",
+        "birth_date": null,
+        "death_date": null,
+        "about": "Poch\u00e1dza z Koc\u00farkova.",
+        "photo": ""
+    }
+},
+{
+    "model": "trackie.projection",
+    "pk": 1,
+    "fields": {
+        "code": "EPSG:3857"
+    }
+},
+{
+    "model": "trackie.projection",
+    "pk": 2,
+    "fields": {
+        "code": "EPSG:4326"
+    }
+},
+{
+    "model": "trackie.race",
+    "pk": 1,
+    "fields": {
+        "name": "Maraton Ve\u013ek\u00e9 \u00da\u013eany",
+        "tournament": 1,
+        "type": 2,
+        "track": 1,
+        "start": "2017-07-10T18:00:00Z",
+        "real_start": "2017-05-30T19:57:08.492Z",
+        "end": "2017-05-30T19:59:20.887Z",
+        "real_end": "2017-05-30T19:59:18.682Z",
+        "estimated_duration": "00:10:00",
+        "projection": 1
+    }
+},
+{
+    "model": "trackie.race",
+    "pk": 2,
+    "fields": {
+        "name": "Pr\u00e1zdny",
+        "tournament": 1,
+        "type": 2,
+        "track": 1,
+        "start": "2017-05-30T20:03:58Z",
+        "real_start": null,
+        "end": null,
+        "real_end": null,
+        "estimated_duration": "00:02:00",
+        "projection": 1
+    }
+},
+{
+    "model": "trackie.racerinrace",
+    "pk": 1,
+    "fields": {
+        "racer": 1,
+        "race": 1,
+        "number": 1
+    }
+},
+{
+    "model": "trackie.racerinrace",
+    "pk": 2,
+    "fields": {
+        "racer": 2,
+        "race": 1,
+        "number": 2
+    }
+},
+{
+    "model": "trackie.racerinrace",
+    "pk": 3,
+    "fields": {
+        "racer": 3,
+        "race": 1,
+        "number": 3
+    }
+},
+{
+    "model": "trackie.racerinrace",
+    "pk": 4,
+    "fields": {
+        "racer": 1,
+        "race": 2,
+        "number": 1
+    }
+},
+{
+    "model": "trackie.racerinrace",
+    "pk": 5,
+    "fields": {
+        "racer": 2,
+        "race": 2,
+        "number": 2
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 115,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:08.612Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5750017 48.17047890000001)",
+        "data": {
+            "time": "0:00:00",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 116,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:08.612Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5750017 48.17047890000001)",
+        "data": {
+            "time": "0:00:00",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 117,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:10.929Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5756031 48.17066139999997)",
+        "data": {
+            "time": "0:00:02",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 118,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:10.929Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5756 48.17066000000003)",
+        "data": {
+            "time": "0:00:02",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 119,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:13.258Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57578 48.1705)",
+        "data": {
+            "time": "0:00:04",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 120,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:13.258Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5756031 48.17066139999997)",
+        "data": {
+            "time": "0:00:04",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 121,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:15.619Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57601 48.17014)",
+        "data": {
+            "time": "0:00:06",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 122,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:15.619Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57573 48.17054999999999)",
+        "data": {
+            "time": "0:00:06",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 123,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:17.988Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5762 48.16995)",
+        "data": {
+            "time": "0:00:08",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 124,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:17.988Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57578 48.1705)",
+        "data": {
+            "time": "0:00:08",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 125,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:20.294Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57621 48.16983999999999)",
+        "data": {
+            "time": "0:00:10",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 126,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:20.294Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57589 48.17034999999999)",
+        "data": {
+            "time": "0:00:10",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 127,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:22.620Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57626 48.16971999999996)",
+        "data": {
+            "time": "0:00:12",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 128,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:22.620Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57601 48.17014)",
+        "data": {
+            "time": "0:00:12",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 129,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:24.989Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57635 48.16964999999999)",
+        "data": {
+            "time": "0:00:14",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 130,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:24.989Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57609 48.17003999999997)",
+        "data": {
+            "time": "0:00:14",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 131,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:27.314Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57658 48.16951)",
+        "data": {
+            "time": "0:00:16",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 132,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:27.314Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5762 48.16995)",
+        "data": {
+            "time": "0:00:16",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 133,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:29.633Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5771 48.16919000000002)",
+        "data": {
+            "time": "0:00:18",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 134,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:29.633Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5762034 48.1699544)",
+        "data": {
+            "time": "0:00:18",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 135,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:31.951Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57723 48.16904000000002)",
+        "data": {
+            "time": "0:00:20",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 136,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:31.951Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57621 48.16983999999999)",
+        "data": {
+            "time": "0:00:20",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 137,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:34.258Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57729 48.16884999999999)",
+        "data": {
+            "time": "0:00:22",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 138,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:34.258Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57624 48.16974999999997)",
+        "data": {
+            "time": "0:00:22",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 139,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:36.583Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57734 48.16863000000001)",
+        "data": {
+            "time": "0:00:24",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 140,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:36.583Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57626 48.16971999999996)",
+        "data": {
+            "time": "0:00:24",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 141,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:38.877Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57731 48.16834)",
+        "data": {
+            "time": "0:00:26",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 142,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:38.877Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57629 48.16969)",
+        "data": {
+            "time": "0:00:26",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 143,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:41.193Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57719 48.16795999999999)",
+        "data": {
+            "time": "0:00:28",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 144,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:41.193Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57635 48.16964999999999)",
+        "data": {
+            "time": "0:00:28",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 145,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:43.497Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57714 48.16773999999998)",
+        "data": {
+            "time": "0:00:30",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 146,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:43.497Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57643 48.16960999999998)",
+        "data": {
+            "time": "0:00:30",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 147,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:45.774Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57713 48.16762)",
+        "data": {
+            "time": "0:00:32",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 148,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:45.774Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57658 48.16951)",
+        "data": {
+            "time": "0:00:32",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 149,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:48.096Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57715 48.16748999999999)",
+        "data": {
+            "time": "0:00:34",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 150,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:48.096Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.577 48.16926999999996)",
+        "data": {
+            "time": "0:00:34",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 151,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:50.412Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57721 48.16732999999999)",
+        "data": {
+            "time": "0:00:36",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 152,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:50.412Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5771 48.16919000000002)",
+        "data": {
+            "time": "0:00:36",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 153,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:52.720Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5773 48.16718)",
+        "data": {
+            "time": "0:00:38",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 154,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:52.720Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57716 48.16913)",
+        "data": {
+            "time": "0:00:38",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 155,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:55.141Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57765 48.16667000000001)",
+        "data": {
+            "time": "0:00:40",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 156,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:55.141Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57723 48.16904000000002)",
+        "data": {
+            "time": "0:00:40",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 157,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:57.497Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57802 48.16611)",
+        "data": {
+            "time": "0:00:42",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 158,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:57.497Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57727 48.16893999999999)",
+        "data": {
+            "time": "0:00:42",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 159,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:59.792Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57799 48.16600000000003)",
+        "data": {
+            "time": "0:00:44",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 160,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:57:59.792Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57729 48.16884999999999)",
+        "data": {
+            "time": "0:00:44",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 161,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:02.120Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57797 48.16595999999998)",
+        "data": {
+            "time": "0:00:46",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 162,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:02.120Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57733 48.16871)",
+        "data": {
+            "time": "0:00:46",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 163,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:04.410Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57794 48.16593)",
+        "data": {
+            "time": "0:00:48",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 164,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:04.410Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57734 48.16863000000001)",
+        "data": {
+            "time": "0:00:48",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 165,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:06.723Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57785 48.16586999999998)",
+        "data": {
+            "time": "0:00:50",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 166,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:06.723Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57733 48.16847999999999)",
+        "data": {
+            "time": "0:00:50",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 167,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:09.073Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57776 48.16583)",
+        "data": {
+            "time": "0:00:52",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 168,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:09.073Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57731 48.16834)",
+        "data": {
+            "time": "0:00:52",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 169,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:11.350Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.57732 48.16573)",
+        "data": {
+            "time": "0:00:54",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 170,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:11.350Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57724 48.16809000000001)",
+        "data": {
+            "time": "0:00:54",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 171,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:13.657Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 172,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:13.657Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57719 48.16795999999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 173,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:16.004Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 174,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:16.004Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57716 48.16783000000001)",
+        "data": {
+            "time": "0:00:58",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 175,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:18.293Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 176,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:18.293Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57714 48.16773999999998)",
+        "data": {
+            "time": "0:01:00",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 177,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:20.625Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 178,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:20.625Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57713 48.16767999999999)",
+        "data": {
+            "time": "0:01:02",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 179,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:23.000Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 180,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:23.000Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57713 48.16762)",
+        "data": {
+            "time": "0:01:04",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 181,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:25.398Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 182,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:25.398Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57714 48.16756000000001)",
+        "data": {
+            "time": "0:01:06",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 183,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:27.718Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 184,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:27.718Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57715 48.16748999999999)",
+        "data": {
+            "time": "0:01:08",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 185,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:30.043Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 186,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:30.043Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57719 48.16739000000001)",
+        "data": {
+            "time": "0:01:10",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 187,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:32.342Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 188,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:32.342Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57721 48.16732999999999)",
+        "data": {
+            "time": "0:01:12",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 189,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:34.632Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 190,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:34.632Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57724 48.16727999999998)",
+        "data": {
+            "time": "0:01:14",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 191,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:36.966Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 192,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:36.966Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5773 48.16718)",
+        "data": {
+            "time": "0:01:16",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 193,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:39.283Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 194,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:39.283Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57746 48.16694999999999)",
+        "data": {
+            "time": "0:01:18",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 195,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:41.567Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 196,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:41.567Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57765 48.16667000000001)",
+        "data": {
+            "time": "0:01:20",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 197,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:43.932Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 198,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:43.932Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.578 48.16613999999998)",
+        "data": {
+            "time": "0:01:22",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 199,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:46.243Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 200,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:46.243Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57802 48.16611)",
+        "data": {
+            "time": "0:01:24",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 201,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:48.557Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 202,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:48.557Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.578 48.16604000000001)",
+        "data": {
+            "time": "0:01:26",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 203,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:50.884Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 204,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:50.884Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57799 48.16600000000003)",
+        "data": {
+            "time": "0:01:28",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 205,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:53.224Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 206,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:53.224Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57798 48.16597000000002)",
+        "data": {
+            "time": "0:01:30",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 207,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:55.525Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 208,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:55.525Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57797 48.16595999999998)",
+        "data": {
+            "time": "0:01:32",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 209,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:57.805Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 210,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:58:57.805Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57796 48.16595000000001)",
+        "data": {
+            "time": "0:01:34",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 211,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:00.104Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 212,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:00.104Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57794 48.16593)",
+        "data": {
+            "time": "0:01:36",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 213,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:02.411Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 214,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:02.411Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57789 48.16589999999999)",
+        "data": {
+            "time": "0:01:38",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 215,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:04.733Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 216,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:04.733Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57785 48.16586999999998)",
+        "data": {
+            "time": "0:01:40",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 217,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:07.181Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 218,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:07.181Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5778 48.16585000000001)",
+        "data": {
+            "time": "0:01:42",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 219,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:09.498Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 220,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:09.498Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57776 48.16583)",
+        "data": {
+            "time": "0:01:44",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 221,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:11.788Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 222,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:11.788Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57756 48.16576000000001)",
+        "data": {
+            "time": "0:01:46",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 223,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:14.108Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 224,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:14.108Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57732 48.16573)",
+        "data": {
+            "time": "0:01:48",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 225,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:16.388Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 226,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:16.388Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.57705 48.16568999999998)",
+        "data": {
+            "time": "0:01:50",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 227,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:18.682Z",
+        "racer": 1,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:00:56",
+            "team": "Lazy"
+        }
+    }
+},
+{
+    "model": "trackie.racedata",
+    "pk": 228,
+    "fields": {
+        "race": 1,
+        "received": "2017-05-30T19:59:18.682Z",
+        "racer": 2,
+        "position": "SRID=4326;POINT (17.5770499 48.16569269999999)",
+        "data": {
+            "time": "0:01:52",
+            "team": "Barracuda"
+        }
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 1,
+    "fields": {
+        "action_time": "2017-05-30T18:32:46.662Z",
+        "user": 1,
+        "content_type": 23,
+        "object_id": "1",
+        "object_repr": "EPSG:3857",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 2,
+    "fields": {
+        "action_time": "2017-05-30T18:32:53.842Z",
+        "user": 1,
+        "content_type": 23,
+        "object_id": "2",
+        "object_repr": "EPSG:4326",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 3,
+    "fields": {
+        "action_time": "2017-05-30T18:33:23.061Z",
+        "user": 1,
+        "content_type": 22,
+        "object_id": "1",
+        "object_repr": "Miesto",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 4,
+    "fields": {
+        "action_time": "2017-05-30T18:33:42.637Z",
+        "user": 1,
+        "content_type": 22,
+        "object_id": "2",
+        "object_repr": "Tim",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 5,
+    "fields": {
+        "action_time": "2017-05-30T18:34:11.793Z",
+        "user": 1,
+        "content_type": 22,
+        "object_id": "3",
+        "object_repr": "Cas",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 6,
+    "fields": {
+        "action_time": "2017-05-30T18:39:28.538Z",
+        "user": 1,
+        "content_type": 22,
+        "object_id": "4",
+        "object_repr": "Kolo",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 7,
+    "fields": {
+        "action_time": "2017-05-30T18:41:35.670Z",
+        "user": 1,
+        "content_type": 21,
+        "object_id": "1",
+        "object_repr": "Bez informacii",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 8,
+    "fields": {
+        "action_time": "2017-05-30T18:44:30.620Z",
+        "user": 1,
+        "content_type": 15,
+        "object_id": "1",
+        "object_repr": "Ostatne",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 9,
+    "fields": {
+        "action_time": "2017-05-30T18:47:19.850Z",
+        "user": 1,
+        "content_type": 15,
+        "object_id": "2",
+        "object_repr": "Behanie",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 10,
+    "fields": {
+        "action_time": "2017-05-30T19:38:19.182Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "3",
+        "object_repr": "\u010cas",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"display_name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 11,
+    "fields": {
+        "action_time": "2017-05-30T19:38:25.432Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "2",
+        "object_repr": "T\u00edm",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"display_name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 12,
+    "fields": {
+        "action_time": "2017-05-30T19:38:41.128Z",
+        "user": 1,
+        "content_type": 17,
+        "object_id": "1",
+        "object_repr": "Bez inform\u00e1cie",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 13,
+    "fields": {
+        "action_time": "2017-05-30T19:38:50.437Z",
+        "user": 1,
+        "content_type": 17,
+        "object_id": "2",
+        "object_repr": "Tajn\u00e9",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 14,
+    "fields": {
+        "action_time": "2017-05-30T19:39:10.832Z",
+        "user": 1,
+        "content_type": 19,
+        "object_id": "3",
+        "object_repr": "Janko Hra\u0161ko",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"last_name\", \"about\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 15,
+    "fields": {
+        "action_time": "2017-05-30T19:40:04.743Z",
+        "user": 1,
+        "content_type": 21,
+        "object_id": "1",
+        "object_repr": "Maraton Ve\u013ek\u00e9 \u00da\u013eany",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 16,
+    "fields": {
+        "action_time": "2017-05-30T19:40:18.036Z",
+        "user": 1,
+        "content_type": 14,
+        "object_id": "1",
+        "object_repr": "Ostatn\u00e9",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 17,
+    "fields": {
+        "action_time": "2017-05-30T19:40:32.319Z",
+        "user": 1,
+        "content_type": 15,
+        "object_id": "1",
+        "object_repr": "Marat\u00f3n Slovakia 2017",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 18,
+    "fields": {
+        "action_time": "2017-05-30T19:40:52.670Z",
+        "user": 1,
+        "content_type": 18,
+        "object_id": "1",
+        "object_repr": "Ve\u013ek\u00e9 \u00da\u013eany",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"name\"]}}]"
+    }
+}
+]
