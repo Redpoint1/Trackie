@@ -38,8 +38,8 @@ if __name__ == "__main__":
         ]
 
         r = requests.post(
-            url="http://localhost:8000/api/v1/trackie/races/{}/data/".format(
-                sys.argv[1]),
+            url="http://{}/api/v1/trackie/races/{}/data/".format(
+                sys.argv[2], sys.argv[1]),
             json=json,
             auth=("admin", "admin")
         )
